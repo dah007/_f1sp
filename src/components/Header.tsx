@@ -1,42 +1,20 @@
-import { JSX } from 'react';
-import ModeToggle from './ModeToggle';
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from './ui/navigation-menu';
+import F1SPlogo from 'assets/f1sp.png';
+import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
 
-/**
- * Header component that displays a header section with a title and a mode toggle button.
- *
- * @returns {JSX.Element} The rendered header component.
- */
-const Header = (): JSX.Element => {
+const Header: React.FC = () => {
     return (
-        <header className="border-b dark:border-gray-500 light:border-gray-900 h-14 flex p-2 justify-center items-center">
-            <h2 data-testid="header" className="text-3xl font-bold">
-                Base Configuration
-            </h2>
-
-            <div>
-                <NavigationMenu>
-                    <NavigationMenuList>
-                        <NavigationMenuItem>
-                            <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
-                            <NavigationMenuContent>
-                                <NavigationMenuLink>Link</NavigationMenuLink>
-                            </NavigationMenuContent>
-                        </NavigationMenuItem>
-                    </NavigationMenuList>
-                </NavigationMenu>
+        <header className="flex md:flex-col lg:flex-col xl:flex-col row-auto xl:bg-pink-300 lg:bg-green-300 md:bg-blue-300 sm:bg-red-300 bg-yellow-300 p-4 rounded-lg">
+            <div className="hidden md:flex lg:flex xl:flex justify-start">
+                <img src={F1SPlogo} alt="F1SP Logo" className="h-32" />
             </div>
 
-            <div className="flex-1 text-right">
-                <ModeToggle />
+            <div className="flex md:hidden lg:hidden xl:hidden justify-start">
+                <img src={F1SPlogoHorizontal} alt="F1SP Logo" className="h-8" />
             </div>
+
+            <h1 className="text-lg xl:text-3xl lg:text-3xl md:text-2xl italic font-extrabold racing-sans-one-regular">
+                Formula 1 - Stats & Predictions
+            </h1>
         </header>
     );
 };
