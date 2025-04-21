@@ -19,7 +19,7 @@
         "host": {
             "mode": "development",
             "cors": {
-                "origins": ["http://localhost:4280"],
+                "origins": ["http://localhost:4280, http://localhost:5173"],
                 "allow-credentials": false
             },
             "authentication": {
