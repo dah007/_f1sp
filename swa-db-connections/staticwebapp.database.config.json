@@ -1,31 +1,62 @@
 {
-    "$schema": "https://github.com/Azure/data-api-builder/releases/download/v1.3.19/dab.draft.schema.json",
+    "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
     "data-source": {
         "database-type": "mysql",
-        "connection-string": "",
+
+        "connection-string": "@env('DATABASE_CONNECTION_STRING')",
         "options": {}
     },
     "runtime": {
         "rest": {
             "enabled": true,
-            "path": "/rest",
-            "request-body-strict": true
+            "path": "/rest"
         },
         "graphql": {
+            "allow-introspection": true,
             "enabled": true,
-            "path": "/graphql",
-            "allow-introspection": true
+            "path": "/graphql"
         },
         "host": {
+            "mode": "development",
             "cors": {
                 "origins": ["http://localhost:4280"],
                 "allow-credentials": false
             },
             "authentication": {
                 "provider": "StaticWebApps"
-            },
-            "mode": "production"
+            }
         }
     },
-    "entities": {}
+    "entities": {
+        "constructor": {
+            "source": {
+                "key-fields": ["id"],
+                "type": "view",
+                "object": "constructor"
+            },
+            "rest": {
+                "path": "constructor",
+                "methods": ["get"],
+                "enabled": true
+            },
+            "graphql": {
+                "enabled": true
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "Person": {
+            "source": "MyTestPersonTable",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        }
+    }
 }
