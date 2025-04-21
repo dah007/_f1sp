@@ -1,23 +1,34 @@
 {
-    "mimeTypes": {
-        ".js": "application/javascript",
-        ".mjs": "application/javascript",
-        ".jsx": "application/javascript",
-        ".tsx": "application/javascript",
-        ".ts": "application/javascript"
-    },
-    "navigationFallback": {
-        "rewrite": "/index.html",
-        "exclude": ["*.{css,scss,js,png,gif,ico,jpg,svg}", "assets/*"]
-    },
-    "platform": {
-        "apiRuntime": "node:18"
-    },
-    "routes": [
-        {
-            "route": "/data-api/*",
-            "methods": ["GET", "POST"],
-            "allowedRoles": ["anonymous"]
-        }
+  "mimeTypes": {
+    ".js": "application/javascript",
+    ".mjs": "application/javascript",
+    ".jsx": "application/javascript",
+    ".tsx": "application/javascript",
+    ".ts": "application/javascript"
+  },
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "*.{css,scss,js,png,gif,ico,jpg,svg}",
+      "assets/*"
     ]
+  },
+  "platform": {
+    "apiRuntime": "node:18"
+  },
+  "routes": [
+    {
+      "route": "/data-api/*",
+      "methods": [
+        "get",
+        "post"
+      ],
+      "allowedRoles": [
+        "anonymous"
+      ],
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  ]
 }
