@@ -3,6 +3,7 @@ import Header from 'components/Header';
 
 import './App.css';
 import NextReactBanner from './components/NextRaceBanner';
+import { LucideSquareArrowOutUpRight } from 'lucide-react';
 
 function list() {
     console.log('List button clicked');
@@ -14,9 +15,8 @@ const App = () => {
             <Header />
             <div
                 className="
-                bg-white 
                 border-b 
-                border-gray-200 
+                border-primary
                 flex 
                 flex-col 
                 gap-12 
@@ -28,18 +28,24 @@ const App = () => {
                     <NextReactBanner />
                     <blockquote>
                         Every race, racer, constructor, track, etc.
-                        <br />
-                        <br />
+                        <span className="flex items-center">
+                            <span className="h-px flex-1 bg-gradient-to-r from-transparent to-gray-300 dark:to-gray-600"></span>
+
+                            <span className="shrink-0 px-4 text-gray-900 dark:text-white">Title goes here</span>
+
+                            <span className="h-px flex-1 bg-gradient-to-l from-transparent to-gray-300 dark:to-gray-600"></span>
+                        </span>
                         Many, many thanks to the awesome{' '}
                         <button
                             type="button"
-                            className="text-blue-500 hover:underline cursor-pointer"
+                            className="text-blue-500 hover:underline cursor-pointer relative pr-4"
                             onClick={() => window.open('https://github.com/f1db/f1db', '_blank')}
                             rel="noopener noreferrer"
                         >
+                            <LucideSquareArrowOutUpRight className="w-3 h-3 top-0 right-0 absolute" />
                             F1DB
-                        </button>
-                        !
+                        </button>{' '}
+                        -- without whom I never would have started this project early last season (20224)!
                     </blockquote>
                 </div>
                 <div className="flex gap-4">

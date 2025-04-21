@@ -1,20 +1,27 @@
--- f1sp.previous_5_winners_circuit source
+
+
+-- f1sp.race_next source
 
 CREATE OR REPLACE
-ALGORITHM = UNDEFINED VIEW `previous_winners_circuit` AS
+ALGORITHM = UNDEFINED VIEW `race_next` AS
 select
-	c.id as circuit_id,
-	c.name,	
-    `r`.`year` AS `year`,
-    `d`.`full_name` AS `full_name`,
-    `d`.`permanent_number` AS `permanent_number`,
-    `rr`.`time` AS `time`
+    r.id as id,
+    `r`.`circuit_id` AS `circuit_id`,
+    `r`.`date` AS `date`,
+    `r`.`official_name` AS `official_name`,
+    `r`.`grand_prix_id` AS `grand_prix_id`,
+    `gp`.`short_name` AS `short_name`
 from
-    ((`race` `r`
-join `race_result` `rr` on
-    ((`r`.`id` = `rr`.`race_id`)))
-join `driver` `d` on
-    ((`rr`.`driver_id` = `d`.`id`)))
-inner join circuit c on r.circuit_id = c.id
-order by
-    `r`.`year` desc, rr.position_display_order
+    (`race` `r`
+join `grand_prix` `gp` on
+    ((`r`.`grand_prix_id` = `gp`.`id`)))
+where
+    (`r`.`date` > now())
+limit 1;
+
+
+
+    flush privileges;
+    
+    
+    select * from race_n
