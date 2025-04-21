@@ -6,17 +6,21 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
+    base: './',
     plugins: [react(), tailwindcss(), tsconfigPaths()],
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
+            app: '/src/app',
             assets: '/src/assets',
             components: '/src/components',
             constants: '/src/constants',
             features: '/src/features',
             hooks: '/src/hooks',
-            pages: '/src/pages',
+            routes: '/src/routes',
+            selectors: '/src/selectors',
             services: 'services',
+            slices: '/src/slices',
             styles: '/src/styles',
             types: '/src/types',
             utils: '/src/utils',

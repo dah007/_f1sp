@@ -1,5 +1,23 @@
 const F1SP_BASE_DB_URL = '/data-api/rest/';
 
+export interface ErrorObject {
+    data: string | unknown;
+    status: string;
+}
+
+/**
+ * Builds an error object from the given error.
+ *
+ * @param error - The error to process. It can be of any type.
+ * @returns An object containing the error status and data. If the error has a `status` property, it will be used as the error status. Otherwise, 'CUSTOM_ERROR' will be used. If the error has a `statusText` property, it will be used as the error data. Otherwise, the entire error object will be used as the error data.
+ */
+export const buildErrorObject = (error: unknown): ErrorObject => {
+    const errorStatus = (error as { status?: string }).status;
+    const errorStatusText = (error as { statusText?: string }).statusText;
+
+    return { status: errorStatus || 'UNKNOWN_ERROR', data: errorStatusText || error };
+};
+
 /**
  * Fetch's data from an endpoint attached to the F1SP
  * @param endPoint The api end point to hit
