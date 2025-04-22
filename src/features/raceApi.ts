@@ -9,10 +9,10 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
  * https://learn.microsoft.com/en-us/azure/search/search-filters
  */
 
-console.log(`http://localhost:4280${REST_URL}`);
+console.log(`${REST_URL}`);
 
 export const raceApi = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: `http://localhost:4280${REST_URL}` }),
+    baseQuery: fetchBaseQuery({ baseUrl: `${REST_URL}` }),
 
     endpoints: (builder) => ({
         getNextRace: builder.query({
