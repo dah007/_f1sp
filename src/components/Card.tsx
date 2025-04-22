@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
-import { Card as CCard, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from 'components/ui/card';
-import { JSX } from 'react';
+
+import { Card as CCard, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface CardProps {
     children: React.ReactNode;
@@ -30,7 +30,7 @@ interface CardProps {
  * @param {string} [props.titleClassName] - Additional class names for the title
  * @returns {JSX.Element} The rendered Card component
  */
-export function Card({
+const Card = ({
     children,
     childrenClassName,
     className,
@@ -40,7 +40,7 @@ export function Card({
     footerClassName,
     title,
     titleClassName,
-}: CardProps): JSX.Element {
+}: CardProps) => {
     return (
         <CCard className={cn('w-full bg-white dark:bg-slate-800 shadow-md p-0', className)}>
             {(title || description) && (
@@ -56,4 +56,6 @@ export function Card({
             {footer && <CardFooter className={cn('flex justify-between', footerClassName)}>{footer}</CardFooter>}
         </CCard>
     );
-}
+};
+
+export default Card;

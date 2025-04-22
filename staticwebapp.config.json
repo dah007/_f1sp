@@ -4,20 +4,45 @@
         ".mjs": "application/javascript",
         ".jsx": "application/javascript",
         ".tsx": "application/javascript",
-        ".ts": "application/javascript"
+        ".ts": "application/javascript",
+        ".css": "text/css"
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["*.{css,scss,js,png,gif,ico,jpg,svg}", "assets/*", "*.{json,xml,txt}"]
-    },
-    "platform": {
-        "apiRuntime": "node:18"
+        "exclude": [
+            "/src/assets/*.{png,jpg,gif}",
+            "/assets/*.{png,jpg,gif}",
+            "/styles/*.{css}"
+        ]
     },
     "routes": [
         {
+            "route": "/",
+            "allowedRoles": [
+                "anonymous",
+                "authenticated"
+            ]
+        },
+        {
+            "route": "/index.html",
+            "allowedRoles": [
+                "anonymous",
+                "authenticated"
+            ]
+        },
+        {
             "route": "/data-api/*",
-            "methods": ["GET", "POST"],
-            "allowedRoles": ["anonymous"]
+            "allowedRoles": [
+                "anonymous",
+                "authenticated"
+            ]
+        },
+        {
+            "route": "/graphql",
+            "allowedRoles": [
+                "anonymous",
+                "authenticated"
+            ]
         }
     ]
 }

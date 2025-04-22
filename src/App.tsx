@@ -1,10 +1,10 @@
 import { Button } from 'components/ui/button';
 import Header from 'components/Header';
 
-import './App.css';
 import NextReactBanner from './components/NextRaceBanner';
+import Card from './components/Card';
 import { LucideSquareArrowOutUpRight } from 'lucide-react';
-import { Card } from './components/ui/card';
+import './App.css';
 
 function list() {
     console.log('List button clicked');
@@ -25,7 +25,7 @@ const App = () => {
                 sm:p-4 sm:pt-4
                 shadow-md"
             >
-                <div className="container flex flex-col">
+                <div className="">
                     <NextReactBanner />
 
                     <div className="flex gap-4">
@@ -39,17 +39,7 @@ const App = () => {
 
                                     <span className="h-px flex-1 bg-gradient-to-l from-transparent to-gray-300 dark:to-gray-600"></span>
                                 </span>
-                                Many, many thanks to the awesome{' '}
-                                <button
-                                    type="button"
-                                    className="text-blue-500 hover:underline cursor-pointer relative pr-4"
-                                    onClick={() => window.open('https://github.com/f1db/f1db', '_blank')}
-                                    rel="noopener noreferrer"
-                                >
-                                    <LucideSquareArrowOutUpRight className="w-3 h-3 top-0 right-0 absolute" />
-                                    F1DB
-                                </button>{' '}
-                                -- without whom I never would have started this project early last season (2024)!
+                                Many, many thanks to the awesome: CUPOFR D <LucideSquareArrowOutUpRight />
                             </div>
                         </Card>
                         <>wtf?</>
