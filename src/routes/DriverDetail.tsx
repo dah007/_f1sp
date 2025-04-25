@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
 import { useGetDriverQuery, useGetDriverStatsQuery, useGetDriverTotalPositionsQuery } from 'features/driversApi';
-import { setDriver, setStats, setTotalPositions } from 'slices/driversSlice';
+import { setDriver, /* setStats,*/ setTotalPositions } from 'slices/driversSlice';
 
 import PageContainer from 'components/PageContainer';
 import Flag from 'components/Flag';
@@ -21,7 +21,7 @@ const DriverDetail: React.FC = () => {
     const dispatch = useAppDispatch();
     const { id, year } = useParams();
 
-    const [maxPercentage, setMaxPercentage] = useState(0);
+    const [, setMaxPercentage] = useState(0);
 
     const driver = useAppSelector((state: RootState) => state.drivers.driver);
     const driverPositions = useAppSelector((state: RootState) => state.drivers.driverPositions);
@@ -50,7 +50,7 @@ const DriverDetail: React.FC = () => {
         if (!statData || statDataError || statDataLoading) return;
 
         console.log('statData:', statData);
-        dispatch(setStats(statData));
+        // dispatch(setStats(statData));
     }, [dispatch, statData, statDataError, statDataLoading]);
 
     useEffect(() => {

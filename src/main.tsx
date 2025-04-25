@@ -14,7 +14,7 @@ createRoot(root).render(
     <div className="min-h-screen min-w-screen p-0 m-0">
         <Provider store={store}>
             <StrictMode>
-                <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <ThemeProvider defaultTheme="dark" storageKey="f1sp-theme">
                     <App />
                 </ThemeProvider>
             </StrictMode>

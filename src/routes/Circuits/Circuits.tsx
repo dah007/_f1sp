@@ -9,7 +9,7 @@ import { CIRCUIT_DETAILS } from '../../constants/circuitConstants';
 import type { CircuitProps } from 'types/circuits';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { setRaceNext } from '../../slices/racesSlice';
+// import { setRaceNext } from '../../slices/racesSlice';
 import { setError } from 'slices/siteWideSlice';
 import PageContainer from 'components/PageContainer';
 import {
@@ -19,9 +19,9 @@ import {
     SHOW_PIN_ZOOM,
     updateMarkerVisibility,
 } from './CircuitFunctions';
-import LoadingToast from '@/components/LoadingToast';
-import CircuitSelect from '@/components/CircuitSelect';
-import ContinentSelect from '@/components/ContinentSelect';
+// import LoadingToast from '@/components/LoadingToast';
+import CircuitSelect from 'components/CircuitSelect';
+import ContinentSelect from './ContinentSelect';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
@@ -45,11 +45,7 @@ const Circuits: React.FC = () => {
     const [circuit, setCircuit] = useState<CircuitProps | undefined>(CIRCUIT_DETAILS['baku']);
     const [continent, setContinent] = useState<string | undefined>('Europe');
 
-    const {
-        data: circuitData,
-        isLoading,
-        error,
-    } = useGetCircuitsQuery({
+    const { data: circuitData } = useGetCircuitsQuery({
         endYear: new Date().getFullYear(),
         startYear: new Date().getFullYear() - 10,
     });
@@ -62,14 +58,14 @@ const Circuits: React.FC = () => {
         if (!circuitData) return;
 
         let circuitBBox = CIRCUIT_DETAILS['baku']?.bbox;
-        let circuit = circuitData.find((circuit: CircuitProps) => circuit.full_name === 'Baku City Circuit');
+        let circuit = CIRCUIT_DETAILS['baku']; // circuitData.find((circuit: CircuitProps) => circuit.full_name === 'Baku City Circuit');
 
         if (raceNext) {
             circuitBBox = CIRCUIT_DETAILS[raceNext.circuit_id]?.bbox;
-            circuit = circuitData.find((circuit: CircuitProps) => circuit.id === raceNext.circuit_id);
+            circuit = CIRCUIT_DETAILS['baku']; // circuitData.find((circuit: CircuitProps) => circuit.id === raceNext.circuit_id);
         }
 
-        setDropdownLabel(circuit?.full_name);
+        setDropdownLabel(circuit?.full_name || originalLabel);
         setSelectedCircuit(circuit);
 
         try {
@@ -85,14 +81,14 @@ const Circuits: React.FC = () => {
         }
 
         // ? set all circuit state var
-        setCircuitsData(circuitData);
+        setCircuitsData(circuitData as CircuitProps[]);
 
         if (!mapContainer.current) return;
 
         mapContainer.current.on('load', () => {
             if (!mapContainer.current) return;
             loadCircuitLayers({
-                data: circuitData,
+                data: circuitData as CircuitProps[],
                 mapContainer: mapContainer.current,
             });
         });

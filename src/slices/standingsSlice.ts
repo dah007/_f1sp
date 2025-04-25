@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { IConstructorStanding, IDriverStanding } from '@/types/standings';
+import type { ConstructorStanding, DriverStanding } from '@/types/standings';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface IState {
-    constructors: IConstructorStanding[];
-    drivers: IDriverStanding[];
+    constructors: ConstructorStanding[];
+    drivers: DriverStanding[];
 }
 
 const initialState: IState = {
@@ -16,13 +16,13 @@ export const standingsSlice = createSlice({
     name: 'standings',
     initialState,
     reducers: {
-        setConstructorStandings: (state, action: PayloadAction<IConstructorStanding[]>) => {
+        setConstructorStandings: (state, action: PayloadAction<ConstructorStanding[]>) => {
             let payload = action.payload;
 
             if (!payload) payload = [];
             state.constructors = payload;
         },
-        setDriverStandings: (state, action: PayloadAction<IDriverStanding[]>) => {
+        setDriverStandings: (state, action: PayloadAction<DriverStanding[]>) => {
             state.drivers = action.payload;
         },
     },

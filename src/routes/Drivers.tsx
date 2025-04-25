@@ -76,10 +76,11 @@ const Drivers: React.FC = (): JSX.Element => {
     const { data: driversData } = useGetDriversQuery(selectedYear);
 
     useEffect(() => {
-        if (driversData && (!isLoaded || driversData !== drivers)) {
-            dispatch(setDrivers(driversData));
-            setIsLoaded(true); // Mark data as loaded
-        }
+        if (!driversData) return;
+        if (driversData) console.log('hello');
+
+        dispatch(setDrivers(driversData));
+        setIsLoaded(true); // Mark data as loaded
     }, [driversData, dispatch, isLoaded, drivers]);
 
     const colDefs = useMemo<ColumnDef<Driver>[]>(

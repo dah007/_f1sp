@@ -6,7 +6,7 @@ import {
     useGetFastestPitStopQuery,
     useGetPollPositionQuery,
     useGetRaceResultsWithQualQuery,
-} from 'features/f1spRacesApi';
+} from 'features/raceApi';
 
 import { useParams } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ import type { TNamedObject } from '../types';
 import { setError, setSelectedYear } from 'slices/siteWideSlice';
 
 import type { DriverOfTheDay } from 'types/drivers';
-import type { RaceProps } from 'types/races';
+import type { FastestLap, RaceProps } from 'types/races';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
 type PolePosition = {
@@ -30,7 +30,7 @@ const RaceDetail: React.FC = (): JSX.Element => {
     const { year: initialYear } = useParams();
 
     const [driverOfTheDay, setDriverOfTheDay] = useState<DriverOfTheDay>();
-    const [fastestLap, setFastestLap] = useState<TNamedObject<string>>();
+    const [fastestLap, setFastestLap] = useState<FastestLap>();
     const [fastestPit, setFastestPit] = useState<TNamedObject<string>>();
     const [firstRow, setFirstRow] = useState<RaceProps>();
     const [pollPosition, setPollPosition] = useState<PolePosition>();
@@ -43,15 +43,28 @@ const RaceDetail: React.FC = (): JSX.Element => {
     }, [initialYear, selectedYear, dispatch]);
 
     // TODO: Add error handling
-    const { data } = useGetRaceResultsWithQualQuery(id!);
-    const { data: driverOfTheDayData } = useGetDriverOfTheDayQuery(id!);
-    const { data: fastestLapData } = useGetFastestLapQuery(id);
-    const { data: fastestPitData } = useGetFastestPitStopQuery(id);
-    const { data: pollPositionData } = useGetPollPositionQuery(id);
-
+    const { data: raceResultsData, isError: raceResultsError } = useGetRaceResultsWithQualQuery(id!) as {
+        data: RaceProps[];
+        isError: boolean;
+    };
+    const { data: driverOfTheDayData, isError: driverOfTheDayError } = useGetDriverOfTheDayQuery(id!) as {
+        data: DriverOfTheDay[];
+        isError: boolean;
+    };
+    const { data: fastestLapData, isError: fastestLapError } = useGetFastestLapQuery(id!) as {
+        data: FastestLap;
+        isError: boolean;
+    };
+    const { data: fastestPitData, isError: fastestPitError } = useGetFastestPitStopQuery(id!) as {
+        data: TNamedObject<string>[];
+        isError: boolean;
+    };
+    const { data: pollPositionData, isError: pollPositionError } = useGetPollPositionQuery(id) as {
+        data: PolePosition;
+        isError: boolean;
+    };
     useEffect(() => {
-        if (!driverOfTheDayData) return;
-        if (driverOfTheDayData.error) {
+        if (driverOfTheDayError) {
             dispatch(setError(true));
             return;
         }
@@ -60,7 +73,7 @@ const RaceDetail: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (!fastestLapData) return;
-        setFastestLap(fastestLapData[0]);
+        setFastestLap(fastestLapData);
     }, [fastestLapData]);
 
     useEffect(() => {
@@ -70,14 +83,19 @@ const RaceDetail: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (!pollPositionData) return;
-        setPollPosition(pollPositionData[0]);
+        setPollPosition(pollPositionData);
     }, [pollPositionData]);
 
     useEffect(() => {
-        if (!data) return;
-        setFirstRow(data[0]);
-        setRaceDetail(data);
-    }, [data]);
+        if (!raceResultsData) return;
+        setFirstRow(raceResultsData[0]);
+        setRaceDetail(raceResultsData);
+    }, [raceResultsData]);
+
+    if (raceResultsError || driverOfTheDayError || fastestLapError || fastestPitError || pollPositionError) {
+        dispatch(setError(true));
+        return <div className="text-red-500">Error loading data</div>;
+    }
 
     return (
         <div className="flex flex-col w-full h-fit mb-4">
@@ -159,7 +177,7 @@ const RaceDetail: React.FC = (): JSX.Element => {
                                 </div>
                                 <div>
                                     <span data-testid="raceFastestLap">
-                                        {fastestLap?.full_name} - {fastestLap?.time}
+                                        {fastestLap?.driver} - {fastestLap?.time}
                                     </span>
                                 </div>
                                 <div className="text-right">

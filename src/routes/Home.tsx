@@ -1,23 +1,25 @@
 // import React, { useEffect } from 'react';
 // import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
-import { useAppDispatch, useAppSelector } from 'app/store';
-import CardContainer from 'components/CardContainer';
+import { /*useAppDispatch, */ useAppSelector } from 'app/store';
+// import CardContainer from 'components/CardContainer';
 // import ErrorDialog from 'components/ErrorDialog';
 // import LastRaceResultsPod from 'components/LastRaceResultsPod';
 
 // import LastRacesAtCircuit from '@/components/LastRacesAtCircuit';
-import { useGetLastRaceResultsQuery } from 'features/raceApi';
-import { setPreviousResultsAtCircuit } from 'slices/racesSlice';
-import { useEffect } from 'react';
-import { RaceProps } from 'types/races';
+// import { useGetLastRaceResultsQuery } from 'features/raceApi';
+// import { setPreviousResultsAtCircuit } from 'slices/racesSlice';
+// import { useEffect } from 'react';
+// import { RaceProps } from 'types/races';
 // import DriverOfTheDay from 'components/DriverOfTheDay';
 // import DriverStandings from 'components/DriverStandings';
 // import { YEAR } from 'constants/constants';
-import LastRaceResultsPod from 'components/LastRaceResultsPod';
 import ErrorDialog from 'components/ErrorDialog';
-import DriverStandings from 'components/DriverStandings';
-import { YEAR } from 'constants/constants';
+// import DriverStandings from 'components/DriverStandings';
+// import { YEAR } from 'constants/constants';
+import LastRaceResultsPod from '@/components/LastRaceResultsPod';
+// import DriverStandings from '@/components/DriverStandings';
+// import Standings from './Standings';
 // import TotalWinsPod from 'components/TotalWinsPod';
 
 // import CardContainer from 'components/CardContainer';
@@ -41,7 +43,7 @@ import { YEAR } from 'constants/constants';
 // const nextYear: number = YEAR + 1;
 
 const Home: React.FC = () => {
-    const dispatch = useAppDispatch();
+    // const dispatch = useAppDispatch();
     const systemError = useAppSelector((state) => state.siteWide.error);
 
     return (
@@ -52,7 +54,7 @@ const Home: React.FC = () => {
                 <div
                     className="
                 lg:grid
-                lg:grid-cols-3
+                lg:grid-cols-2
                 lg:grid-rows-2
 
                 md:flex
@@ -63,22 +65,13 @@ const Home: React.FC = () => {
                 gap-4
 
                 flex
-                flex-col                
-                lg:w-[80vw]                
-                md:w-[90vw]
-                w-[90vw]"
+                flex-col
+                w-full"
                 >
                     <div className="row-start-1 col-start-1 w-full">
                         <LastRaceResultsPod />
                     </div>
-                    <div className="col-start-2 row-start-1">
-                        <CardContainer
-                            className="overflow-hidden max-h-[30vh] h-[30vh]"
-                            title={`Driver Standings ${YEAR}`}
-                        >
-                            <DriverStandings />
-                        </CardContainer>
-                    </div>
+                    <div className="col-start-2 row-start-1">{/* <DriverStandings /> */}</div>
                     {/* <div className="col-start-3 row-start-2">
                         <CardContainer
                             className="overflow-hidden h-[20vh]"

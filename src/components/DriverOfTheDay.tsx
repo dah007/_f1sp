@@ -11,7 +11,7 @@ import { useGetDriverOfDayQuery } from 'features/driversApi';
 import { useGetRaceNextQuery } from 'features/raceApi';
 
 import type { DriverOfTheDay } from 'types/drivers';
-import type { RaceProps } from 'types/races';
+import type { NextRaceProps } from 'types/races';
 import { YEAR } from 'constants/constants';
 import Chart from './Chart';
 
@@ -22,7 +22,8 @@ const DriverOfTheDay: React.FC = () => {
         (state: RootState) => state.drivers?.driversOfTheDay || [],
     );
     const raceNext =
-        useAppSelector<RaceProps | null>((state: RootState) => state.races?.raceNext) || ({ id: '' } as RaceProps);
+        useAppSelector<NextRaceProps | null>((state: RootState) => state.races?.raceNext) ||
+        ({ id: '' } as NextRaceProps);
     const raceLastName = useAppSelector<string>((state: RootState) =>
         state?.races && state.races?.lastRaceResults?.length
             ? (state.races?.lastRaceResults[0]?.short_name ?? 'N/A')
@@ -34,7 +35,7 @@ const DriverOfTheDay: React.FC = () => {
     useEffect(() => {
         if (!raceNextData) return;
 
-        dispatch(setRaceNext(raceNextData));
+        dispatch(setRaceNext(raceNextData as unknown as NextRaceProps));
     }, [dispatch, raceNextData]);
 
     const { data: dataDriversOfTheDay, isError: driverOfTheDayError } = useGetDriverOfDayQuery(raceNext?.id);

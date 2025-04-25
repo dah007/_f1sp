@@ -1,6 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-import { useGetPointsByRaceQuery } from 'features/f1spRacesApi';
+import { useGetPointsByRaceQuery } from 'features/raceApi';
 import { useEffect, useState } from 'react';
 
 // localStorage.setItem(
@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 //     }),
 // );
 
-interface IDriverPoint {
+interface DriverPoint {
     raceId: number;
     full_name: string;
     points: number;
@@ -33,10 +33,8 @@ const Sessions: React.FC = () => {
 
     useEffect(() => {
         if (!sessionsData) return;
-        setDistinctRaceIds([
-            ...new Set((sessionsData as IDriverPoint[]).map((session: IDriverPoint) => session.raceId)),
-        ]);
-        setDrivers([...new Set((sessionsData as IDriverPoint[]).map((session: IDriverPoint) => session.full_name))]);
+        setDistinctRaceIds([...new Set((sessionsData as DriverPoint[]).map((session: DriverPoint) => session.raceId))]);
+        setDrivers([...new Set((sessionsData as DriverPoint[]).map((session: DriverPoint) => session.full_name))]);
     }, [sessionsData]);
 
     useEffect(() => {
@@ -52,7 +50,7 @@ const Sessions: React.FC = () => {
 
             distinctRaceIds.forEach((raceId) => {
                 const driverRaceData = sessionsData?.find(
-                    (session: IDriverPoint) => session.raceId === raceId && session.full_name === driver,
+                    (session: DriverPoint) => session.raceId === raceId && session.full_name === driver,
                 );
 
                 tempDataPoint.data.push({

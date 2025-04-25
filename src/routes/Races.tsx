@@ -4,7 +4,7 @@ import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
 
 import { useGetDriversQuery } from '../features/driversApi';
-import { useGetRacesResultsWithQualQuery } from '../features/f1spRacesApi';
+import { useGetRacesResultsWithQualQuery } from '../features/raceApi';
 
 import { setDrivers } from 'slices/driversSlice';
 import { setError, setSelectedYear } from 'slices/siteWideSlice';
@@ -183,8 +183,9 @@ const Races: React.FC = (): JSX.Element => {
                 options={driverOptions}
                 selectedOptions={selectedDrivers}
                 setSelectedOptions={(values) => {
-                    const drivers: string[] = values as unknown as string[];
-                    setSelectedDrivers(values);
+                    const newValues = typeof values === 'function' ? values(selectedDrivers) : values;
+                    const drivers: string[] = newValues;
+                    setSelectedDrivers(newValues);
                     setFilterBy(drivers?.join(','));
                 }}
             />
@@ -193,7 +194,7 @@ const Races: React.FC = (): JSX.Element => {
         </div>
     );
 
-    if (error || isRacesError) dispatch(setError(true));
+    if (isRacesError) dispatch(setError(true));
 
     return (
         <PageContainer lastCrumb="Races" title="Races">

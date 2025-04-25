@@ -10,36 +10,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { ScrollArea } from './ui/scroll-area';
 import CardContainer from './CardContainer';
 
-/**
- * Component to display the last race results in a tabular format.
- *
- * @component
- * @param {Object} props - Component props.
- * @param {number} [props.year=YEAR] - The year for which to fetch the last race results.
- * @returns {JSX.Element} A JSX element displaying the last race results.
- *
- * @example
- * <LastRaceResultsPod year={2023} />
- *
- * @remarks
- * This component uses Redux for state management and RTK Query for data fetching.
- * It dispatches actions to set the last race results and handle errors.
- * The component displays a loading state while fetching data and shows a message if no data is available.
- *
- * @requires useAppDispatch
- * @requires useAppSelector
- * @requires useGetLastRaceResultsQuery
- * @requires setLastRaceResults
- * @requires setError
- * @requires CardLoading
- * @requires Table
- * @requires TableHeader
- * @requires TableRow
- * @requires TableHead
- * @requires TableBody
- * @requires TableCell
- * @requires CustomLink
- */
 const LastRaceResultsPod: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
 
@@ -53,7 +23,6 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
     };
     useEffect(() => {
         if (!raceWGPData) return;
-        console.log('raceWGPData', raceWGPData);
         dispatch(setRaceWGP(raceWGPData));
     }, [raceWGPData, dispatch]);
 
@@ -66,7 +35,6 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (!dataResults) return;
-        console.log('dataResults', dataResults);
         dispatch(setLastRaceResults(dataResults));
     }, [dataResults, dispatch]);
 
@@ -89,11 +57,11 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
         return raceResults?.map((race: RaceResultProps) => {
             return (
                 <TableRow key={race.permanent_number}>
-                    <TableCell className="w-4 text-right">{race.position_text}</TableCell>
-                    <TableCell className="w-4 text-right">{race.driver_number}</TableCell>
-                    <TableCell>{race.driver_name}</TableCell>
-                    <TableCell className="w-4 text-right">{race.gap}</TableCell>
-                    <TableCell className="w-4 text-right">{race.points}</TableCell>
+                    <TableCell className="w-2 text-right">{race.position_text}</TableCell>
+                    <TableCell className="w-2 text-right">{race.driver_number}</TableCell>
+                    <TableCell className="cursor-pointer text-bolder">{race.driver_name}</TableCell>
+                    <TableCell className="w-2 text-right">{race.gap}</TableCell>
+                    <TableCell className="w-2 text-right">{race.points}</TableCell>
                 </TableRow>
             );
         });
@@ -101,19 +69,19 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
 
     return (
         <CardContainer
-            className="overflow-hidden h-[30vh]"
-            childrenClassName="w-full m-0 p-0 h-[30vh]"
-            title={`Last Race: ${raceWGP ? raceWGP.short_name : 'N/A'}`}
+            className="overflow-hidden"
+            childrenClassName="w-full m-0 p-0"
+            title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
         >
-            <ScrollArea className="h-full w-full border-t">
+            <ScrollArea className="h-[40vh] w-full border-t">
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-4 text-right">Pos</TableHead>
-                            <TableHead className="w-4 text-right">No</TableHead>
+                            <TableHead className="w-2 text-right">Pos</TableHead>
+                            <TableHead className="w-2 text-right">No</TableHead>
                             <TableHead>Driver</TableHead>
-                            <TableHead className="w-4 text-right">Gap</TableHead>
-                            <TableHead className="w-4 text-right">Points</TableHead>
+                            <TableHead className="w-2 text-right">Gap</TableHead>
+                            <TableHead className="w-2 text-right">Points</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

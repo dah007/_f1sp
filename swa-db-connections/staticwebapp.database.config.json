@@ -27,29 +27,7 @@
         }
     },
     "entities": {
-        "raceNext": {
-            "source": {
-                "type": "view",
-                "key-fields": ["id"],
-                "object": "race_next"
-            },
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
-        "driver": {
-            "source": "driver",
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
-        "circuits_w_data": {
+        "circuits": {
             "source": {
                 "type": "view",
                 "key-fields": ["id"],
@@ -63,8 +41,8 @@
             ]
         },
 
-        "race": {
-            "source": "race",
+        "driver": {
+            "source": "driver",
             "permissions": [
                 {
                     "actions": ["*"],
@@ -72,7 +50,73 @@
                 }
             ]
         },
-        "race_result": {
+        "drivers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "driver_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "driversStandings": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "driver_w_standings"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "fastestLap": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "fastest_lap_w_driver"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "pitStop": {
+            "source": {
+                "object": "pit_stop",
+                "key-fields": ["race_id"],
+                "type": "view"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceNext": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_next"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceResult": {
             "source": {
                 "type": "view",
                 "key-fields": ["race_id"],
@@ -85,7 +129,7 @@
                 }
             ]
         },
-        "race_w_gp": {
+        "raceGP": {
             "source": {
                 "type": "view",
                 "key-fields": ["id"],

@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { IConstructorStanding, IDriverStanding } from 'types/standings';
+import type { ConstructorStanding, DriverStanding } from 'types/standings';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { ISeason } from 'types/season';
+import { Season } from 'types/season';
 
 interface IState {
-    constructors: IConstructorStanding[];
-    drivers: IDriverStanding[];
-    seasons: ISeason[];
+    constructors: ConstructorStanding[];
+    drivers: DriverStanding[];
+    seasons: Season[];
 }
 
 const initialState: IState = {
@@ -19,28 +19,21 @@ export const seasonsSlice = createSlice({
     name: 'seasons',
     initialState,
     reducers: {
-        setConstructorSeasons: (
-            state,
-            action: PayloadAction<IConstructorStanding[]>,
-        ) => {
+        setConstructorSeasons: (state, action: PayloadAction<ConstructorStanding[]>) => {
             let payload = action.payload;
 
             if (!payload) payload = [];
             state.constructors = payload;
         },
-        setDriverSeasons: (state, action: PayloadAction<IDriverStanding[]>) => {
+        setDriverSeasons: (state, action: PayloadAction<DriverStanding[]>) => {
             state.drivers = action.payload;
         },
-        setSeasonStats: (state, action: PayloadAction<ISeason[]>) => {
+        setSeasonStats: (state, action: PayloadAction<Season[]>) => {
             state.seasons = action.payload;
         },
     },
 });
 
-export const { 
-    setConstructorSeasons, 
-    setDriverSeasons, 
-    setSeasonStats,
-} = seasonsSlice.actions;
+export const { setConstructorSeasons, setDriverSeasons, setSeasonStats } = seasonsSlice.actions;
 
 export default seasonsSlice.reducer;

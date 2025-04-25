@@ -1,4 +1,4 @@
-:root {
+/* :root {
     --radius: 0.5rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
@@ -65,4 +65,31 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.645 0.246 16.439);
+} */
+
+.staatliches-regular {
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.krona-one-regular {
+    font-family: "Krona One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.racing-sans-one-regular {
+    font-family: "Racing Sans One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.racingFont-regular {
+    font-family: 'Racing Sans One', serif;
+}
+
+.racingFont-bold {
+    font-family: 'Racing Sans One', serif;
+    font-weight: 700;
 }

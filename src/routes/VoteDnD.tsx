@@ -69,7 +69,7 @@ const Vote = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const form = useForm();
 
-    const [, setOriginalOrderDrivers] = useState([]);
+    const [, setOriginalOrderDrivers] = useState<Driver[]>([]);
 
     const [voteOrderedDrivers, setVoteOrderedDrivers] = useState<Driver[]>(driversByYear ?? []);
     const [driversInCrashDisabled, setDriversInCrashDisabled] = useState(true);
@@ -79,9 +79,10 @@ const Vote = (): JSX.Element => {
     useEffect(() => {
         if (!driversByYearData) return;
 
-        dispatch(setDriversByYear(driversByYearData));
-        setOriginalOrderDrivers(driversByYearData);
-        setVoteOrderedDrivers(driversByYearData.slice());
+        const driversArray = driversByYearData as Driver[];
+        dispatch(setDriversByYear(driversArray));
+        setOriginalOrderDrivers(driversArray);
+        setVoteOrderedDrivers(driversArray.slice());
     }, [dispatch, driversByYearData]);
 
     const [voteValues, setVoteValues] = useState<VoteValueProps>({
