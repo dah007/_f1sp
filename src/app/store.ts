@@ -8,15 +8,15 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 // import { driversApi } from 'features/driversApi';
 import { raceApi } from '@/features/raceApi';
 // import { sessionsApi } from 'features/sessionsApi';
-// import { standingsApi } from 'features/standingsApi';
+import { standingsApi } from 'features/standingsApi';
 
 // import constructorsReducer from 'slices/constructorsSlice';
 // import driversReducer from 'slices/driversSlice';
 import racesReducer from 'slices/racesSlice';
 // import routeSlice from 'slices/routeSlice';
 // import seasonApi from 'slices/seasonsSlice';
-// import siteWideSlice from 'slices/siteWideSlice';
-// import standingsReducer from 'slices/standingsSlice';
+import siteWideSlice from 'slices/siteWideSlice';
+import standingsReducer from 'slices/standingsSlice';
 // import { seasonsApi } from 'features/seasonsApi';
 
 export type TAppDispatch = typeof store.dispatch;
@@ -29,15 +29,15 @@ export const store = configureStore({
         [raceApi.reducerPath]: raceApi.reducer,
         // [seasonsApi.reducerPath]: seasonsApi.reducer,
         // [sessionsApi.reducerPath]: sessionsApi.reducer,
-        // [standingsApi.reducerPath]: standingsApi.reducer,
+        [standingsApi.reducerPath]: standingsApi.reducer,
 
         // constructors: constructorsReducer,
         // currentRoute: routeSlice,
         // drivers: driversReducer,
         races: racesReducer,
         // seasons: seasonApi,
-        // siteWide: siteWideSlice,
-        // standings: standingsReducer,
+        siteWide: siteWideSlice,
+        standings: standingsReducer,
     },
     // Adding the api middleware enables caching, invalidation, polling, and other features of RTK Query
     middleware: (getDefaultMiddleware) =>
@@ -45,10 +45,10 @@ export const store = configureStore({
             // .concat(circuitsApi.middleware)
             // .concat(constructorsApi.middleware)
             // .concat(driversApi.middleware)
-            .concat(raceApi.middleware),
-    // .concat(seasonsApi.middleware)
-    // .concat(sessionsApi.middleware)
-    // .concat(standingsApi.middleware),
+            .concat(raceApi.middleware)
+            // .concat(seasonsApi.middleware)
+            // .concat(sessionsApi.middleware)
+            .concat(standingsApi.middleware),
 });
 
 // Enable listeners behavior for refetchOnMount and refetchOnReconnect behaviors

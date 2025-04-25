@@ -1,22 +1,31 @@
 {
+    "globalHeaders": {
+        "Cache-Control": "no-cache",
+        "Access-Control-Allow-Origin": "*"
+    },
     "mimeTypes": {
         ".js": "application/javascript",
         ".mjs": "application/javascript",
         ".jsx": "application/javascript",
         ".tsx": "application/javascript",
-        ".ts": "application/javascript"
+        ".ts": "application/javascript",
+        ".css": "text/css"
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["*.{css,scss,js,png,gif,ico,jpg,svg}", "assets/*"]
-    },
-    "platform": {
-        "apiRuntime": "node:18"
+        "exclude": ["/src/assets/*.{png,jpg,gif}", "/assets/*.{png,jpg,gif}", "/styles/*.{css}"]
     },
     "routes": [
         {
+            "route": "/api/*",
+            "allowedRoles": ["anonymous"]
+        },
+        {
+            "route": "/*",
+            "rewrite": "/index.html"
+        },
+        {
             "route": "/data-api/*",
-            "methods": ["GET", "POST"],
             "allowedRoles": ["anonymous"]
         }
     ]

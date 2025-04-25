@@ -2,9 +2,8 @@
     "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
     "data-source": {
         "database-type": "mysql",
-
-        "connection-string": "@env('DATABASE_CONNECTION_STRING')",
-        "options": {}
+        "options": {},
+        "connection-string": "@env('DATABASE_CONNECTION_STRING')"
     },
     "runtime": {
         "rest": {
@@ -12,12 +11,12 @@
             "path": "/rest"
         },
         "graphql": {
-            "allow-introspection": false,
-            "enabled": false,
+            "allow-introspection": true,
+            "enabled": true,
             "path": "/graphql"
         },
         "host": {
-            "mode": "development",
+            "mode": "production",
             "cors": {
                 "origins": ["http://localhost:4280"],
                 "allow-credentials": false
@@ -28,186 +27,70 @@
         }
     },
     "entities": {
-        "circuits": {
+        "raceNext": {
             "source": {
                 "type": "view",
+                "key-fields": ["id"],
+                "object": "race_next"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "driver": {
+            "source": "driver",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "circuits_w_data": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
                 "object": "circuits_w_data"
             },
-            "rest": {
-                "path": "circuits",
-                "methods": ["get"],
-                "enabled": true
-            },
-            "graphql": {
-                "enabled": false
-            },
             "permissions": [
                 {
                     "actions": ["*"],
                     "role": "anonymous"
-                }
-            ]
-        },
-        "constructor": {
-            "source": {
-                "key-fields": ["id"],
-                "type": "view",
-                "object": "constructor"
-            },
-            "rest": {
-                "path": "constructor",
-                "methods": ["get"],
-                "enabled": true
-            },
-            "graphql": {
-                "enabled": true
-            },
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
-
-        "driver": {
-            "source": {
-                "object": "driver",
-                "type": "table",
-                "key-fields": ["id"]
-            },
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
-        "driver_w_standings": {
-            "source": {
-                "key-fields": ["driver_id"],
-                "type": "view",
-                "object": "driver_w_standings"
-            },
-            "rest": {
-                "path": "standingsWithDrivers",
-                "methods": ["get"],
-                "enabled": true
-            },
-            "graphql": {
-                "enabled": true
-            },
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
-
-        "previousWinnersCircuit": {
-            "source": {
-                "key-fields": ["circuit_id"],
-                "type": "view",
-                "object": "previous_5_winners_circuit",
-                "parameters": {
-                    "circuit_id": "string"
-                }
-            },
-            "rest": {
-                "path": "previousWinnersCircuit",
-                "methods": ["get"],
-                "enabled": true
-            },
-            "permissions": [
-                {
-                    "role": "anonymous",
-                    "actions": ["read"]
                 }
             ]
         },
 
         "race": {
-            "graphql": {
-                "enabled": true
-            },
+            "source": "race",
             "permissions": [
                 {
                     "actions": ["*"],
                     "role": "anonymous"
                 }
-            ],
-            "source": "race"
+            ]
         },
-        "raceNext": {
+        "race_result": {
             "source": {
-                "object": "race_next",
                 "type": "view",
-                "key-fields": ["id"]
-            },
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ],
-            "rest": {
-                "path": "raceNext",
-                "methods": ["get"],
-                "enabled": true
-            }
-        },
-        "raceResult": {
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ],
-            "source": {
                 "key-fields": ["race_id"],
-                "type": "view",
                 "object": "rr_w_driver"
-            }
-        },
-
-        "totalWinsByYear": {
-            "source": {
-                "key-fields": ["year"],
-                "type": "view",
-                "object": "total_wins_by_year",
-                "parameters": {
-                    "year": "string"
-                }
             },
             "permissions": [
                 {
-                    "actions": ["read"],
+                    "actions": ["*"],
                     "role": "anonymous"
                 }
             ]
         },
-        "totalWinsDrivers": {
+        "race_w_gp": {
             "source": {
-                "key-fields": ["race_id"],
                 "type": "view",
-                "object": "total_wins_by_driver"
+                "key-fields": ["id"],
+                "object": "race_w_gp"
             },
-            "rest": {
-                "path": "totalWinsDrivers",
-                "methods": ["get"],
-                "enabled": true
-            },
-            "permissions": [
-                {
-                    "actions": ["read"],
-                    "role": "anonymous"
-                }
-            ]
-        },
-
-        "apiTest": {
-            "source": "MyTestPersonTable",
             "permissions": [
                 {
                     "actions": ["*"],
