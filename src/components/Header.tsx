@@ -2,10 +2,13 @@ import F1SPlogo from 'assets/f1sp.png';
 import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
 
 import Button from './Button';
+import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
+    const navigate = useNavigate();
+
     const handleNavigation = (path: string) => {
-        window.location.href = path;
+        navigate(path);
     };
 
     return (
@@ -51,18 +54,6 @@ const Header: React.FC = () => {
                     <Button variant="ghost" className="hidden md:flex lg:flex xl:flex">
                         Drivers
                     </Button>
-                    {/* <NavigationMenu>
-                        <NavigationMenuList>
-                            <NavigationMenuLink>Link</NavigationMenuLink>
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
-                                <NavigationMenuContent>
-                                    <NavigationMenuLink>Link</NavigationMenuLink>
-                                </NavigationMenuContent>
-                            </NavigationMenuItem>
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                    <ModeToggle /> */}
                 </div>
 
                 <div className="h-2 lg:h-6 xl:h-8"></div>

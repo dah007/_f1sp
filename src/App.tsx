@@ -49,36 +49,38 @@ const App = () => {
     // </nextRace>
 
     return (
-        <Router>
-            <Header />
+        <div className="border pt-2 pl-10 pr-10 pb-10">
+            <Router>
+                <Header />
 
-            <main className="p-0 pl-3 pr-3">
-                <NextReactBanner />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="circuits" element={<Circuits />} />
-                    <Route path="constructors/:year?" element={<Constructors />} />
-                    <Route path="drivers/:year?" element={<Drivers />} />
-                    <Route path="drivers/:year/driver/:id" element={<DriverDetail />} />
-                    {/* <Route path="login" element={<LoginForm />} /> */}
+                <main className="p-0 w-[95vw]">
+                    <NextReactBanner />
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="circuits" element={<Circuits />} />
+                        <Route path="constructors/:year?" element={<Constructors />} />
+                        <Route path="drivers/:year?" element={<Drivers />} />
+                        <Route path="drivers/:year/driver/:id" element={<DriverDetail />} />
+                        {/* <Route path="login" element={<LoginForm />} /> */}
 
-                    <Route path="races/:year?/*" element={<Races />} />
+                        <Route path="races/:year?/*" element={<Races />} />
 
-                    <Route path="seasons/:year?" element={<Seasons />} />
-                    <Route path="standings" element={<Standings />} />
-                    <Route path="vote" element={<VoteDnD />} />
-                    <Route
-                        path="*"
-                        element={
-                            <div className="flex flex-col items-center justify-center h-[85vh]">
-                                <h1 className="mb-6 text-3xl font-bold">404 - Not Found</h1>
-                                <img className="max-w-[40%] rounded-3xl" src="assets/images/404.png" alt="404" />
-                            </div>
-                        }
-                    />
-                </Routes>
-            </main>
-        </Router>
+                        <Route path="seasons/:year?" element={<Seasons />} />
+                        <Route path="standings" element={<Standings />} />
+                        <Route path="vote" element={<VoteDnD />} />
+                        <Route
+                            path="*"
+                            element={
+                                <div className="flex flex-col items-center justify-center h-[85vh]">
+                                    <h1 className="mb-6 text-3xl font-bold">404 - Not Found</h1>
+                                    <img className="max-w-[40%] rounded-3xl" src="assets/images/404.png" alt="404" />
+                                </div>
+                            }
+                        />
+                    </Routes>
+                </main>
+            </Router>
+        </div>
     );
 };
 

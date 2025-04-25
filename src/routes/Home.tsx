@@ -65,10 +65,8 @@ const Home: React.FC = () => {
                 gap-4
 
                 flex
-                flex-col                
-                lg:w-[90vw]                
-                md:w-[99vw]
-                w-[95vw]"
+                flex-col
+                w-full"
                 >
                     <div className="row-start-1 col-start-1 w-full">
                         <LastRaceResultsPod />
