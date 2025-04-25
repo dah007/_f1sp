@@ -27,28 +27,6 @@
         }
     },
     "entities": {
-        "raceNext": {
-            "source": {
-                "type": "view",
-                "key-fields": ["id"],
-                "object": "race_next"
-            },
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
-        "driver": {
-            "source": "driver",
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
         "circuits_w_data": {
             "source": {
                 "type": "view",
@@ -63,8 +41,57 @@
             ]
         },
 
+        "driver": {
+            "source": "driver",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "drivers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "driver_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "driver_w_standings": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "driver_w_standings"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
         "race": {
             "source": "race",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceNext": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_next"
+            },
             "permissions": [
                 {
                     "actions": ["*"],

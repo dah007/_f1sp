@@ -1,4 +1,4 @@
-const F1SP_BASE_DB_URL = '/data-api/rest/';
+import { BASE_URL } from '@/constants/constants';
 
 export interface ErrorObject {
     data: string | unknown;
@@ -22,9 +22,11 @@ export const buildErrorObject = (error: unknown): ErrorObject => {
  * Fetch's data from an endpoint attached to the F1SP
  * @param endPoint The api end point to hit
  * @returns An array of objects
+ *
+ * @deprecated This function is deprecated and will be removed in a future version. Use the `fetch` API directly instead.
  */
 export const dbFetch = async (endPoint: string) => {
-    return fetch(`${F1SP_BASE_DB_URL}${endPoint}`)
+    return fetch(`${BASE_URL}${endPoint}`)
         .then((response) => {
             console.log('Full Response:', response);
             if (!response.ok) {

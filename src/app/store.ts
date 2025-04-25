@@ -5,13 +5,13 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 
 // import { circuitsApi } from 'features/circuitsApi';
 // import { constructorsApi } from 'features/constructorsApi';
-// import { driversApi } from 'features/driversApi';
+import { driversApi } from 'features/driversApi';
 import { raceApi } from '@/features/raceApi';
 // import { sessionsApi } from 'features/sessionsApi';
 import { standingsApi } from 'features/standingsApi';
 
 // import constructorsReducer from 'slices/constructorsSlice';
-// import driversReducer from 'slices/driversSlice';
+import driversReducer from 'slices/driversSlice';
 import racesReducer from 'slices/racesSlice';
 // import routeSlice from 'slices/routeSlice';
 // import seasonApi from 'slices/seasonsSlice';
@@ -25,7 +25,7 @@ export const store = configureStore({
     reducer: {
         // [circuitsApi.reducerPath]: circuitsApi.reducer,
         // [constructorsApi.reducerPath]: constructorsApi.reducer,
-        // [driversApi.reducerPath]: driversApi.reducer,
+        [driversApi.reducerPath]: driversApi.reducer,
         [raceApi.reducerPath]: raceApi.reducer,
         // [seasonsApi.reducerPath]: seasonsApi.reducer,
         // [sessionsApi.reducerPath]: sessionsApi.reducer,
@@ -33,7 +33,7 @@ export const store = configureStore({
 
         // constructors: constructorsReducer,
         // currentRoute: routeSlice,
-        // drivers: driversReducer,
+        drivers: driversReducer,
         races: racesReducer,
         // seasons: seasonApi,
         siteWide: siteWideSlice,
@@ -44,7 +44,7 @@ export const store = configureStore({
         getDefaultMiddleware()
             // .concat(circuitsApi.middleware)
             // .concat(constructorsApi.middleware)
-            // .concat(driversApi.middleware)
+            .concat(driversApi.middleware)
             .concat(raceApi.middleware)
             // .concat(seasonsApi.middleware)
             // .concat(sessionsApi.middleware)

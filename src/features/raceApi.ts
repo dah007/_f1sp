@@ -1,6 +1,6 @@
 import { REST_URL } from '@/constants/constants';
 import { type NextRaceProps } from '@/types/races';
-import { buildErrorObject } from '@/utils';
+// import { buildErrorObject } from '@/utils';
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
@@ -26,19 +26,14 @@ export const raceApi = createApi({
         }),
         getLastRaceResults: builder.query({
             query: (raceId: number) => `race_result?$filter=race_id eq ${parseInt((raceId - 1).toString(), 10)}`,
-            transformResponse: (response: { value: NextRaceProps }) => {
-                return response?.value ?? [];
-            },
+            transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching last race results:', error);
             },
         }),
         getRaceWithGP: builder.query({
             query: (raceId: number) => `race_w_gp?$filter=id eq ${raceId}`,
-            transformResponse: (response: { value: NextRaceProps }) => {
-                console.log('response', response);
-                return response?.value ?? [];
-            },
+            transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching race with GP:', error);
             },

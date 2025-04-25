@@ -4,8 +4,8 @@ import { useDispatch } from 'react-redux';
 
 import { setError } from 'slices/siteWideSlice';
 import { useGetNextRaceQuery } from 'features/raceApi';
-import { setRaceNext } from '@/slices/racesSlice';
-import { RaceProps } from '@/types/races';
+import { setRaceNext } from 'slices/racesSlice';
+import { NextRaceProps } from 'types/races';
 
 // TODO: get clock countdown ready for next year (2026)
 // import CountdownClock from './CountdownClock';
@@ -21,7 +21,15 @@ const NextReactBanner: React.FC = (): JSX.Element => {
 
     const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
 
-    const { data: raceNextData, isLoading: raceNextIsLoading, isError: raceNextIsError } = useGetNextRaceQuery(1);
+    const {
+        data: raceNextData,
+        isLoading: raceNextIsLoading,
+        isError: raceNextIsError,
+    } = useGetNextRaceQuery(1) as {
+        data: NextRaceProps | undefined;
+        isLoading: boolean;
+        isError: boolean;
+    };
 
     useEffect(() => {
         if (!raceNextData) return;
@@ -30,7 +38,7 @@ const NextReactBanner: React.FC = (): JSX.Element => {
 
         // Make sure raceNextData has all required properties before dispatching
         if (raceNextData && 'circuit_id' in raceNextData) {
-            dispatch(setRaceNext(raceNextData as unknown as RaceProps)); // Using type assertion as a temporary fix
+            dispatch(setRaceNext(raceNextData)); // Using type assertion as a temporary fix
         }
     }, [raceNextData, raceNextIsError, raceNextIsLoading, dispatch]);
 
@@ -41,9 +49,8 @@ const NextReactBanner: React.FC = (): JSX.Element => {
         if (!raceNext.date) return;
 
         return (
-            <div className="flex text-2xl racingFont flex-row sm:flex-col">
-                <span>{`Next Race: ${raceNext.date || ''} @ `} </span>{' '}
-                <span>{`${raceNext.official_name || 'N/A'}`}</span>
+            <div className="krona-one-regular flex flex-col xl:text-xl lg:text-lg text-lg sm:flex-col">
+                <span>{`Next Race: ${raceNext.date || ''} @ ${raceNext.official_name || 'N/A'}`}</span>
             </div>
         );
     };
@@ -62,6 +69,7 @@ const NextReactBanner: React.FC = (): JSX.Element => {
             lg:text-3xl 
             md:text-2xl
             text-xl
+            pb-2
         "
         >
             {renderBanner()}

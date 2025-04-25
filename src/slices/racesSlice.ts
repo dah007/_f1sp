@@ -47,7 +47,6 @@ const racesSlice = createSlice({
             state.lastRaceId = action.payload || null;
         },
         setRaceWGP(state, action: PayloadAction<Partial<RaceProps> | null>) {
-            console.log('setRaceWGP', action.payload);
             state.raceWGP = action.payload || null;
         },
     },

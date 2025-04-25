@@ -70,7 +70,7 @@ export interface RaceResultProps extends RaceType {
     full_name?: string;
     gap: string;
     grid_position_number: number;
-    id: string;
+    id: number;
     laps: number;
     name: string;
     permanent_number?: number;
