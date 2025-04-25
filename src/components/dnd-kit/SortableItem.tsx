@@ -24,7 +24,12 @@ interface SortableItemProps {
  * ```
  */
 const SortableItem: React.FC<SortableItemProps> = (props: SortableItemProps) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+        id: props.id,
+        resizeObserverConfig: {
+            disabled: false,
+        },
+    });
 
     const style = {
         transform: CSS.Transform.toString(transform),

@@ -42,7 +42,7 @@ export const raceApi = createApi({
             },
         }),
         getRaceWithGP: builder.query({
-            query: (raceId: number) => `raceGP$filter=id eq ${raceId}`,
+            query: (raceId: number) => `raceGP?$filter=id eq ${raceId}`,
             transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching race with GP:', error);

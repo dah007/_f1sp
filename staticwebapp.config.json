@@ -21,10 +21,6 @@
             "allowedRoles": ["anonymous"]
         },
         {
-            "route": "/*",
-            "rewrite": "/index.html"
-        },
-        {
             "route": "/data-api/*",
             "allowedRoles": ["anonymous"]
         }

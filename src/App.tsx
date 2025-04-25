@@ -53,8 +53,6 @@ const App = () => {
             <Header />
 
             <main className="p-0 pl-3 pr-3">
-                {/* w-[100vw] h-[98vh] p-0 pl-2 pr-2 border border-emerald-400 */}
-
                 <NextReactBanner />
                 <Routes>
                     <Route path="/" element={<Home />} />

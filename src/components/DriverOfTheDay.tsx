@@ -11,7 +11,7 @@ import { useGetDriverOfDayQuery } from 'features/driversApi';
 import { useGetRaceNextQuery } from 'features/raceApi';
 
 import type { DriverOfTheDay } from 'types/drivers';
-import type { RaceProps, NextRaceProps } from 'types/races';
+import type { NextRaceProps } from 'types/races';
 import { YEAR } from 'constants/constants';
 import Chart from './Chart';
 
@@ -22,7 +22,8 @@ const DriverOfTheDay: React.FC = () => {
         (state: RootState) => state.drivers?.driversOfTheDay || [],
     );
     const raceNext =
-        useAppSelector((state: RootState) => state.races?.raceNext as RaceProps | null) || { id: '' } as unknown as RaceProps;
+        useAppSelector<NextRaceProps | null>((state: RootState) => state.races?.raceNext) ||
+        ({ id: '' } as NextRaceProps);
     const raceLastName = useAppSelector<string>((state: RootState) =>
         state?.races && state.races?.lastRaceResults?.length
             ? (state.races?.lastRaceResults[0]?.short_name ?? 'N/A')
@@ -32,15 +33,12 @@ const DriverOfTheDay: React.FC = () => {
     const { data: raceNextData, isError: raceNextError } = useGetRaceNextQuery(YEAR);
 
     useEffect(() => {
-            if (!raceNextData) return;
-    
-            // Make sure raceNextData has all required properties before dispatching
-            if (raceNextData) {
-                dispatch(setRaceNext(raceNextData as unknown as NextRaceProps));
-            }
-        }, [dispatch, raceNextData]);
+        if (!raceNextData) return;
 
-    const { data: dataDriversOfTheDay, isError: driverOfTheDayError } = useGetDriverOfDayQuery(raceNext?.id?.toString());
+        dispatch(setRaceNext(raceNextData as unknown as NextRaceProps));
+    }, [dispatch, raceNextData]);
+
+    const { data: dataDriversOfTheDay, isError: driverOfTheDayError } = useGetDriverOfDayQuery(raceNext?.id);
 
     if (driverOfTheDayError || raceNextError) {
         dispatch(setError(true));
