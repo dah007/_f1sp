@@ -26,15 +26,6 @@ export default defineConfig({
             utils: '/src/utils',
         },
     },
-    // server: {
-    //     proxy: {
-    //         '/data-api/rest/*': {
-    //             target: 'http://localhost:4280', // Replace with your backend's local URL
-    //             changeOrigin: true,
-    //             rewrite: (path) => path.replace(/^\/data-api\/rest/, '/data-api/rest'),
-    //         },
-    //     },
-    // },
     test: {
         coverage: {
             exclude: ['node_modules/', 'test/', 'setupTests.ts'],
