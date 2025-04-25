@@ -18,6 +18,7 @@ import ErrorDialog from 'components/ErrorDialog';
 // import DriverStandings from 'components/DriverStandings';
 // import { YEAR } from 'constants/constants';
 import LastRaceResultsPod from '@/components/LastRaceResultsPod';
+import { ModeToggle } from '@/components/ui/mode-toggle';
 // import DriverStandings from '@/components/DriverStandings';
 // import Standings from './Standings';
 // import TotalWinsPod from 'components/TotalWinsPod';
@@ -49,6 +50,8 @@ const Home: React.FC = () => {
     return (
         <>
             {systemError && <ErrorDialog />}
+
+            <ModeToggle />
 
             <div className="flex flex-col justify-center items-center mr-2">
                 <div

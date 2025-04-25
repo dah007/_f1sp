@@ -37,10 +37,9 @@ const PageContainer: React.FC<PageContainerProps> = ({
     title,
 }: PageContainerProps): JSX.Element => {
     return (
-        <div>
+        <div className={cn('flex', 'flex-col', 'h-[80vh]', 'gap-2', className, 'border', 'border-primary')}>
             {showBreadcrumbs && <Breadcrumbs lastCrumb={lastCrumb} />}
             <div className="">{showTitle && title && <Titles title={title} type="h1" />}</div>
-            <div className={cn('flex', 'flex-col', 'h-full', 'gap-2', className)}></div>
             {children}
         </div>
     );

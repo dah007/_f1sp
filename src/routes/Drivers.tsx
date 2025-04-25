@@ -242,7 +242,7 @@ const Drivers: React.FC = (): JSX.Element => {
     return (
         <PageContainer lastCrumb="Drivers" title="Drivers">
             <DataTable
-                className="w-fit h-[70-vh]"
+                className="w-fit"
                 columns={colDefs}
                 data={drivers ?? []}
                 additionalFilters={AdditionalFilters({

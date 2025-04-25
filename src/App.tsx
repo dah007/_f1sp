@@ -5,8 +5,9 @@ import NextReactBanner from './components/NextRaceBanner';
 // import { LucideSquareArrowOutUpRight } from 'lucide-react';
 import './App.css';
 
-import { Route, BrowserRouter as Router, Routes } from 'react-router';
-// import CardContainer from './components/CardContainer';
+import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import Home from './routes/Home';
 import { lazy, useEffect } from 'react';
 import { NextRaceProps, RaceResultProps } from './types/races';

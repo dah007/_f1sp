@@ -11,8 +11,8 @@ export const REST_URL = `${base}/data-api/${rest}`;
 /** @deprecated */
 export const F1SP_BASE_DB_URL = BASE_URL;
 
-export const BUTTON_CLASSES =
-    'border-2 border-gray-300 bg-sky-950 hover:bg-sky-600 text-white hover:text-black cursor-pointer';
+export const BUTTON_CLASSES = 'cursor-pointer';
+// 'border-2 border-gray-300 bg-sky-950 hover:bg-sky-600 text-white hover:text-black cursor-pointer';
 
 export const DEBUG = import.meta.env.VITE_DEBUG;
 export const DESCRIPTION = import.meta.env.VITE_DESCRIPTION;

@@ -2,15 +2,10 @@ import F1SPlogo from 'assets/f1sp.png';
 import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
 
 import Button from './Button';
-import { useNavigate } from 'react-router';
-
-// import { ModeToggle } from './ui/mode-toggle';
 
 const Header: React.FC = () => {
-    const navigate = useNavigate();
-
     const handleNavigation = (path: string) => {
-        navigate(path);
+        window.location.href = path;
     };
 
     return (
@@ -31,17 +26,25 @@ const Header: React.FC = () => {
                 <div className="flex flex-grow items-end">
                     <Button
                         variant="ghost"
-                        className="hidden md:flex lg:flex xl:flex"
+                        className="hidden md:flex lg:flex xl:flex cursor-pointer"
                         onClick={() => handleNavigation('/drivers')}
                     >
                         Drivers
                     </Button>
 
-                    <Button variant="ghost" className="hidden md:flex lg:flex xl:flex">
+                    <Button
+                        variant="ghost"
+                        className="hidden md:flex lg:flex xl:flex cursor-pointer"
+                        onClick={() => handleNavigation('/races')}
+                    >
                         Races
                     </Button>
 
-                    <Button variant="ghost" className="hidden md:flex lg:flex xl:flex">
+                    <Button
+                        variant="ghost"
+                        className="hidden md:flex lg:flex xl:flex cursor-pointer"
+                        onClick={() => handleNavigation('/constructors')}
+                    >
                         Constructors
                     </Button>
 

@@ -17,7 +17,7 @@ const Titles: React.FC<ITitleProps> = ({ title, type = 'pod' }: ITitleProps): JS
     const renderTitle = () => {
         if (type === 'h1')
             return (
-                <h1 className="text-3xl font-extrabold tracking-wider racingFont" data-testid="titlesTitle">
+                <h1 className="text-3xl font-extrabold tracking-wider racingFont-bold" data-testid="titlesTitle">
                     {title}
                 </h1>
             );

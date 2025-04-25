@@ -87,7 +87,7 @@ const DataTable = <TData, TValue>({
     });
 
     return (
-        <div className={cn('flex', 'flex-col', 'gap-4', 'max-w-[95%]', className)}>
+        <div className={cn('flex', 'flex-col', 'gap-4', 'max-w-[95%]', 'h-full', className)}>
             {useFilters ? (
                 <div className="flex items-center gap-4">
                     <Input
@@ -103,7 +103,7 @@ const DataTable = <TData, TValue>({
             )}
 
             <div className={cn('p-0', 'border', 'rounded-md', 'w-full', className)}>
-                <ScrollArea className="h-[400px] w-[95vw]">
+                <ScrollArea className="h-[65vh] w-[95vw]">
                     <ScrollBar />
                     <Table>
                         <TableHeader>
