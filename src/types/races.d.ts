@@ -20,7 +20,7 @@ export type RaceProps = {
     free_practice_4_date: string | null;
     free_practice_4_time: string | null;
     grand_prix_id: string;
-    id: string;
+    id: number;
     laps: number;
     official_name: string;
     permanent_number: number;
@@ -62,7 +62,8 @@ export type RaceProps = {
 };
 
 export interface RaceResultProps extends RaceType {
-    driver: string; // ? this should be deprecated, use full_name OR name instead
+    driver: string; // ? this should be deprecated, use driver_name
+    driver_name: string; // ? name and full name should go, this is the only one that is clean
     driver_id: number;
     driver_number: string; // ? this should be deprecated, use permanent_number instead
     fastest_lap: number;
@@ -117,3 +118,12 @@ export interface TotalWinsYearProps {
     name: string;
     id: string;
 }
+
+export type NextRaceProps = Partial<RaceProps> & {
+    circuit_id: string;
+    official_name: string;
+    short_name?: string;
+    date: string;
+    grand_prix_id: string;
+    id: string;
+};

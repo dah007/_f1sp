@@ -8,7 +8,9 @@ import { ThemeProvider } from './components/ui/theme-provider.tsx';
 
 import './main.css';
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root') as HTMLElement;
+
+createRoot(root).render(
     <div className="min-h-screen min-w-screen p-0 m-0">
         <Provider store={store}>
             <StrictMode>

@@ -1,13 +1,13 @@
 import F1SPlogo from 'assets/f1sp.png';
 import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
-import { ModeToggle } from './ui/mode-toggle';
+// import { ModeToggle } from './ui/mode-toggle';
 
 const Header: React.FC = () => {
     return (
         <header>
-            <div className="absolute top-4 right-4">
+            {/* <div className="absolute top-4 right-4">
                 <ModeToggle />
-            </div>
+            </div> */}
 
             <div className="flex md:flex-col lg:flex-col xl:flex-col row-auto p-4">
                 <>

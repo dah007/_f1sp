@@ -1,42 +1,99 @@
 {
-    "$schema": "https://github.com/Azure/data-api-builder/releases/download/v1.3.19/dab.draft.schema.json",
+    "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
     "data-source": {
         "database-type": "mysql",
-        "connection-string": "@env('DATABASE_CONNECTION_STRING')",
-        "options": {}
+        "options": {},
+        "connection-string": "@env('DATABASE_CONNECTION_STRING')"
     },
     "runtime": {
         "rest": {
             "enabled": true,
-            "path": "/rest",
-            "request-body-strict": true
+            "path": "/rest"
         },
         "graphql": {
-            "enabled": false,
-            "path": "/graphql",
-            "allow-introspection": true
+            "allow-introspection": true,
+            "enabled": true,
+            "path": "/graphql"
         },
         "host": {
+            "mode": "production",
             "cors": {
-                "origins": [
-                    "*"
-                ],
+                "origins": ["http://localhost:4280"],
                 "allow-credentials": false
             },
             "authentication": {
                 "provider": "StaticWebApps"
-            },
-            "mode": "production"
+            }
         }
     },
     "entities": {
-        "apiTest": {
-            "source": "MyTestPersonTable",
+        "raceNext": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_next"
+            },
             "permissions": [
                 {
-                    "actions": [
-                        "*"
-                    ],
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "driver": {
+            "source": "driver",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "circuits_w_data": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "circuits_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "race": {
+            "source": "race",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "race_result": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "rr_w_driver"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "race_w_gp": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_w_gp"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
                     "role": "anonymous"
                 }
             ]

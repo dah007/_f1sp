@@ -1,10 +1,10 @@
-const base = '/data-api/';
+const base = '';
 const graphql = 'graphql/';
 const rest = 'rest/';
 
 export const BASE_URL = base;
 export const GRAPHQL_URL = `${base}${graphql}`;
-export const REST_URL = `${base}${rest}`;
+export const REST_URL = `${base}data-api/${rest}`;
 
 /** @deprecated */
 export const F1SP_BASE_DB_URL = BASE_URL;

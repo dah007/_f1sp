@@ -1,5 +1,6 @@
 import { REST_URL } from '@/constants/constants';
-import { RaceProps } from '@/types/races';
+import { type NextRaceProps } from '@/types/races';
+import { buildErrorObject } from '@/utils';
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
@@ -9,24 +10,40 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
  * https://learn.microsoft.com/en-us/azure/search/search-filters
  */
 
-console.log(`${REST_URL}`);
-
 export const raceApi = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: `${REST_URL}` }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: REST_URL,
+    }),
 
     endpoints: (builder) => ({
         getNextRace: builder.query({
             query: () => 'raceNext',
-            transformResponse: (response: { value: RaceProps }) => {
-                console.log('response', response);
-                return response?.value ?? {};
-            },
+            transformResponse: (response: { value: NextRaceProps }) => response?.value?.[0] ?? {},
             transformErrorResponse: (error) => {
                 console.error('Error fetching next race results:', error);
                 return error;
             },
         }),
+        getLastRaceResults: builder.query({
+            query: (raceId: number) => `race_result?$filter=race_id eq ${parseInt((raceId - 1).toString(), 10)}`,
+            transformResponse: (response: { value: NextRaceProps }) => {
+                return response?.value ?? [];
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching last race results:', error);
+            },
+        }),
+        getRaceWithGP: builder.query({
+            query: (raceId: number) => `race_w_gp?$filter=id eq ${raceId}`,
+            transformResponse: (response: { value: NextRaceProps }) => {
+                console.log('response', response);
+                return response?.value ?? [];
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching race with GP:', error);
+            },
+        }),
     }),
 });
 
-export const { useGetNextRaceQuery } = raceApi;
+export const { useGetNextRaceQuery, useGetLastRaceResultsQuery, useGetRaceWithGPQuery } = raceApi;

@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 
 import { setError } from 'slices/siteWideSlice';
 import { useGetNextRaceQuery } from 'features/raceApi';
+import { setRaceNext } from '@/slices/racesSlice';
+import { RaceProps } from '@/types/races';
 
 // TODO: get clock countdown ready for next year (2026)
 // import CountdownClock from './CountdownClock';
@@ -23,9 +25,14 @@ const NextReactBanner: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (!raceNextData) return;
-        if (raceNextIsLoading) console.log('%cNext race loading...', 'background:green;color:white');
+        if (raceNextIsLoading) console.info('%cNext race loading...', 'background:green;color:white');
         if (raceNextIsError) dispatch(setError(raceNextIsError));
-    });
+
+        // Make sure raceNextData has all required properties before dispatching
+        if (raceNextData && 'circuit_id' in raceNextData) {
+            dispatch(setRaceNext(raceNextData as unknown as RaceProps)); // Using type assertion as a temporary fix
+        }
+    }, [raceNextData, raceNextIsError, raceNextIsLoading, dispatch]);
 
     const renderBanner = () => {
         // ready for next year (2026)

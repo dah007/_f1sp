@@ -1,4 +1,8 @@
 {
+    "globalHeaders": {
+        "Cache-Control": "no-cache",
+        "Access-Control-Allow-Origin": "*"
+    },
     "mimeTypes": {
         ".js": "application/javascript",
         ".mjs": "application/javascript",
@@ -9,40 +13,20 @@
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": [
-            "/src/assets/*.{png,jpg,gif}",
-            "/assets/*.{png,jpg,gif}",
-            "/styles/*.{css}"
-        ]
+        "exclude": ["/src/assets/*.{png,jpg,gif}", "/assets/*.{png,jpg,gif}", "/styles/*.{css}"]
     },
     "routes": [
         {
-            "route": "/",
-            "allowedRoles": [
-                "anonymous",
-                "authenticated"
-            ]
+            "route": "/api/*",
+            "allowedRoles": ["anonymous"]
         },
         {
-            "route": "/index.html",
-            "allowedRoles": [
-                "anonymous",
-                "authenticated"
-            ]
+            "route": "/*",
+            "rewrite": "/index.html"
         },
         {
             "route": "/data-api/*",
-            "allowedRoles": [
-                "anonymous",
-                "authenticated"
-            ]
-        },
-        {
-            "route": "/graphql",
-            "allowedRoles": [
-                "anonymous",
-                "authenticated"
-            ]
+            "allowedRoles": ["anonymous"]
         }
     ]
 }
