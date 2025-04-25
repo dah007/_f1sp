@@ -3,7 +3,7 @@ import { RootState, useAppSelector } from 'app/store';
 import { useDispatch } from 'react-redux';
 
 import { setError } from 'slices/siteWideSlice';
-import { useGetNextRaceQuery } from 'features/raceApi';
+import { useGetRaceNextQuery } from 'features/raceApi';
 import { setRaceNext } from 'slices/racesSlice';
 import { NextRaceProps } from 'types/races';
 
@@ -25,7 +25,7 @@ const NextReactBanner: React.FC = (): JSX.Element => {
         data: raceNextData,
         isLoading: raceNextIsLoading,
         isError: raceNextIsError,
-    } = useGetNextRaceQuery(1) as {
+    } = useGetRaceNextQuery(1) as {
         data: NextRaceProps | undefined;
         isLoading: boolean;
         isError: boolean;

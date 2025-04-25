@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useGetConstructorStandingsQuery } from '../features/standingsApi';
+import React /*, { useEffect, useState }*/ from 'react';
+// import { useGetConstructorStandingsQuery } from '../features/standingsApi';
 
-import type { ConstructorStanding } from 'types/standings';
+// import type { ConstructorStanding } from 'types/standings';
 
-import { useAppDispatch, useAppSelector } from '../app/store';
-import { setSelectedYear } from 'slices/siteWideSlice';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+// import { useAppDispatch, useAppSelector } from '../app/store';
+// import { setSelectedYear } from 'slices/siteWideSlice';
+// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 interface ConstructorsStandingProps {
     year: number;
 }
 
-const ConstructorsStanding: React.FC<ConstructorsStandingProps> = ({ year }) => {
+const ConstructorsStanding: React.FC<ConstructorsStandingProps> = () => {
     // const dispatch = useAppDispatch();
 
     // const { data, isError, isLoading } = useGetConstructorStandingsQuery(year);

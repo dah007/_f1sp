@@ -1,23 +1,23 @@
-import { Location } from 'types'
+import { Location } from 'types';
 
 // @deprecated ??
 export interface Season {
-    url: string
-    total: string
+    url: string;
+    total: string;
     CircuitTable: {
-        season: string
-        Circuits: Circuit[]
-    }
+        season: string;
+        Circuits: Circuit[];
+    };
 }
 // @deprecated ??
 export type Circuit = {
-    circuitId: string
-    circuitName: string
-    Location: Location[]
-    url: string
-}
+    circuitId: string;
+    circuitName: string;
+    Location: Location[];
+    url: string;
+};
 
-export interface ISeason {
+export interface Season {
     constructorChampion: string;
     constructorChampionPoints: number;
     constructorCount: number;

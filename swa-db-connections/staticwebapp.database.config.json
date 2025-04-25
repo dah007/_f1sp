@@ -27,7 +27,7 @@
         }
     },
     "entities": {
-        "circuits_w_data": {
+        "circuits": {
             "source": {
                 "type": "view",
                 "key-fields": ["id"],
@@ -63,7 +63,7 @@
                 }
             ]
         },
-        "driver_w_standings": {
+        "driversStandings": {
             "source": {
                 "type": "view",
                 "key-fields": ["id"],
@@ -77,8 +77,25 @@
             ]
         },
 
-        "race": {
-            "source": "race",
+        "fastestLap": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "fastest_lap_w_driver"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "pitStop": {
+            "source": {
+                "object": "pit_stop",
+                "key-fields": ["race_id"],
+                "type": "view"
+            },
             "permissions": [
                 {
                     "actions": ["*"],
@@ -99,7 +116,7 @@
                 }
             ]
         },
-        "race_result": {
+        "raceResult": {
             "source": {
                 "type": "view",
                 "key-fields": ["race_id"],
@@ -112,7 +129,7 @@
                 }
             ]
         },
-        "race_w_gp": {
+        "raceGP": {
             "source": {
                 "type": "view",
                 "key-fields": ["id"],

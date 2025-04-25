@@ -7,13 +7,13 @@ import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 
 import DataTable from 'components/DataTable';
 import Flag from 'components/Flag';
-import { LinkRenderer } from 'utils/dataTableRenderers';
+import { LinkRenderer } from '../utils/dataTableRenderers';
 
 import { setError, setSelectedYear } from 'slices/siteWideSlice';
 import { setSeasonStats } from 'slices/seasonsSlice';
 import { useGetSeasonStatsQuery } from 'features/seasonsApi';
 
-import type { ISeason } from 'types/season';
+import type { Season } from 'types/season';
 import PageContainer from 'components/PageContainer';
 
 /**
@@ -60,16 +60,24 @@ import PageContainer from 'components/PageContainer';
 const Seasons: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const columnHelper = createColumnHelper<ISeason>();
+    const columnHelper = createColumnHelper<Season>();
 
     const selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
     const seasons = useAppSelector((state: RootState) => state.seasons.seasons);
     let { year } = useParams() as { year: string };
 
-    const { data: seasonsData, isError, isLoading } = useGetSeasonStatsQuery(selectedYear);
+    const {
+        data: seasonsData,
+        isError,
+        isLoading,
+    } = useGetSeasonStatsQuery(selectedYear) as {
+        data: Season[] | undefined;
+        isError: boolean;
+        isLoading: boolean;
+    };
 
     useEffect(() => {
-        if (!isError || isLoading) return;
+        if (isError || isLoading) return;
 
         console.log('Error loading season stats');
         setError(isError);
@@ -78,7 +86,7 @@ const Seasons: React.FC = (): JSX.Element => {
     useEffect(() => {
         if (!seasonsData || isLoading || isError) return;
 
-        dispatch(setSeasonStats(seasonsData.data));
+        dispatch(setSeasonStats(seasonsData));
     }, [dispatch, isError, isLoading, seasonsData]);
 
     if (!year) year = selectedYear.toString();
@@ -92,7 +100,7 @@ const Seasons: React.FC = (): JSX.Element => {
         navigate(url);
     };
 
-    const [colDefs] = useState<ColumnDef<ISeason, unknown>[]>([
+    const [colDefs] = useState<ColumnDef<Season, unknown>[]>([
         {
             accessorKey: 'year',
             cell: ({ row }) => {

@@ -19,6 +19,7 @@ import {
 import { useGetConstructorStandingsQuery, useGetDriverStandingsQuery } from 'features/standingsApi';
 import { setConstructorStandings, setDriverStandings } from 'slices/standingsSlice';
 import ConstructorsStanding from 'components/ConstructorsStandings';
+import { ConstructorStanding, DriverStanding } from '@/types/standings';
 
 interface LocalConstructorProps {
     cName: string;
@@ -72,8 +73,12 @@ const Standings: React.FC = (): JSX.Element => {
         selectDriverStandings(state),
     ) satisfies LocalDriverProps[];
 
-    const { data: constructorsData } = useGetConstructorStandingsQuery(selectedYear);
-    const { data: driversData } = useGetDriverStandingsQuery(selectedYear);
+    const { data: constructorsData } = useGetConstructorStandingsQuery(selectedYear) as {
+        data: ConstructorStanding[] | undefined;
+    };
+    const { data: driversData } = useGetDriverStandingsQuery(selectedYear) as {
+        data: DriverStanding[] | undefined;
+    };
 
     useEffect(() => {
         if (!constructorsData) return;
@@ -120,21 +125,15 @@ const Standings: React.FC = (): JSX.Element => {
                 </div>
 
                 <div className="row-start-1 h-[28vh] w-full">
-                    <CardContainer
-                        bodyClasses={'w-full lg:h-[28vh] md:h-[12vh]'}
-                        classes="max-h-[28vh] overflow-hidden"
-                        content={<ConstructorsStanding year={selectedYear} />}
-                        title={`Constructors Standings ${selectedYear}`}
-                    />
+                    <CardContainer>
+                        <ConstructorsStanding year={selectedYear} />
+                    </CardContainer>
                 </div>
 
                 <div className="row-start-2 h-[28vh] w-full">
-                    <CardContainer
-                        bodyClasses={'w-full h-full'}
-                        classes="max-h-full overflow-hidden"
-                        content={<DriverStandings year={selectedYear} />}
-                        title={`Driver Standings ${selectedYear}`}
-                    />
+                    <CardContainer>
+                        <DriverStandings year={selectedYear} />
+                    </CardContainer>
                 </div>
                 <div className="row-start-2 h-[28vh] w-full">
                     <Card className="h-full w-full p-0 m-0">

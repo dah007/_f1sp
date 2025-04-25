@@ -39,7 +39,7 @@ export const standingsApi = createApi({
             queryFn: async (year: number = 2024) => {
                 try {
                     const data = await dbFetch(`/standingsWithDrivers?year=${year}`);
-                    return { data: data.data };
+                    return { data: data };
                 } catch (error) {
                     return buildErrorObject(error);
                 }

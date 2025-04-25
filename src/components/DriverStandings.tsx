@@ -5,11 +5,12 @@ import CardContainer from './CardContainer';
 import { DriverStanding } from '@/types/standings';
 import { useGetDriverStandingsQuery } from '@/features/standingsApi';
 import { useEffect } from 'react';
+import { YEAR } from '@/constants/constants';
 
-const DriverStandings = () => {
+const DriverStandings = ({ year = YEAR }: { year?: number }): JSX.Element => {
     // const driverStandings = useAppSelector((state: RootState) => state.standings.drivers);
 
-    const { data: driverStandingsData } = useGetDriverStandingsQuery(4) as {
+    const { data: driverStandingsData } = useGetDriverStandingsQuery(year) as {
         data: DriverStanding[] | undefined;
         isLoading: boolean;
         isError: boolean;

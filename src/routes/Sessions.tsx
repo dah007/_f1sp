@@ -1,6 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-import { useGetPointsByRaceQuery } from 'features/f1spRacesApi';
+import { useGetPointsByRaceQuery } from 'features/raceApi';
 import { useEffect, useState } from 'react';
 
 // localStorage.setItem(

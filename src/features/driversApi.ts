@@ -32,7 +32,7 @@ export const driversApi = createApi({
                 try {
                     const data = await dbFetch(`/driversByYear?year=${year}`);
                     console.log('data:', data);
-                    return { data: data.data };
+                    return { data: data };
                 } catch (error) {
                     return buildErrorObject(error);
                 }
@@ -43,7 +43,7 @@ export const driversApi = createApi({
                 const ids = drivers.join(',');
                 const result = await dbFetch(`driversByIds?ids=${ids}`);
                 console.log('result:', result);
-                return { data: result.data[0] };
+                return { data: result };
             },
         }),
         getDriverPodiums: builder.query({
@@ -53,14 +53,14 @@ export const driversApi = createApi({
             queryFn: async (driverId: string = 'lando-norris') => {
                 try {
                     const data = await dbFetch(`/driverStats?id=${driverId}`);
-                    return { data: data.data[0] };
+                    return { data: data };
                 } catch (error) {
                     return buildErrorObject(error);
                 }
             },
         }),
         getDriverStandings: builder.query({
-            query: (year: string = '2024') => `/driver_w_standings?year=${year}`,
+            query: (year: string = '2024') => `/driverStandings?year=${year}`,
         }),
 
         getDriverWins: builder.query({
