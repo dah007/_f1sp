@@ -158,7 +158,7 @@ export const raceApi = createApi({
                 }
             },
         }),
-        getRaceResultsWithQual: builder.query({
+        getRacesResultsWithQual: builder.query({
             query: (id: string) => `/raceResultsWithQual?$filter=id eq ${id}`,
             // queryFn: async (id: string) => {
             //     try {
@@ -169,7 +169,7 @@ export const raceApi = createApi({
             //     }
             // },
         }),
-        getRacesResultsWithQual: builder.query({
+        getRaceResultsWithQual: builder.query({
             query: (year: number = YEAR) => `/raceResult?$filter=year eq ${year}`,
             transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {

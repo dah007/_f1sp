@@ -1,5 +1,5 @@
 import { JSX, useEffect, useState } from 'react';
-import { Route, Routes, /* useNavigate,*/ useParams } from 'react-router-dom';
+import { Route, Routes /* useNavigate,useParams*/ } from 'react-router-dom';
 import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
 
@@ -75,8 +75,8 @@ const Races: React.FC = (): JSX.Element => {
     // const [driverOptions, setDriverOptions] = useState<OptionProps[]>([]);
     // const [, setFilterBy] = useState<string>('');
 
-    const { year: paramYear } = useParams() as { year: string };
-    const [year, setYear] = useState<number | undefined>(paramYear ? parseInt(paramYear) : undefined);
+    // const { year: paramYear } = useParams() as { year: string };
+    // const [year] = useState<number | undefined>(paramYear ? parseInt(paramYear) : undefined);
 
     // useEffect(() => {
     //     if (!year) setYear(selectedYear);
@@ -104,10 +104,9 @@ const Races: React.FC = (): JSX.Element => {
     //     dispatch(setDrivers(driversData));
     // }, [dispatch, driversData]);
 
-    const { data: raceData, isError: isRacesError } = useGetRacesResultsWithQualQuery(year) as {
+    const { data: raceData, isError: isRacesError } = useGetRacesResultsWithQualQuery('') as {
         data: RaceProps[];
         isError: boolean;
-        isLoading: boolean;
     };
     useEffect(() => {
         if (isRacesError) dispatch(setError(true));
@@ -123,7 +122,7 @@ const Races: React.FC = (): JSX.Element => {
             cell: ({ row }) => {
                 return LinkRenderer({
                     gotoCB: () => {
-                        navigateRace(row.original?.race_id as unknown as number);
+                        // navigateRace(row.original?.race_id as unknown as number);
                     },
                     label: row.getValue('official_name'),
                     value: row.original.race_id?.toString() ?? '',
