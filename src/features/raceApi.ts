@@ -159,24 +159,31 @@ export const raceApi = createApi({
             },
         }),
         getRaceResultsWithQual: builder.query({
-            queryFn: async (id: string) => {
-                try {
-                    const data = await dbFetch(`/raceResultsWithQual?id=${id}`);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
+            query: (id: string) => `/raceResultsWithQual?$filter=id eq ${id}`,
+            // queryFn: async (id: string) => {
+            //     try {
+            //         const data = await dbFetch(`/raceResultsWithQual?$filter=id eq ${id}`);
+            //         return { data: data };
+            //     } catch (error) {
+            //         return buildErrorObject(error);
+            //     }
+            // },
         }),
         getRacesResultsWithQual: builder.query({
-            queryFn: async (year: number = YEAR) => {
-                try {
-                    const results = await dbFetch(`/racesResultsWithQual?year=${year}`);
-                    return { data: results };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
+            query: (year: number = YEAR) => `/raceResult?$filter=year eq ${year}`,
+            transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error', error);
+                return error;
             },
+            // queryFn: async (year: number = YEAR) => {
+            //     try {
+            //         const results = await dbFetch(`/racesResultsWithQual?year=${year}`);
+            //         return { data: results };
+            //     } catch (error) {
+            //         return buildErrorObject(error);
+            //     }
+            // },
         }),
         getTotalWins: builder.query({
             queryFn: async (year: number = YEAR) => {

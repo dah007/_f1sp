@@ -162,7 +162,7 @@ const Drivers: React.FC = (): JSX.Element => {
                                 className="flex flex-col"
                                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                             >
-                                <span>Best</span> <span>Champ</span> <span>Pos</span>
+                                <span>Champ Pos</span>
                             </Button>
                         </>
                     );

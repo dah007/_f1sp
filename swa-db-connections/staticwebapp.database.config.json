@@ -119,7 +119,7 @@
         "raceResult": {
             "source": {
                 "type": "view",
-                "key-fields": ["race_id"],
+                "key-fields": ["race_id", "year"],
                 "object": "rr_w_driver"
             },
             "permissions": [

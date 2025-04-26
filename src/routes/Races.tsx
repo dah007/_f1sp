@@ -1,27 +1,27 @@
 import { JSX, useEffect, useState } from 'react';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Route, Routes, /* useNavigate,*/ useParams } from 'react-router-dom';
 import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
 
-import { useGetDriversQuery } from '../features/driversApi';
+// import { useGetDriversQuery } from '../features/driversApi';
 import { useGetRacesResultsWithQualQuery } from '../features/raceApi';
 
-import { setDrivers } from 'slices/driversSlice';
-import { setError, setSelectedYear } from 'slices/siteWideSlice';
+// import { setDrivers } from 'slices/driversSlice';
+import { setError /*, setSelectedYear*/ } from 'slices/siteWideSlice';
 import { setRaces } from 'slices/racesSlice';
 
-import ButtonStyled from 'components/ButtonStyled';
+// import ButtonStyled from 'components/ButtonStyled';
 import DataTable from 'components/DataTable';
-import DropdownYears from 'components/YearsDropdown';
-import MultiSelect from 'components/MultiSelect';
+// import DropdownYears from 'components/YearsDropdown';
+// import MultiSelect from 'components/MultiSelect';
 import PageContainer from 'components/PageContainer';
 import TableSortHeader from 'components/TableSortHeader';
 import { ColumnDef } from '@tanstack/react-table';
 import { DistanceCellRenderer, LinkRenderer } from 'utils/dataTableRenderers';
 import { FlagRendererById } from '../components/Flag';
 
-import type { AdditionalFiltersYearProps } from 'types/index';
-import type { Driver } from 'types/drivers';
+// import type { AdditionalFiltersYearProps } from 'types/index';
+// import type { Driver } from 'types/drivers';
 import type { RaceProps } from 'types/races';
 import RaceDetail from './RaceDetail';
 
@@ -66,42 +66,43 @@ export type OptionProps = {
 const Races: React.FC = (): JSX.Element => {
     // TODO: Clean up year handling
     const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
+    // const selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
     const races = useAppSelector((state: RootState) => state.races.races);
 
-    const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
-    const [driverOptions, setDriverOptions] = useState<OptionProps[]>([]);
-    const [, setFilterBy] = useState<string>('');
+    // const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
+    // const [driverOptions, setDriverOptions] = useState<OptionProps[]>([]);
+    // const [, setFilterBy] = useState<string>('');
 
     const { year: paramYear } = useParams() as { year: string };
-
     const [year, setYear] = useState<number | undefined>(paramYear ? parseInt(paramYear) : undefined);
 
-    useEffect(() => {
-        if (!year) setYear(selectedYear);
-        if (year !== selectedYear) dispatch(setSelectedYear(year!));
-    }, [paramYear, selectedYear, year, dispatch]);
+    // useEffect(() => {
+    //     if (!year) setYear(selectedYear);
+    //     if (year !== selectedYear) dispatch(setSelectedYear(year!));
+    // }, [paramYear, selectedYear, year, dispatch]);
 
-    const navigateYearCB = (newYear: string) => {
-        navigate(`/races/${newYear}`);
-    };
-    const navigateRace = (raceId: number) => navigate(`/races/${year}/race/${raceId}`);
+    // const navigateYearCB = (newYear: string) => {
+    //     navigate(`/races/${newYear}`);
+    // };
+    // const navigateRace = (raceId: number) => navigate(`/races/${year}/race/${raceId}`);
 
-    const { data: driversData } = useGetDriversQuery(selectedYear);
-    useEffect(() => {
-        if (!driversData) return;
+    // const { data: driversData } = useGetDriversQuery(selectedYear) as {
+    //     data: Driver[];
+    // };
+    // useEffect(() => {
+    //     if (!driversData) return;
 
-        const tempOptions: OptionProps[] = [];
+    //     const tempOptions: OptionProps[] = [];
 
-        driversData.forEach((driver: Driver) => {
-            tempOptions.push({ label: driver.full_name, value: driver.id });
-        });
+    //     driversData.forEach((driver: Driver) => {
+    //         tempOptions.push({ label: driver.full_name, value: driver.id });
+    //     });
 
-        setDriverOptions(tempOptions);
-        dispatch(setDrivers(driversData));
-    }, [dispatch, driversData]);
+    //     setDriverOptions(tempOptions);
+    //     dispatch(setDrivers(driversData));
+    // }, [dispatch, driversData]);
 
     const { data: raceData, isError: isRacesError } = useGetRacesResultsWithQualQuery(year) as {
         data: RaceProps[];
@@ -109,8 +110,10 @@ const Races: React.FC = (): JSX.Element => {
         isLoading: boolean;
     };
     useEffect(() => {
+        if (isRacesError) dispatch(setError(true));
         if (!raceData) return;
 
+        console.log('raceData', raceData);
         dispatch(setRaces(raceData));
     }, [dispatch, raceData]);
 
@@ -163,38 +166,38 @@ const Races: React.FC = (): JSX.Element => {
         },
     ]);
 
-    const onFilterTextBoxChanged = (event: React.FormEvent<HTMLInputElement>) => {
-        dispatch(setSelectedYear(Number(event.currentTarget.value)));
-        navigateYearCB(event.currentTarget.value);
-    };
+    // const onFilterTextBoxChanged = (event: React.FormEvent<HTMLInputElement>) => {
+    //     dispatch(setSelectedYear(Number(event.currentTarget.value)));
+    //     navigateYearCB(event.currentTarget.value);
+    // };
 
-    const AdditionalFilters: React.FC<AdditionalFiltersYearProps> = ({
-        onFilterTextBoxChanged,
-        selectedYear,
-    }: {
-        onFilterTextBoxChanged: (event: React.FormEvent<HTMLInputElement>) => void;
-        selectedYear: string;
-    }) => (
-        <div className="flex gap-4">
-            <DropdownYears onFilterTextBoxChanged={onFilterTextBoxChanged} selectedYear={Number(selectedYear)} />
+    // const AdditionalFilters: React.FC<AdditionalFiltersYearProps> = ({
+    //     onFilterTextBoxChanged,
+    //     selectedYear,
+    // }: {
+    //     onFilterTextBoxChanged: (event: React.FormEvent<HTMLInputElement>) => void;
+    //     selectedYear: string;
+    // }) => (
+    //     <div className="flex gap-4">
+    //         <DropdownYears onFilterTextBoxChanged={onFilterTextBoxChanged} selectedYear={Number(selectedYear)} />
 
-            <MultiSelect
-                placeholder="Drivers"
-                options={driverOptions}
-                selectedOptions={selectedDrivers}
-                setSelectedOptions={(values) => {
-                    const newValues = typeof values === 'function' ? values(selectedDrivers) : values;
-                    const drivers: string[] = newValues;
-                    setSelectedDrivers(newValues);
-                    setFilterBy(drivers?.join(','));
-                }}
-            />
+    //         <MultiSelect
+    //             placeholder="Drivers"
+    //             options={driverOptions}
+    //             selectedOptions={selectedDrivers}
+    //             setSelectedOptions={(values) => {
+    //                 const newValues = typeof values === 'function' ? values(selectedDrivers) : values;
+    //                 const drivers: string[] = newValues;
+    //                 setSelectedDrivers(newValues);
+    //                 setFilterBy(drivers?.join(','));
+    //             }}
+    //         />
 
-            {<ButtonStyled>Reset</ButtonStyled>}
-        </div>
-    );
+    //         {<ButtonStyled>Reset</ButtonStyled>}
+    //     </div>
+    // );
 
-    if (isRacesError) dispatch(setError(true));
+    // if (isRacesError) dispatch(setError(true));
 
     return (
         <PageContainer lastCrumb="Races" title="Races">
@@ -203,10 +206,10 @@ const Races: React.FC = (): JSX.Element => {
             </Routes>
 
             <DataTable
-                additionalFilters={AdditionalFilters({
-                    onFilterTextBoxChanged,
-                    selectedYear: selectedYear.toString(),
-                })}
+                // additionalFilters={AdditionalFilters({
+                //     onFilterTextBoxChanged,
+                //     selectedYear: selectedYear.toString(),
+                // })}
                 classNames="w-full"
                 columns={colDefs}
                 data={races}
