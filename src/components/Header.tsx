@@ -47,14 +47,14 @@ const Header: React.FC = () => {
                 />
                 <MenuButton label="Leaderboard" onClick={() => handleNavigation('/leaderboard')} />
 
-                <MenuButton label="Drivers" onClick={() => handleNavigation('/drivers')} />
-
-                <MenuButton label="Races" onClick={() => handleNavigation('/races')} />
-
-                <MenuButton label="Constructors" onClick={() => handleNavigation('/constructors')} />
-
                 <MenuButton label="Standings" onClick={() => handleNavigation('/standings')} />
 
+                <MenuButton label="Drivers" onClick={() => handleNavigation('/drivers')} />
+                <MenuButton label="Races" onClick={() => handleNavigation('/races')} />
+
+                <MenuButton label="Circuits" onClick={() => handleNavigation('/circuits')} />
+
+                <MenuButton label="Constructors" onClick={() => handleNavigation('/constructors')} />
                 <MenuButton label="Schedule" onClick={() => handleNavigation('/results')} />
             </div>
         </header>

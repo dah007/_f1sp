@@ -6,7 +6,7 @@ import { useGetCircuitsQuery } from '../../features/circuitsApi';
 
 import { CIRCUIT_DETAILS } from '../../constants/circuitConstants';
 
-import type { CircuitProps } from 'types/circuits';
+import type { CircuitProps, CircuitDetailsProps } from 'types/circuits';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 // import { setRaceNext } from '../../slices/racesSlice';
@@ -130,7 +130,7 @@ const Circuits: React.FC = () => {
             <div className="z-50 h-full relative w-full gap-4 rounded-md flex justify-around">
                 <div className="absolute z-50 flex gap-2 rounded-md mapInfo top-2 left-2 right-2">
                     <CircuitSelect
-                        circuitsData={circuitsData || []}
+                        circuitsData={(circuitsData as unknown as CircuitDetailsProps[]) || []}
                         circuit={circuit || CIRCUIT_DETAILS['baku']}
                         map={mapContainer.current}
                         setCircuit={setCircuit}

@@ -1,6 +1,7 @@
-import { buildErrorObject, dbFetch } from '@/utils';
+import { buildErrorObject } from '@/utils';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { F1SP_BASE_DB_URL } from '../constants/constants';
+import { REST_URL } from '../constants/constants';
+import { CircuitProps } from '@/types/circuits';
 
 /**
  * API slice for fetching circuit data from the F1 database.
@@ -9,7 +10,7 @@ import { F1SP_BASE_DB_URL } from '../constants/constants';
  * This API slice uses `createApi` from Redux Toolkit Query to define endpoints and base query configurations.
  *
  * @constant
- * @type {Api}
+ * @type {ReturnType<typeof createApi>}
  *
  * @property {string} reducerPath - The path to the reducer in the Redux store.
  * @property {function} baseQuery - The base query function for making HTTP requests.
@@ -26,16 +27,33 @@ import { F1SP_BASE_DB_URL } from '../constants/constants';
  */
 export const circuitsApi = createApi({
     reducerPath: 'circuitsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: F1SP_BASE_DB_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
     endpoints: (builder) => ({
         getCircuits: builder.query({
-            queryFn: async () => {
-                try {
-                    const results = await dbFetch(`/circuits`);
-                    return { data: results };
-                } catch (error) {
-                    return buildErrorObject(error);
+            query: ({ startYear, endYear }) => ({
+                url: `/circuitWYear?$filter=startYear gt ${startYear} and endYear lte ${endYear}`,
+                method: 'GET',
+            }),
+            transformResponse: (response: { value: CircuitProps[] }) => {
+                if (response?.value) {
+                    console.log(response);
+                    return response.value.map((circuit) => ({
+                        ...circuit,
+                        lat: circuit.latitude,
+                        lng: circuit.longitude,
+                        bbox: [circuit.longitude, circuit.latitude], // ? NOT a mistake, mbox is [lng, lat]
+                    }));
                 }
+                return [];
+            },
+            transformErrorResponse: (error) => {
+                const errorMessage = buildErrorObject(error);
+                return {
+                    error: {
+                        status: error.status,
+                        message: errorMessage,
+                    },
+                };
             },
         }),
     }),

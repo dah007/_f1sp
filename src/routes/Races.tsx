@@ -4,7 +4,7 @@ import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
 
 // import { useGetDriversQuery } from '../features/driversApi';
-import { useGetRacesResultsWithQualQuery } from '../features/raceApi';
+import { useGetRaceQuery } from '../features/raceApi';
 
 // import { setDrivers } from 'slices/driversSlice';
 import { setError /*, setSelectedYear*/ } from 'slices/siteWideSlice';
@@ -18,7 +18,7 @@ import PageContainer from 'components/PageContainer';
 import TableSortHeader from 'components/TableSortHeader';
 import { ColumnDef } from '@tanstack/react-table';
 import { DistanceCellRenderer, LinkRenderer } from 'utils/dataTableRenderers';
-import { FlagRendererById } from '../components/Flag';
+import Flag from '../components/Flag';
 
 // import type { AdditionalFiltersYearProps } from 'types/index';
 // import type { Driver } from 'types/drivers';
@@ -104,19 +104,44 @@ const Races: React.FC = (): JSX.Element => {
     //     dispatch(setDrivers(driversData));
     // }, [dispatch, driversData]);
 
-    const { data: raceData, isError: isRacesError } = useGetRacesResultsWithQualQuery('') as {
-        data: RaceProps[];
+    const {
+        data: raceData,
+        isError: isRacesError,
+        nextLink,
+        prevLink,
+    } = useGetRaceQuery(-1) as {
+        data: { value: RaceProps[] };
+        nextLink?: string;
+        prevLink?: string;
         isError: boolean;
     };
+
+    console.log("['nextLink', 'prevLink']", nextLink, prevLink);
+    //
+    // const [nextLink, setNextLink] = useState<string | undefined>(undefined);
+    // const [prevLink, setPrevLink] = useState<string | undefined>(undefined);
+
     useEffect(() => {
         if (isRacesError) dispatch(setError(true));
         if (!raceData) return;
 
         console.log('raceData', raceData);
-        dispatch(setRaces(raceData));
+
+        // setNextLink(raceData?.nextLink);
+        // setPrevLink(raceData?.prevLink);
+
+        console.log('raceData', raceData);
+        dispatch(setRaces(raceData.value as unknown as RaceProps[]));
     }, [dispatch, raceData]);
 
     const [colDefs] = useState<ColumnDef<RaceProps, unknown>[]>([
+        {
+            accessorKey: 'alpha2_code',
+            cell: ({ row }) => {
+                return <Flag cCode={row.getValue('alpha2_code')} size={32} />;
+            },
+            header: () => <div className="min-w-4"></div>,
+        },
         {
             accessorKey: 'official_name',
             cell: ({ row }) => {
@@ -131,21 +156,8 @@ const Races: React.FC = (): JSX.Element => {
             header: ({ column }) => <TableSortHeader<RaceProps> column={column} name="Name" />,
         },
         {
-            accessorKey: 'nationality_country_id',
-            cell: ({ row }) => {
-                return <FlagRendererById countryId={row.getValue('nationality_country_id')} size={32} />;
-            },
-            header: () => <div className="min-w-4"></div>,
-        },
-        {
-            accessorKey: 'full_name',
-            cell: ({ row }) => row.getValue('full_name'),
-            // header: () => <div className="min-w-8">Winner</div>,
-            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Winner" />,
-        },
-        {
-            accessorKey: 'place_name',
-            cell: ({ row }) => row.getValue('place_name'),
+            accessorKey: 'country_name',
+            cell: ({ row }) => row.getValue('country_name'),
             header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Location" />,
         },
         {
@@ -157,6 +169,12 @@ const Races: React.FC = (): JSX.Element => {
             accessorKey: 'distance',
             cell: ({ row }) => DistanceCellRenderer({ value: row.getValue('distance') }),
             header: () => <div className="min-w-8">Distance (km)</div>,
+        },
+        {
+            accessorKey: 'driver',
+            cell: ({ row }) => row.getValue('driver'),
+            // header: () => <div className="min-w-8">Winner</div>,
+            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Winner" />,
         },
         {
             accessorKey: 'time',

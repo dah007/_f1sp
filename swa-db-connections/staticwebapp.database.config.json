@@ -27,11 +27,11 @@
         }
     },
     "entities": {
-        "circuits": {
+        "circuitWYear": {
             "source": {
                 "type": "view",
                 "key-fields": ["id"],
-                "object": "circuits_w_data"
+                "object": "circuit_w_race_year"
             },
             "permissions": [
                 {
@@ -95,6 +95,20 @@
                 "object": "pit_stop",
                 "key-fields": ["race_id"],
                 "type": "view"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "race": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_w_data"
             },
             "permissions": [
                 {

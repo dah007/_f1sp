@@ -1,11 +1,11 @@
-import type { CircuitProps } from 'types/circuits';
+import type { CircuitDetailsProps, CircuitProps } from 'types/circuits';
 import type { GotoCircuitProps } from 'routes/Circuits/CircuitFunctions';
 import type { Map } from 'mapbox-gl';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { BUTTON_CLASSES } from '@/constants/constants';
 
 interface CircuitSelectProps {
-    circuitsData: CircuitProps[];
+    circuitsData: CircuitDetailsProps[]; // CircuitProps[];
     circuit: CircuitProps;
     map: Map | null;
     setCircuit: (circuit: CircuitProps) => void;
@@ -26,7 +26,14 @@ interface CircuitSelectProps {
  * @param {Function} props.gotoCircuit - Function to navigate to the selected circuit.
  * @returns {JSX.Element} The rendered component.
  */
-const CircuitSelect = ({ circuitsData, circuit, map, setCircuit, setContinent, gotoCircuit }: CircuitSelectProps) => {
+const CircuitSelect = ({
+    circuitsData,
+    circuit,
+    map,
+    setCircuit,
+    setContinent,
+    gotoCircuit,
+}: CircuitSelectProps): JSX.Element => {
     return (
         <div className="w-72">
             <Select
@@ -42,10 +49,10 @@ const CircuitSelect = ({ circuitsData, circuit, map, setCircuit, setContinent, g
                 <SelectTrigger role="button" className={BUTTON_CLASSES}>
                     <SelectValue placeholder={circuit?.full_name || 'Select Circuit'} />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-stone-300 dark:bg-stone-800 text-stone-800 dark:text-stone-300 appearance-none">
                     {circuitsData?.map((circuit, index) => (
-                        <SelectItem key={index} value={circuit.id} className="cursor-pointer">
-                            {circuit.full_name}
+                        <SelectItem key={index} value={String(circuit.id)} className="cursor-pointer">
+                            {circuit.full_name.toString()}
                         </SelectItem>
                     ))}
                 </SelectContent>
