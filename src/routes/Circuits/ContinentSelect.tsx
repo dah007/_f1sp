@@ -51,9 +51,9 @@ const ContinentSelect = ({
                 }}
             >
                 <SelectTrigger role="button" className={BUTTON_CLASSES}>
-                    <SelectValue placeholder={continent ?? `Continent`} />
+                    <SelectValue placeholder={continent ?? `Continent`} className="appearance-none" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-stone-300 dark:bg-stone-800 text-stone-800 dark:text-stone-300 appearance-none">
                     {Object.keys(CONTINENTS).map((continent, index) => (
                         <SelectItem key={index} value={continent} className="cursor-pointer">
                             {continent}

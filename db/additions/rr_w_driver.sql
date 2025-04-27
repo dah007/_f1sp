@@ -3,7 +3,7 @@
 create or replace
 algorithm = UNDEFINED view `rr_w_driver` as
 select
-    `d`.`name` as `name`,
+    `d`.`name` as `driver_name`,
     `rd`.`driver_number` as `driver_number`,
     `d`.`permanent_number` as `permanent_number`,
     `rd`.`race_id` as `race_id`,
@@ -36,13 +36,12 @@ select
     `rd`.`race_pit_stops` as `pit_stops`,
     `rd`.`race_fastest_lap` as `fastest_lap`,
     `rd`.`race_driver_of_the_day` as `driver_of_the_day`,
-    `rd`.`race_grand_slam` as `grand_slam`
+    `rd`.`race_grand_slam` as `grand_slam`,
+    `r`.`year` as `year`
 from
     (`race_data` `rd`
 join `driver` `d` on
     ((`rd`.`driver_id` = `d`.`id`)))
+    inner join race r on rd.race_id = r.id
 where
     (`rd`.`type` = 'RACE_RESULT')
-order by
-    `rd`.`race_id` desc,
-    `rd`.`position_display_order`;

@@ -1,5 +1,5 @@
 import { REST_URL, YEAR } from '@/constants/constants';
-import { FastestLap, type NextRaceProps } from '@/types/races';
+import { FastestLap, RaceProps, type NextRaceProps } from '@/types/races';
 import { buildErrorObject, dbFetch } from '@/utils';
 // import { buildErrorObject } from '@/utils';
 
@@ -46,6 +46,13 @@ export const raceApi = createApi({
             transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching race with GP:', error);
+            },
+        }),
+        getRace: builder.query({
+            query: (id: number) => (id > 0 ? `race?$filter=id eq ${id}` : `race`),
+            transformResponse: (response: { value: RaceProps[] }) => response ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error fetching race', error);
             },
         }),
         /*------------------------------------------------------------------ */
@@ -128,16 +135,16 @@ export const raceApi = createApi({
                 }
             },
         }),
-        getRace: builder.query({
-            queryFn: async (year: number = YEAR) => {
-                try {
-                    const data = await dbFetch(`/race?year=${year}`);
-                    return { data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
+        // getRace: builder.query({
+        //     queryFn: async (year: number = YEAR) => {
+        //         try {
+        //             const data = await dbFetch(`/race?year=${year}`);
+        //             return { data };
+        //         } catch (error) {
+        //             return buildErrorObject(error);
+        //         }
+        //     },
+        // }),
         getRaceNext: builder.query({
             queryFn: async (year: number) => {
                 try {
@@ -158,25 +165,32 @@ export const raceApi = createApi({
                 }
             },
         }),
-        getRaceResultsWithQual: builder.query({
-            queryFn: async (id: string) => {
-                try {
-                    const data = await dbFetch(`/raceResultsWithQual?id=${id}`);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
         getRacesResultsWithQual: builder.query({
-            queryFn: async (year: number = YEAR) => {
-                try {
-                    const results = await dbFetch(`/racesResultsWithQual?year=${year}`);
-                    return { data: results };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
+            query: (id: number) => `/raceResultsWithQual?$filter=id eq ${id}`,
+            // queryFn: async (id: string) => {
+            //     try {
+            //         const data = await dbFetch(`/raceResultsWithQual?$filter=id eq ${id}`);
+            //         return { data: data };
+            //     } catch (error) {
+            //         return buildErrorObject(error);
+            //     }
+            // },
+        }),
+        getRaceResultsWithQual: builder.query({
+            query: (year: number = YEAR) => `/raceResult?$filter=year eq ${year}`,
+            transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error', error);
+                return error;
             },
+            // queryFn: async (year: number = YEAR) => {
+            //     try {
+            //         const results = await dbFetch(`/racesResultsWithQual?year=${year}`);
+            //         return { data: results };
+            //     } catch (error) {
+            //         return buildErrorObject(error);
+            //     }
+            // },
         }),
         getTotalWins: builder.query({
             queryFn: async (year: number = YEAR) => {

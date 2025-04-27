@@ -6,7 +6,7 @@ import { /*useAppDispatch, */ useAppSelector } from 'app/store';
 // import ErrorDialog from 'components/ErrorDialog';
 // import LastRaceResultsPod from 'components/LastRaceResultsPod';
 
-// import LastRacesAtCircuit from '@/components/LastRacesAtCircuit';
+// import LastRacesAtCircuit from '/components/LastRacesAtCircuit';
 // import { useGetLastRaceResultsQuery } from 'features/raceApi';
 // import { setPreviousResultsAtCircuit } from 'slices/racesSlice';
 // import { useEffect } from 'react';
@@ -17,8 +17,9 @@ import { /*useAppDispatch, */ useAppSelector } from 'app/store';
 import ErrorDialog from 'components/ErrorDialog';
 // import DriverStandings from 'components/DriverStandings';
 // import { YEAR } from 'constants/constants';
-import LastRaceResultsPod from '@/components/LastRaceResultsPod';
-// import DriverStandings from '@/components/DriverStandings';
+import LastRaceResultsPod from 'components/LastRaceResultsPod';
+import NextReactBanner from 'components/NextRaceBanner';
+// import DriverStandings from '/components/DriverStandings';
 // import Standings from './Standings';
 // import TotalWinsPod from 'components/TotalWinsPod';
 
@@ -48,6 +49,8 @@ const Home: React.FC = () => {
 
     return (
         <>
+            <NextReactBanner />
+
             {systemError && <ErrorDialog />}
 
             <div className="flex flex-col justify-center items-center mr-2">

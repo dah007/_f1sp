@@ -27,11 +27,11 @@
         }
     },
     "entities": {
-        "circuits": {
+        "circuitWYear": {
             "source": {
                 "type": "view",
                 "key-fields": ["id"],
-                "object": "circuits_w_data"
+                "object": "circuit_w_race_year"
             },
             "permissions": [
                 {
@@ -103,6 +103,20 @@
                 }
             ]
         },
+
+        "race": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
         "raceNext": {
             "source": {
                 "type": "view",
@@ -119,7 +133,7 @@
         "raceResult": {
             "source": {
                 "type": "view",
-                "key-fields": ["race_id"],
+                "key-fields": ["race_id", "year"],
                 "object": "rr_w_driver"
             },
             "permissions": [

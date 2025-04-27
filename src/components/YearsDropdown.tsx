@@ -46,7 +46,9 @@ const DropdownYears: React.FC<DropdownYearsProps> = ({
             <SelectTrigger role="button" className={BUTTON_CLASSES}>
                 <SelectValue placeholder={selectedYear.toString()} />
             </SelectTrigger>
-            <SelectContent>{yearsDropdown(true)}</SelectContent>
+            <SelectContent className="border border-stone-900 dark:border-stone-300 bg-stone-300 dark:bg-stone-900 text-stone-900 dark:text-stone-300">
+                {yearsDropdown(true)}
+            </SelectContent>
         </Select>
     );
 };

@@ -43,10 +43,7 @@ const RaceDetail: React.FC = (): JSX.Element => {
     }, [initialYear, selectedYear, dispatch]);
 
     // TODO: Add error handling
-    const { data: raceResultsData, isError: raceResultsError } = useGetRaceResultsWithQualQuery(id!) as {
-        data: RaceProps[];
-        isError: boolean;
-    };
+    const { data: raceResultsData, isError: raceResultsError } = useGetRaceResultsWithQualQuery(parseInt(id!));
     const { data: driverOfTheDayData, isError: driverOfTheDayError } = useGetDriverOfTheDayQuery(id!) as {
         data: DriverOfTheDay[];
         isError: boolean;
@@ -63,6 +60,8 @@ const RaceDetail: React.FC = (): JSX.Element => {
         data: PolePosition;
         isError: boolean;
     };
+
+    if (fastestLapError || fastestPitError || pollPositionError) dispatch(setError(true));
     useEffect(() => {
         if (driverOfTheDayError) {
             dispatch(setError(true));
@@ -88,11 +87,13 @@ const RaceDetail: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (!raceResultsData) return;
-        setFirstRow(raceResultsData[0]);
-        setRaceDetail(raceResultsData);
+        // Handle the case where raceResultsData might not be an array
+        const resultsArray = Array.isArray(raceResultsData) ? raceResultsData : [raceResultsData];
+        setFirstRow(resultsArray[0]);
+        setRaceDetail(resultsArray as unknown as RaceProps[]);
     }, [raceResultsData]);
 
-    if (raceResultsError || driverOfTheDayError || fastestLapError || fastestPitError || pollPositionError) {
+    if (raceResultsError) {
         dispatch(setError(true));
         return <div className="text-red-500">Error loading data</div>;
     }
