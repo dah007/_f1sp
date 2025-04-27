@@ -1,8 +1,5 @@
-// import { Button } from 'components/ui/button';
 import Header from 'components/Header';
 
-import NextReactBanner from './components/NextRaceBanner';
-// import { LucideSquareArrowOutUpRight } from 'lucide-react';
 import './App.css';
 
 import { Route, Routes } from 'react-router-dom';
@@ -61,7 +58,6 @@ const App = () => {
                     <Header />
 
                     <main className="pl-10 pr-10 w-[95vw] ">
-                        <NextReactBanner />
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="circuits" element={<Circuits />} />
