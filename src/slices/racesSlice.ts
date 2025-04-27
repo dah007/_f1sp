@@ -10,6 +10,7 @@ export interface IState {
     raceNext: NextRaceProps | null;
     races: RaceProps[];
     raceWGP: Partial<RaceProps> | null;
+    totalRaceCount: number | 0;
 }
 
 const initialState: IState = {
@@ -20,6 +21,7 @@ const initialState: IState = {
     raceNext: null,
     races: [],
     raceWGP: null,
+    totalRaceCount: 0,
 };
 
 const racesSlice = createSlice({
@@ -49,10 +51,20 @@ const racesSlice = createSlice({
         setRaceWGP(state, action: PayloadAction<Partial<RaceProps> | null>) {
             state.raceWGP = action.payload || null;
         },
+        setTotalRaceCount(state, action: PayloadAction<number>) {
+            state.totalRaceCount = action.payload || 0;
+        },
     },
 });
 
-export const { setLastRaceId, setLastRaceResults, setPreviousResultsAtCircuit, setRaceNext, setRaceWGP, setRaces } =
-    racesSlice.actions;
+export const {
+    setLastRaceId,
+    setLastRaceResults,
+    setPreviousResultsAtCircuit,
+    setRaceNext,
+    setRaceWGP,
+    setRaces,
+    setTotalRaceCount,
+} = racesSlice.actions;
 
 export default racesSlice.reducer;

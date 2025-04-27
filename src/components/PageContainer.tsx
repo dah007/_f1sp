@@ -5,6 +5,8 @@ import { JSX } from 'react';
 import { cn } from '@/lib/utils';
 import Breadcrumbs from './Breadcrumbs';
 import Titles from './Titles';
+import { ScrollArea } from './ui/scroll-area';
+import { ScrollAreaScrollbar } from '@radix-ui/react-scroll-area';
 
 interface PageContainerProps {
     children: React.ReactNode;
@@ -40,7 +42,10 @@ const PageContainer: React.FC<PageContainerProps> = ({
         <div className={cn('flex', 'flex-col', 'h-[80vh]', 'gap-2', className)}>
             {showBreadcrumbs && <Breadcrumbs lastCrumb={lastCrumb} />}
             <div>{showTitle && title && <Titles title={title} type="h1" />}</div>
-            {children}
+            <ScrollArea className="h-[80vh] w-full">
+                <ScrollAreaScrollbar />
+                {children}
+            </ScrollArea>
         </div>
     );
 };

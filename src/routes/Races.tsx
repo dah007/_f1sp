@@ -1,138 +1,220 @@
-import { JSX, useEffect, useState } from 'react';
-import { Route, Routes /* useNavigate,useParams*/ } from 'react-router-dom';
+import { JSX, useEffect, useState, useCallback, useRef } from 'react';
 import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
+import { skipToken } from '@reduxjs/toolkit/query';
 
-// import { useGetDriversQuery } from '../features/driversApi';
-import { useGetRaceQuery } from '../features/raceApi';
+import { useGetNextPageQuery, useGetRaceCountQuery, useGetRacesQuery } from '../features/raceApi';
 
-// import { setDrivers } from 'slices/driversSlice';
-import { setError /*, setSelectedYear*/ } from 'slices/siteWideSlice';
-import { setRaces } from 'slices/racesSlice';
-
-// import ButtonStyled from 'components/ButtonStyled';
-import DataTable from 'components/DataTable';
-// import DropdownYears from 'components/YearsDropdown';
-// import MultiSelect from 'components/MultiSelect';
-import PageContainer from 'components/PageContainer';
+// import DataTable from 'components/DataTable';
 import TableSortHeader from 'components/TableSortHeader';
-import { ColumnDef } from '@tanstack/react-table';
 import { DistanceCellRenderer, LinkRenderer } from 'utils/dataTableRenderers';
 import Flag from '../components/Flag';
 
-// import type { AdditionalFiltersYearProps } from 'types/index';
-// import type { Driver } from 'types/drivers';
-import type { RaceProps } from 'types/races';
-import RaceDetail from './RaceDetail';
+import {
+    ColumnDef,
+    ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    GroupingState,
+    SortingState,
+    useReactTable,
+} from '@tanstack/react-table';
+import { type RaceProps } from 'types/races';
+import { setRaces } from 'slices/racesSlice';
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationNext,
+    PaginationPrevious,
+} from 'components/ui/pagination';
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ExtendedColumnDef } from '@/types/dataTable';
+import { Input } from '@/components/ui/input';
+import { BUTTON_CLASSES } from '@/constants/constants';
 
 export type OptionProps = {
     label: string;
     value: string;
 };
 
-/**
- * Races component displays a list of races for a selected year.
- * It allows users to filter races by year and drivers, and navigate to race details.
- *
- * @component
- * @example
- * return (
- *   <Races />
- * )
- *
- * @returns {JSX.Element} The rendered component.
- *
- * @remarks
- * This component uses Redux for state management and React Router for navigation.
- * It fetches race and driver data using custom hooks and displays the data in a table.
- *
- * @todo
- * - Clean up year handling logic.
- *
- * @requires
- * - useAppDispatch
- * - useAppSelector
- * - useNavigate
- * - useParams
- * - useGetRacesResultsWithQualQuery
- * - useGetDriversQuery
- * - setSelectedYear
- * - setDrivers
- * - setRaces
- * - setError
- *
- * @param {void}
- */
-const Races: React.FC = (): JSX.Element => {
-    // TODO: Clean up year handling
-    const dispatch = useAppDispatch();
-    // const navigate = useNavigate();
+// Update the type to explicitly include nextLink
+export type NextLinkRaceProps = {
+    value: RaceProps[];
+    nextLink?: string;
+    '@odata.nextLink'?: string;
+};
 
-    // const selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
+const Races: React.FC = (): JSX.Element => {
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [currentNextLink, setCurrentNextLink] = useState<string | null>(null);
+    const [currentPage, setCurrentPage] = useState<number>(0);
+    const [grouping, setGrouping] = useState<GroupingState>([]);
+    const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
+    const [nextLinkArray, setNextLinkArray] = useState<string[]>([]);
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [totalPages, setTotalPages] = useState<number>(0);
+
+    // Ref to store current races to avoid dependency cycle
+    const racesRef = useRef<RaceProps[]>([]);
+
+    const dispatch = useAppDispatch();
     const races = useAppSelector((state: RootState) => state.races.races);
 
-    // const [selectedDrivers, setSelectedDrivers] = useState<string[]>([]);
-    // const [driverOptions, setDriverOptions] = useState<OptionProps[]>([]);
-    // const [, setFilterBy] = useState<string>('');
+    // Update the ref when races change
+    useEffect(() => {
+        racesRef.current = races;
+    }, [races]);
 
-    // const { year: paramYear } = useParams() as { year: string };
-    // const [year] = useState<number | undefined>(paramYear ? parseInt(paramYear) : undefined);
-
-    // useEffect(() => {
-    //     if (!year) setYear(selectedYear);
-    //     if (year !== selectedYear) dispatch(setSelectedYear(year!));
-    // }, [paramYear, selectedYear, year, dispatch]);
-
-    // const navigateYearCB = (newYear: string) => {
-    //     navigate(`/races/${newYear}`);
-    // };
-    // const navigateRace = (raceId: number) => navigate(`/races/${year}/race/${raceId}`);
-
-    // const { data: driversData } = useGetDriversQuery(selectedYear) as {
-    //     data: Driver[];
-    // };
-    // useEffect(() => {
-    //     if (!driversData) return;
-
-    //     const tempOptions: OptionProps[] = [];
-
-    //     driversData.forEach((driver: Driver) => {
-    //         tempOptions.push({ label: driver.full_name, value: driver.id });
-    //     });
-
-    //     setDriverOptions(tempOptions);
-    //     dispatch(setDrivers(driversData));
-    // }, [dispatch, driversData]);
+    const { data: raceTotalCountData } = useGetRaceCountQuery(undefined);
 
     const {
         data: raceData,
-        isError: isRacesError,
-        nextLink,
-        prevLink,
-    } = useGetRaceQuery(-1) as {
-        data: { value: RaceProps[] };
-        nextLink?: string;
-        prevLink?: string;
+        isLoading: raceDataIsLoading,
+        isError: raceDataIsError,
+    } = useGetRacesQuery(undefined) as {
+        data: NextLinkRaceProps | undefined;
+        isLoading: boolean;
         isError: boolean;
     };
 
-    console.log("['nextLink', 'prevLink']", nextLink, prevLink);
-    //
-    // const [nextLink, setNextLink] = useState<string | undefined>(undefined);
-    // const [prevLink, setPrevLink] = useState<string | undefined>(undefined);
+    // Use skip pattern with skipToken to properly manage the query execution
+    // Remove isLoadingMore from the skip condition to ensure query runs when we set currentNextLink
+    const {
+        data: nextPageData,
+        isLoading: nextPageLoading,
+        isSuccess: nextPageSuccess,
+        isError: nextPageError,
+    } = useGetNextPageQuery(currentNextLink ?? skipToken, {
+        skip: !currentNextLink,
+    }) as {
+        data: NextLinkRaceProps | undefined;
+        isLoading: boolean;
+        isSuccess: boolean;
+        isError: boolean;
+    };
 
+    // Memoized function to go to next page with useCallback to prevent recreation on render
+    const gotoNext = useCallback(() => {
+        if (nextLinkArray.length > 0 && !isLoadingMore && !nextPageLoading) {
+            console.log('--> Requesting next page with link:', nextLinkArray[0]);
+            setIsLoadingMore(true);
+
+            // Always use the first item in the array (index 0)
+            setCurrentNextLink(nextLinkArray[0]);
+        }
+    }, [nextLinkArray, isLoadingMore, nextPageLoading]);
+
+    // Handle initial races data
     useEffect(() => {
-        if (isRacesError) dispatch(setError(true));
-        if (!raceData) return;
+        if (raceDataIsLoading) return;
+        if (raceDataIsError) {
+            console.error('Error fetching race data');
+            return;
+        }
+        if (!raceData?.value) return;
 
-        console.log('raceData', raceData);
+        console.log('Initial race data loaded:', raceData.value.length);
+        setCurrentPage(1);
 
-        // setNextLink(raceData?.nextLink);
-        // setPrevLink(raceData?.prevLink);
+        // Check for OData nextLink format first, then fallback to standard nextLink
+        const responseNextLink = raceData['@odata.nextLink'] || raceData.nextLink;
+        if (responseNextLink) {
+            // Extract the query part from the URL
+            const queryPart = responseNextLink.split('?')[1];
+            if (queryPart) {
+                setNextLinkArray([queryPart]);
+            }
+        }
 
-        console.log('raceData', raceData);
-        dispatch(setRaces(raceData.value as unknown as RaceProps[]));
-    }, [dispatch, raceData]);
+        dispatch(setRaces(raceData.value));
+    }, [dispatch, raceData, raceDataIsError, raceDataIsLoading]);
+
+    // Monitor API loading status
+    useEffect(() => {
+        if (nextPageLoading) {
+            console.log('Next page data loading...');
+        }
+    }, [nextPageLoading]);
+
+    // Process next page results when they arrive - removed races from dependencies
+    useEffect(() => {
+        console.log('Next page data:', nextPageData);
+
+        if (!nextPageSuccess || !nextPageData?.value) return;
+
+        console.log('Next page data loaded successfully:', nextPageData.value.length);
+
+        // Get races from ref to avoid dependency cycle
+        const currentRaces = racesRef.current;
+
+        // Use a functional update to ensure we're working with the latest state
+        dispatch(setRaces([...currentRaces, ...nextPageData.value]));
+
+        // Check if there's another nextLink in the response
+        const responseNextLink = nextPageData['@odata.nextLink'] || nextPageData.nextLink;
+
+        // Update nextLinkArray based on the new response
+        setNextLinkArray((prev) => {
+            // Create a new array to avoid mutation
+            const newArray = [...prev];
+
+            // If we have a new link, replace the first item that we just used
+            if (responseNextLink) {
+                const newNextLink = responseNextLink.split('?')[1];
+                if (newNextLink) {
+                    // If we have remaining links, replace the first one
+                    // Otherwise add it as a new item
+                    if (newArray.length > 0) {
+                        newArray[0] = newNextLink;
+                    } else {
+                        newArray.push(newNextLink);
+                    }
+                } else {
+                    // If no query part found, remove the used link
+                    return newArray.slice(1);
+                }
+            } else {
+                // No more pages, remove the used link
+                return newArray.slice(1);
+            }
+
+            return newArray;
+        });
+
+        // Update current page
+        setCurrentPage((prev) => prev + 1);
+
+        // Reset loading states
+        setIsLoadingMore(false);
+        setCurrentNextLink(null);
+
+        dispatch(setRaces(nextPageData.value));
+    }, [nextPageData, nextPageSuccess, dispatch]);
+
+    // Handle any errors in pagination
+    useEffect(() => {
+        if (nextPageError) {
+            console.error('Error loading next page');
+            setIsLoadingMore(false);
+            setCurrentNextLink(null);
+        }
+    }, [nextPageError]);
+
+    // Update total pages from race count
+    useEffect(() => {
+        if (!raceTotalCountData) return;
+
+        console.log('raceTotalCountData:', raceTotalCountData);
+
+        const tPages = Math.ceil((raceTotalCountData as unknown as number) / 100);
+        setTotalPages(tPages);
+    }, [raceTotalCountData]);
 
     const [colDefs] = useState<ColumnDef<RaceProps, unknown>[]>([
         {
@@ -173,7 +255,6 @@ const Races: React.FC = (): JSX.Element => {
         {
             accessorKey: 'driver',
             cell: ({ row }) => row.getValue('driver'),
-            // header: () => <div className="min-w-8">Winner</div>,
             header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Winner" />,
         },
         {
@@ -183,55 +264,117 @@ const Races: React.FC = (): JSX.Element => {
         },
     ]);
 
-    // const onFilterTextBoxChanged = (event: React.FormEvent<HTMLInputElement>) => {
-    //     dispatch(setSelectedYear(Number(event.currentTarget.value)));
-    //     navigateYearCB(event.currentTarget.value);
-    // };
+    const GetInVisibleColumn = (): Record<string, boolean> => {
+        const inVisibleColumns: ExtendedColumnDef[] = colDefs.filter(
+            (col) => 'visible' in col && col.visible === false,
+        ) as unknown as ExtendedColumnDef[];
 
-    // const AdditionalFilters: React.FC<AdditionalFiltersYearProps> = ({
-    //     onFilterTextBoxChanged,
-    //     selectedYear,
-    // }: {
-    //     onFilterTextBoxChanged: (event: React.FormEvent<HTMLInputElement>) => void;
-    //     selectedYear: string;
-    // }) => (
-    //     <div className="flex gap-4">
-    //         <DropdownYears onFilterTextBoxChanged={onFilterTextBoxChanged} selectedYear={Number(selectedYear)} />
+        const removedColumn = {} as Record<string, boolean>;
 
-    //         <MultiSelect
-    //             placeholder="Drivers"
-    //             options={driverOptions}
-    //             selectedOptions={selectedDrivers}
-    //             setSelectedOptions={(values) => {
-    //                 const newValues = typeof values === 'function' ? values(selectedDrivers) : values;
-    //                 const drivers: string[] = newValues;
-    //                 setSelectedDrivers(newValues);
-    //                 setFilterBy(drivers?.join(','));
-    //             }}
-    //         />
+        for (const item of inVisibleColumns) {
+            removedColumn[item.accessorKey as string] = false;
+        }
+        return removedColumn;
+    };
 
-    //         {<ButtonStyled>Reset</ButtonStyled>}
-    //     </div>
-    // );
-
-    // if (isRacesError) dispatch(setError(true));
+    const table = useReactTable({
+        columns: colDefs,
+        data: races,
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        onSortingChange: setSorting,
+        onGroupingChange: setGrouping,
+        state: {
+            columnFilters,
+            grouping,
+            sorting,
+        },
+        initialState: {
+            columnVisibility: GetInVisibleColumn(),
+        },
+    });
 
     return (
-        <PageContainer lastCrumb="Races" title="Races">
-            <Routes>
-                <Route path="race/:id" element={<RaceDetail />} />
-            </Routes>
+        <>
+            <div className="flex justify-between mb-4">
+                <h2>
+                    Total Races: {races.length} / Pages: {currentPage} of {totalPages}
+                </h2>
+            </div>
 
-            <DataTable
-                // additionalFilters={AdditionalFilters({
-                //     onFilterTextBoxChanged,
-                //     selectedYear: selectedYear.toString(),
-                // })}
-                classNames="w-full"
-                columns={colDefs}
-                data={races}
-            />
-        </PageContainer>
+            <p>well? {table.getRowModel().rows?.length}</p>
+
+            <div className="flex p-2">
+                <div className="flex w-fit">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious href="#" />
+                            </PaginationItem>
+
+                            {/* {AddPaginationItems(1, totalPages)} */}
+
+                            <PaginationItem>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+
+                            <PaginationItem>
+                                <PaginationNext onClick={gotoNext} href="#" />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+
+                <div className="flex items-center gap-4 grow">
+                    <Input
+                        placeholder="Filter..."
+                        value={table.getState().globalFilter ?? ''}
+                        onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+                        className={`${BUTTON_CLASSES} appearance-none`}
+                    />
+                </div>
+            </div>
+
+            <Table className="w-full">
+                <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => {
+                                return (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
+                                );
+                            })}
+                        </TableRow>
+                    ))}
+                </TableHeader>
+                <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={colDefs.length} className="h-24 text-center">
+                                No results.
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </>
     );
 };
 
