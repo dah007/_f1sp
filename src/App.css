@@ -2,3 +2,8 @@
 @plugin "tailwindcss-animate";
 /* @custom-variant dark (&:is(.dark *)); */
 @custom-variant dark (&:where(.dark, .dark *));
+
+body {
+    @apply bg-zinc-300 dark:bg-zinc-900;
+    @apply text-zinc-900 dark:text-zinc-200;
+}

@@ -1,4 +1,5 @@
 import { REST_URL, YEAR } from '@/constants/constants';
+import { NextLinkRaceProps } from '@/routes/Races';
 import { FastestLap, RaceProps, type NextRaceProps } from '@/types/races';
 import { buildErrorObject, dbFetch } from '@/utils';
 // import { buildErrorObject } from '@/utils';
@@ -46,6 +47,38 @@ export const raceApi = createApi({
             transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching race with GP:', error);
+            },
+        }),
+        getRaceCount: builder.query({
+            query: () => `/raceCount`,
+            transformResponse: (response: { value: RaceProps[] }) => {
+                console.log('response?.value', response?.value[0].totalRaceCount);
+                return response?.value[0].totalRaceCount ?? 0;
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error ', error);
+                return error;
+            },
+        }),
+        getRaces: builder.query({
+            query: (year: number | undefined) => (year ? `/races?year=${year}` : `/races`),
+            transformResponse: (response: NextLinkRaceProps) => response ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error fetching races:', error);
+                return error;
+            },
+        }),
+        getNextPage: builder.query({
+            query: (nextLink: string) => {
+                console.log('nextLink', nextLink);
+                const url = new URL(`/data-api/rest/races?${nextLink}`, `http://localhost:4280`);
+                console.log('url', url);
+                return url.href;
+            },
+            transformResponse: (response: { value: RaceProps[] }) => response ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error fetching next page:', error);
+                return error;
             },
         }),
         getRace: builder.query({
@@ -211,15 +244,18 @@ export const {
     useGetFastestPitStopQuery,
     useGetLastRaceResultsQuery,
     useGetLastResultsAtCircuitQuery,
+    useGetNextPageQuery,
     useGetNextRaceQuery,
     useGetPointsByRaceQuery,
     useGetPollPositionQuery,
+    useGetRaceCountQuery,
     useGetRaceMaxYearQuery,
     useGetRaceNextQuery,
     useGetRaceQuery,
     useGetRaceResultsPreviousQuery,
     useGetRaceResultsWithQualQuery,
     useGetRaceWithGPQuery,
+    useGetRacesQuery,
     useGetRacesResultsWithQualQuery,
     useGetTotalWinsQuery,
 } = raceApi;

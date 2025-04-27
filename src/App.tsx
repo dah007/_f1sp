@@ -57,7 +57,7 @@ const App = () => {
                 <div className="pt-0 mt-0 pb-10 flex flex-col gap-4">
                     <Header />
 
-                    <main className="pl-10 pr-10 w-[95vw] ">
+                    <main className="pl-10 pr-10 w-[100vw] border border-purple-800">
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="circuits" element={<Circuits />} />

@@ -117,6 +117,32 @@
                 }
             ]
         },
+        "races": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceCount": {
+            "source": {
+                "type": "view",
+                "key-fields": ["totalRaceCount"],
+                "object": "race_count"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
         "raceNext": {
             "source": {
                 "type": "view",
