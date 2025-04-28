@@ -33,7 +33,7 @@ const Header: React.FC = () => {
                 </div>
 
                 <div className="hidden md:flex lg:flex xl:flex justify-start cursor-pointer">
-                    <a title="F1 // SP home" onClick={() => handleNavigation('/')} className="flex items-center">
+                    <a title="F1//SP home" onClick={() => handleNavigation('/')} className="flex items-center">
                         <img src={F1SPlogo} alt="F1//SP Logo" className="h-28" />
                     </a>
                 </div>
@@ -55,7 +55,6 @@ const Header: React.FC = () => {
                 <MenuButton label="Circuits" onClick={() => handleNavigation('/circuits')} />
 
                 <MenuButton label="Constructors" onClick={() => handleNavigation('/constructors')} />
-                <MenuButton label="Schedule" onClick={() => handleNavigation('/results')} />
             </div>
         </header>
     );

@@ -33,21 +33,10 @@ const Constructors: React.FC = (): JSX.Element => {
     const colDefs = useMemo<ColumnDef<ConstructorProps>[]>(
         () => [
             {
-                accessorKey: 'id',
-                cell: ({ row }) => <div>{row.index}</div>,
-                header: ({ column }) => (
-                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                        ID
-                        <ArrowUpDown className="w-4 h-4 ml-2" />
-                    </Button>
-                ),
-            },
-            {
                 accessorKey: 'country_id',
                 cell: ({ row }) => {
                     return (
                         <div className="min-w-8 w-8 max-w-8">
-                            {row.index}
                             {Flag({ nameAsId: row.getValue('country_id'), size: 24 })}
                         </div>
                     );

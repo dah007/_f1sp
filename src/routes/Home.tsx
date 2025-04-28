@@ -1,6 +1,7 @@
 // import React, { useEffect } from 'react';
 // import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
+import DriverStandings from '@/components/DriverStandings';
 import { /*useAppDispatch, */ useAppSelector } from 'app/store';
 // import CardContainer from 'components/CardContainer';
 // import ErrorDialog from 'components/ErrorDialog';
@@ -74,7 +75,9 @@ const Home: React.FC = () => {
                     <div className="row-start-1 col-start-1 w-full">
                         <LastRaceResultsPod />
                     </div>
-                    <div className="col-start-2 row-start-1">{/* <DriverStandings /> */}</div>
+                    <div className="col-start-2 row-start-1">
+                        <DriverStandings />
+                    </div>
                     {/* <div className="col-start-3 row-start-2">
                         <CardContainer
                             className="overflow-hidden h-[20vh]"

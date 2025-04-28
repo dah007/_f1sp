@@ -73,7 +73,7 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
             childrenClassName="w-full m-0 p-0"
             title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
         >
-            <ScrollArea className="h-[40vh] w-full border-t">
+            <ScrollArea className="xl:h-[40vh] md:h-[20vh] h-[14vh] w-full border-t">
                 <Table>
                     <TableHeader>
                         <TableRow>

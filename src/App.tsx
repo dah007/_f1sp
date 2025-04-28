@@ -13,6 +13,8 @@ import { useGetLastRaceResultsQuery, useGetNextRaceQuery } from './features/race
 import { setRaceNext } from './slices/racesSlice';
 import ModeToggle from './components/ModeToggle';
 
+import Footer from './components/Footer';
+
 import Error404Image from './assets/images/404.png';
 
 const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
@@ -68,6 +70,7 @@ const App = () => {
                                 z-50 
                                 bg-zinc-550"
                     ></div>
+
                     <Header />
 
                     <main
@@ -102,6 +105,8 @@ const App = () => {
                             />
                         </Routes>
                     </main>
+
+                    <Footer />
                 </div>
             </Router>
         </>

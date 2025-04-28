@@ -6,7 +6,7 @@ export const constructorsApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
     endpoints: (builder) => ({
         getConstructors: builder.query({
-            query: () => `/constructors`,
+            query: () => `/constructors?$first=500`,
             transformResponse: (response: { value: ConstructorProps[] }) => {
                 console.log(response);
                 return response.value;

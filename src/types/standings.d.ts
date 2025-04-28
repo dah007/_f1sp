@@ -13,6 +13,7 @@ export interface ConstructorStanding {
 export interface DriverStanding {
     driver_id: string;
     name: string;
+    permanent_number: number;
     points: number;
     position_display_order: number;
     position_number: number;

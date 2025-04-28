@@ -1,27 +1,37 @@
-// import { RootState, useAppSelector } from '@/app/store';
+import { useEffect } from 'react';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+
 import CardContainer from './CardContainer';
-// import { ScrollArea } from './ui/scroll-area';
-// import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
+import { ScrollArea } from './ui/scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { DriverStanding } from '@/types/standings';
 import { useGetDriverStandingsQuery } from '@/features/standingsApi';
-import { useEffect } from 'react';
-import { YEAR } from '@/constants/constants';
+
+import { YEAR } from 'constants/constants';
+import { setDriverStandings } from '@/slices/standingsSlice';
+import { setError } from '@/slices/siteWideSlice';
 
 const DriverStandings = ({ year = YEAR }: { year?: number }): JSX.Element => {
-    // const driverStandings = useAppSelector((state: RootState) => state.standings.drivers);
+    const dispatch = useAppDispatch();
+    const driverStandings = useAppSelector((state: RootState) => state.standings.drivers);
 
-    const { data: driverStandingsData } = useGetDriverStandingsQuery(year) as {
+    const { data: driverStandingsData, isError: driverStandingsIsError } = useGetDriverStandingsQuery(year) as {
         data: DriverStanding[] | undefined;
-        isLoading: boolean;
+        isLoading?: boolean;
         isError: boolean;
     };
-    // const driverStandingsIsLoading = isLoading || !driverStandings;
-    // const driverStandingsIsError = isError || !driverStandings;
 
     useEffect(() => {
+        if (driverStandingsIsError) {
+            dispatch(setError(true));
+            return;
+        }
         if (!driverStandingsData) return;
+
         console.info('%cDriverStandings data', 'background:green;color:white', driverStandingsData);
-    }, [driverStandingsData]);
+
+        dispatch(setDriverStandings(driverStandingsData));
+    }, [driverStandingsData, dispatch]);
 
     // if (driverStandingsIsLoading) {
     //     return <div>Loading...</div>;
@@ -30,38 +40,33 @@ const DriverStandings = ({ year = YEAR }: { year?: number }): JSX.Element => {
     // if (driverStandingsIsError) {
     //     return <div>Error loading driver standings.</div>;
     // }
-    // if (!driverStandings) {
-    //     return <div>No driver standings available.</div>;
-    // }
+    if (!driverStandings) {
+        return <div className="text-center italic">No driver standings available.</div>;
+    }
     return (
-        <CardContainer
-            className="overflow-hidden"
-            childrenClassName="w-full m-0 p-0 racingFont-bold"
-            title={`Driver Standings`}
-        >
-            <div className="italics text-center font">No driver standings data available</div>
-            {/* <ScrollArea className="h-[40vh] w-full border-t">
+        <CardContainer className="overflow-hidden" childrenClassName="w-full m-0 p-0" title="Driver Standings">
+            <ScrollArea className="xl:h-[40] md:h-[20vh] h-[14vh] w-full border-t">
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-4 text-right">Pos</TableHead>
                             <TableHead className="w-4 text-right">No</TableHead>
                             <TableHead>Driver</TableHead>
-                            <TableHead className="w-4 text-right">Gap</TableHead>
                             <TableHead className="w-4 text-right">Points</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {driverStandingsData?.map((driver: DriverStanding) => (
+                        {driverStandings?.map((driver: DriverStanding) => (
                             <TableRow key={driver.driver_id}>
-                                <td className="text-right">{driver.position_number}</td>
-                                <td>{driver.name}</td>
-                                <td className="text-right">{driver.points}</td>
+                                <TableCell className="text-right">{driver.position_number}</TableCell>
+                                <TableCell className="text-right">{driver.permanent_number}</TableCell>
+                                <TableCell>{driver.name}</TableCell>
+                                <TableCell className="text-right">{driver.points}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-            </ScrollArea> */}
+            </ScrollArea>
         </CardContainer>
     );
 };
