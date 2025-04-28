@@ -9,7 +9,7 @@ const MenuButton = ({ label, onClick, className }: { label: string; onClick: () 
     <Button
         variant="ghost"
         className={cn(
-            'dark:text-red-700 text-red-900 hover:underline hidden md:flex lg:flex xl:flex cursor-pointer font-bold',
+            'dark:text-red-500 text-red-900 hover:underline hidden md:flex lg:flex xl:flex cursor-pointer font-bold',
             className,
         )}
         onClick={onClick}

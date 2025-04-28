@@ -16,8 +16,8 @@ export const constructorSlice = createSlice({
     reducers: {
         setConstructors(state, action: PayloadAction<ConstructorProps[]>) {
             state.constructors = action.payload;
-        }
-    }
+        },
+    },
 });
 
 export const { setConstructors } = constructorSlice.actions;

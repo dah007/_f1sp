@@ -1,115 +1,145 @@
+import { JSX, useEffect, useMemo, useState } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-import { JSX, useEffect } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
 
-import { useGetConstructorsQuery } from 'features/constructorsApi';
-import { setConstructors } from 'slices/constructorsSlice';
-import { setError } from 'slices/siteWideSlice';
-
+import DataTable from 'components/DataTable';
 import Flag from 'components/Flag';
 import PageContainer from 'components/PageContainer';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'components/ui/table';
+import { Button } from 'components/ui/button';
 
 import { intlNumberFormat } from 'utils/number';
-import { type ConstructorProps } from 'types/constructors';
-import CardLoading from '@/components/CardLoading';
 
-const Constructors = (): JSX.Element => {
-    const constructors = useAppSelector((state: RootState) => state.constructors.constructors);
+import { setConstructors } from 'slices/constructorsSlice';
+import { useGetConstructorsQuery } from 'features/constructorsApi';
+
+import { type ConstructorProps } from 'types/constructors';
+import { ArrowUpDown } from 'lucide-react';
+import { ScrollArea, Scrollbar } from '@radix-ui/react-scroll-area';
+
+const Constructors: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
 
-    const {
-        data: constructorsData,
-        isLoading: constructorsLoading,
-        isError: constructorsError,
-    } = useGetConstructorsQuery(2024);
+    const constructors = useAppSelector((state: RootState) => state.constructors.constructors);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const { data: constructorsData } = useGetConstructorsQuery(undefined);
 
     useEffect(() => {
         if (!constructorsData) return;
-        console.log('constructorsData', constructorsData);
-        dispatch(setConstructors(constructorsData));
-    }, [constructorsData, dispatch]);
+        dispatch(setConstructors(Array.isArray(constructorsData) ? constructorsData : [constructorsData]));
+        setIsLoaded(true); // Mark data as loaded
+    }, [constructorsData, dispatch, isLoaded, constructors]);
 
-    if (constructorsLoading) {
-        return <CardLoading isLoading={constructorsLoading} />;
-    }
+    const colDefs = useMemo<ColumnDef<ConstructorProps>[]>(
+        () => [
+            {
+                accessorKey: 'id',
+                cell: ({ row }) => <div>{row.index}</div>,
+                header: ({ column }) => (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        ID
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: 'country_id',
+                cell: ({ row }) => {
+                    return (
+                        <div className="min-w-8 w-8 max-w-8">
+                            {row.index}
+                            {Flag({ nameAsId: row.getValue('country_id'), size: 24 })}
+                        </div>
+                    );
+                },
+                size: 8,
+                maxWidth: 8,
+                minWidth: 8,
+                header: () => <div></div>,
+            },
+            {
+                accessorKey: 'name',
+                cell: ({ row }) => <div>{row.getValue('name')}</div>,
+                header: ({ column }) => (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Name
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: 'full_name',
+                cell: ({ row }) => <div>{row.getValue('full_name')}</div>,
+                header: ({ column }) => (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Full Name
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: 'total_points',
+                cell: ({ row }) => <div>{intlNumberFormat(row.getValue('total_points'))}</div>,
+                header: ({ column }) => (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Total Points
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: 'total_podiums',
+                cell: ({ row }) => <div>{intlNumberFormat(row.getValue('total_podiums'))}</div>,
+                header: ({ column }) => (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Podiums
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: 'total_race_laps',
+                cell: ({ row }) => <div>{intlNumberFormat(row.getValue('total_race_laps'))}</div>,
+                header: ({ column }) => (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Race
+                        <br />
+                        Laps
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                ),
+            },
+            {
+                accessorKey: 'total_race_wins',
+                cell: ({ row }) => <div>{intlNumberFormat(row.getValue('total_race_wins'))}</div>,
+                header: ({ column }) => (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Race
+                        <br />
+                        Wins
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                ),
+            },
+        ],
+        [dispatch],
+    );
 
-    if (constructorsError) {
-        dispatch(setError(true));
-        return <div>Error loading constructors data.</div>;
-    }
+    const page = useMemo(() => {
+        return {
+            pageIndex: 0,
+            pageSize:
+                constructors.map((d) => `${d.subRows}`?.length ?? 0).reduce((acc, val) => acc + val, 0) +
+                constructors.length,
+        };
+    }, [constructors]);
 
     return (
-        <PageContainer title="Constructors">
-            <div className="w-full border rounded-lg">
-                <Table className="w-full">
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead colSpan={2}></TableHead>
-                            <TableHead colSpan={3}>Best</TableHead>
-                            <TableHead colSpan={12}>Totals</TableHead>
-                        </TableRow>
-                        <TableRow>
-                            <TableHead></TableHead>
-                            <TableHead className="w-26">Full Name</TableHead>
-
-                            <TableHead className="w-22 max-w-24">Champ Position</TableHead>
-                            <TableHead className="w-22 max-w-24">Grid Position</TableHead>
-                            <TableHead className="w-22 max-w-24">Race Result</TableHead>
-
-                            <TableHead className="w-22 max-w-24">Champ Wins</TableHead>
-                            <TableHead className="w-22 max-w-24">Entries</TableHead>
-                            <TableHead className="w-22 max-w-24">Starts</TableHead>
-                            <TableHead className="w-22 max-w-24">Race Wins</TableHead>
-                            <TableHead className="w-22 max-w-24">1-2 Finishes</TableHead>
-                            <TableHead className="w-22 max-w-24">Race Laps</TableHead>
-                            <TableHead className="w-22 max-w-24">Podiums</TableHead>
-                            <TableHead className="w-22 max-w-24">Podium Races</TableHead>
-                            <TableHead className="w-22 max-w-24">Points</TableHead>
-                            <TableHead className="w-22 max-w-24">Champ Points</TableHead>
-                            <TableHead className="w-22 max-w-24">Pole Positions</TableHead>
-                            <TableHead className="w-22 max-w-24">Fastest Laps</TableHead>
-                        </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                        {constructors.map((constructor: ConstructorProps) => {
-                            return (
-                                <TableRow key={constructor.id}>
-                                    <TableCell className="w-12 text-center">
-                                        <Flag cCode={constructor.alpha2_code} size={24} />
-                                    </TableCell>
-                                    <TableCell>{constructor.full_name}</TableCell>
-                                    <TableCell className="text-right">
-                                        {constructor.best_championship_position}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {constructor.best_starting_grid_position}
-                                    </TableCell>
-                                    <TableCell className="text-right">{constructor.best_race_result}</TableCell>
-                                    <TableCell className="text-right">{constructor.total_championship_wins}</TableCell>
-                                    <TableCell className="text-right">{constructor.total_race_entries}</TableCell>
-                                    <TableCell className="text-right">{constructor.total_race_starts}</TableCell>
-                                    <TableCell className="text-right">{constructor.total_race_wins}</TableCell>
-                                    <TableCell className="text-right">{constructor.total_1_and_2_finishes}</TableCell>
-                                    <TableCell className="text-right">
-                                        {intlNumberFormat(constructor.total_race_laps)}
-                                    </TableCell>
-                                    <TableCell className="text-right">{constructor.total_podiums}</TableCell>
-                                    <TableCell className="text-right">{constructor.total_podium_races}</TableCell>
-                                    <TableCell className="text-right">
-                                        {intlNumberFormat(constructor.total_points)}
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                        {intlNumberFormat(constructor.total_championship_points)}
-                                    </TableCell>
-                                    <TableCell className="text-right">{constructor.total_pole_positions}</TableCell>
-                                    <TableCell className="text-right">{constructor.total_fastest_laps}</TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </div>
+        <PageContainer lastCrumb="Constructors" title="Constructors">
+            <ScrollArea className="h-[calc(100vh-10rem)]">
+                <Scrollbar className="w-2 bg-slate-200" />
+                <DataTable className="w-fit" columns={colDefs} data={constructors ?? []} pagination={page} />
+            </ScrollArea>
         </PageContainer>
     );
 };

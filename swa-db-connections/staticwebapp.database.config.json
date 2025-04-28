@@ -40,6 +40,19 @@
                 }
             ]
         },
+        "constructors": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "constructors_with_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
 
         "driver": {
             "source": "driver",

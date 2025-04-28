@@ -20,4 +20,5 @@ export interface ConstructorProps {
     total_race_laps: number;
     total_race_starts: number;
     total_race_wins: number;
+    subRows?: ConstructorProps[];
 }

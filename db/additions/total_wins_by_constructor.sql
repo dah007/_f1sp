@@ -1,23 +1,7 @@
+-- f1sp.constructors_with_data source
 
--- constructors_with_data
-    SELECT  c.*, c2.alpha2_code, c2.name as country
-            (select total()
-    FROM    constructor c
-    INNER JOIN country c2 
-        ON c.country_id = c2.id
-    INNER JOIN race_data rd 
-        ON c.id = rd.constructor_id
-    INNER JOIN race r
-        ON rd.race_id = r.id
-    WHERE 
-    rd.type = 'RACE_RESULT'
-    GROUP 
-    BY c.id
-    ORDER BY c.name;
-
-select *  from  race_result
-
-
+create or replace
+algorithm = UNDEFINED view `constructors_with_data` as
 select
     `c`.`id` as `id`,
     `c`.`name` as `name`,
@@ -39,8 +23,7 @@ select
     `c`.`total_pole_positions` as `total_pole_positions`,
     `c`.`total_fastest_laps` as `total_fastest_laps`,
     `c2`.`alpha2_code` as `alpha2_code`,
-    `c2`.`name` as `country`,
-    `r`.`year` as `year`
+    `c2`.`name` as `country`
 from
     (((`constructor` `c`
 join `country` `c2` on
@@ -49,29 +32,9 @@ join `race_data` `rd` on
     ((`c`.`id` = `rd`.`constructor_id`)))
 join `race` `r` on
     ((`rd`.`race_id` = `r`.`id`)))
-    
 where
     (`rd`.`type` = 'RACE_RESULT')
 group by
     `c`.`id`
 order by
     `c`.`name`;
-
-
-select
-    count(`rr`.`constructor_id`) as `total`,
-    c.name as constructor,
-    `r`.`year` as `year`
-from
-    `race_result` `rr`
-join `constructor` `c` on
-    `rr`.`constructor_id` = `c`.`id`
-join `race` `r` on
-    `rr`.`race_id` = `r`.`id`
-where
-    `rr`.`position_number` = 1
-group by
-    `rr`.`constructor_id`,
-    `r`.`year`
-order by
-    `year` desc,`total` desc

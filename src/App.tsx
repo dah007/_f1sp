@@ -55,9 +55,29 @@ const App = () => {
             </div>
             <Router>
                 <div className="pt-0 mt-0 pb-10 flex flex-col gap-4">
+                    <div
+                        className="border-2 border-b-0 border-l-0 border-r-0
+                                sm:border-amber-300 
+                                md:border-orange-600 
+                                lg:border-blue-300 
+                                xl:border-green-300 
+                                border-slate-700 
+                                absolute top-0 
+                                left-0 
+                                w-full 
+                                z-50 
+                                bg-zinc-550"
+                    ></div>
                     <Header />
 
-                    <main className="pl-10 pr-10 w-[100vw] border border-purple-800">
+                    <main
+                        className="
+                        xl:pl-20 xl:pr-20
+                        lg:pl-10 lg:pr-10
+                        md:pl-10 md:pr-10
+                        sm:pl-4 sm:pr-4
+                        pl-1 pr-1 w-[100vw]"
+                    >
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="circuits" element={<Circuits />} />

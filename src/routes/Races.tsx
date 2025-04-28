@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState, useCallback, useRef } from 'react';
+import { JSX, useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
 import { skipToken } from '@reduxjs/toolkit/query';
@@ -102,7 +102,6 @@ const Races: React.FC = (): JSX.Element => {
     // Memoized function to go to next page with useCallback to prevent recreation on render
     const gotoNext = useCallback(() => {
         if (nextLinkArray.length > 0 && !isLoadingMore && !nextPageLoading) {
-            console.log('--> Requesting next page with link:', nextLinkArray[0]);
             setIsLoadingMore(true);
 
             // Always use the first item in the array (index 0)
@@ -119,7 +118,6 @@ const Races: React.FC = (): JSX.Element => {
         }
         if (!raceData?.value) return;
 
-        console.log('Initial race data loaded:', raceData.value.length);
         setCurrentPage(1);
 
         // Check for OData nextLink format first, then fallback to standard nextLink
@@ -131,24 +129,19 @@ const Races: React.FC = (): JSX.Element => {
                 setNextLinkArray([queryPart]);
             }
         }
-
         dispatch(setRaces(raceData.value));
     }, [dispatch, raceData, raceDataIsError, raceDataIsLoading]);
 
     // Monitor API loading status
     useEffect(() => {
         if (nextPageLoading) {
-            console.log('Next page data loading...');
+            console.info('Next page data loading...');
         }
     }, [nextPageLoading]);
 
     // Process next page results when they arrive - removed races from dependencies
     useEffect(() => {
-        console.log('Next page data:', nextPageData);
-
         if (!nextPageSuccess || !nextPageData?.value) return;
-
-        console.log('Next page data loaded successfully:', nextPageData.value.length);
 
         // Get races from ref to avoid dependency cycle
         const currentRaces = racesRef.current;
@@ -210,8 +203,6 @@ const Races: React.FC = (): JSX.Element => {
     useEffect(() => {
         if (!raceTotalCountData) return;
 
-        console.log('raceTotalCountData:', raceTotalCountData);
-
         const tPages = Math.ceil((raceTotalCountData as unknown as number) / 100);
         setTotalPages(tPages);
     }, [raceTotalCountData]);
@@ -238,6 +229,21 @@ const Races: React.FC = (): JSX.Element => {
             header: ({ column }) => <TableSortHeader<RaceProps> column={column} name="Name" />,
         },
         {
+            accessorKey: 'date',
+            cell: ({ row }) => row.getValue('date'),
+            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Date" />,
+        },
+        {
+            accessorKey: 'race_winner',
+            cell: ({ row }) => row.getValue('race_winner'),
+            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Race Winner" />,
+        },
+        {
+            accessorKey: 'sprint_winner',
+            cell: ({ row }) => row.getValue('sprint_winner'),
+            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Sprint Winner" />,
+        },
+        {
             accessorKey: 'country_name',
             cell: ({ row }) => row.getValue('country_name'),
             header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Location" />,
@@ -252,16 +258,11 @@ const Races: React.FC = (): JSX.Element => {
             cell: ({ row }) => DistanceCellRenderer({ value: row.getValue('distance') }),
             header: () => <div className="min-w-8">Distance (km)</div>,
         },
-        {
-            accessorKey: 'driver',
-            cell: ({ row }) => row.getValue('driver'),
-            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Winner" />,
-        },
-        {
-            accessorKey: 'time',
-            cell: ({ row }) => row.getValue('time'),
-            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Lap Time" />,
-        },
+        // {
+        //     accessorKey: 'time',
+        //     cell: ({ row }) => row.getValue('time'),
+        //     header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Lap Time" />,
+        // },
     ]);
 
     const GetInVisibleColumn = (): Record<string, boolean> => {
@@ -277,6 +278,13 @@ const Races: React.FC = (): JSX.Element => {
         return removedColumn;
     };
 
+    const pagination = useMemo(() => {
+        return {
+            pageIndex: 0,
+            pageSize: races.map((d) => `${d.subRows}`?.length ?? 0).reduce((acc, val) => acc + val, 0) + races.length,
+        };
+    }, [races]);
+
     const table = useReactTable({
         columns: colDefs,
         data: races,
@@ -290,6 +298,7 @@ const Races: React.FC = (): JSX.Element => {
         state: {
             columnFilters,
             grouping,
+            pagination,
             sorting,
         },
         initialState: {
@@ -299,14 +308,11 @@ const Races: React.FC = (): JSX.Element => {
 
     return (
         <>
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between mb-2">
                 <h2>
                     Total Races: {races.length} / Pages: {currentPage} of {totalPages}
                 </h2>
             </div>
-
-            <p>well? {table.getRowModel().rows?.length}</p>
-
             <div className="flex p-2">
                 <div className="flex w-fit">
                     <Pagination>
