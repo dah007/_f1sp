@@ -99,8 +99,88 @@
     background-color: #02192b;
 }
 
+.alpine-text {
+    color: #02192b;
+}
+
 .aston-martin {
     background-color: #002420;
+}
+
+.aston-martin-text {
+    color: #002420;
+}
+
+.ferrari {
+    background-color: #ef1a2d;
+}
+
+.ferrari-text {
+    color: #ef1a2d;
+}
+
+.hass {
+    background-color: #e6002b;
+}
+
+.hass-text {
+    color: #e6002b;
+}
+
+.mclaren {
+    background-color: #ff8000;
+}
+
+.mclaren-text {
+    color: #ff8000;
+}
+
+.mercedes {
+    background-color: #00a19b;
+}
+
+.mercedes-text {
+    color: #00a19b;
+}
+
+.red-bull {
+    background-color: #c0bfbf;
+}
+
+.red-bull-text {
+    color: #c0bfbf;
+}
+
+.rb {
+    background-color: #2240ce;
+}
+
+.rb-text {
+    color: #2240ce;
+}
+
+.kick-sauber {
+    background-color: #00e701;
+}
+
+.kick-sauber-text {
+    color: #00e701;
+}
+
+.williams {
+    background-color: #00a0de;
+}
+
+.williams-text {
+    color: #00a0de;
+}
+
+.aston-martin {
+    background-color: #002420;
+}
+
+.aston-martin-text {
+    color: #002420;
 }
 
 .ferrari {

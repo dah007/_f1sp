@@ -128,7 +128,7 @@ const Circuits: React.FC = () => {
     return (
         <PageContainer title="Circuits" showBreadcrumbs showTitle>
             <div className="z-50 h-full relative w-full gap-4 rounded-md flex justify-around">
-                <div className="absolute z-50 flex gap-2 rounded-md mapInfo top-2 left-2 right-2">
+                <div className="absolute z-50 flex gap-2 rounded-md mapInfo top-2 left-2">
                     <CircuitSelect
                         circuitsData={(circuitsData as unknown as CircuitDetailsProps[]) || []}
                         circuit={circuit || CIRCUIT_DETAILS['baku']}
@@ -145,9 +145,7 @@ const Circuits: React.FC = () => {
                         gotoContinent={gotoContinent}
                     />
                 </div>
-                <div className="absolute z-50 p-2 bg-black rounded-md mapInfo top-2 right-2 bg-opacity-40">
-                    {mapInfo()}
-                </div>
+                <div className="absolute z-50 p-2 top-2 right-2 bg-opacity-4">{mapInfo()}</div>
                 <div
                     className="rounded-lg z-40"
                     ref={circuitsMap}

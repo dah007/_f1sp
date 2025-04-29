@@ -2,14 +2,14 @@ import dah007Logo from '../assets/dah007-icon-logo.png';
 
 const Footer = () => {
     return (
-        <footer className="bg-stone-300 dark:bg-stone-900 border-t-2 border-stone-700">
-            <div className="mx-auto max-w-screen-xl space-y-8 px-4 py-16 sm:px-6 lg:space-y-16 lg:px-8">
+        <footer className="bg-stone-300 dark:bg-stone-900 border-t-2 border-stone-700 mt-16">
+            <div className="mx-auto max-w-screen-xl space-y-8 px-4 py-16 pt-8 sm:px-6 lg:space-y-2 lg:px-8">
                 <div className="sm:flex sm:items-center sm:justify-between">
                     <div>
                         <a href="#" className="text-2xl font-bold">
-                            <span style={{ color: '#ff0000' }}>F1</span>
-                            <span style={{ color: '#ee7a0c' }}>{'//'}</span>
-                            <span style={{ color: '#828282' }}>SP</span>
+                            <span className="ferrari-text">F1</span>
+                            <span className="mclaren-text">{'//'}</span>
+                            <span className="mercedes-text">sp</span>
                         </a>
                     </div>
 
@@ -35,7 +35,7 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8 border-t border-gray-100 pt-8 sm:grid-cols-2 lg:grid-cols-4 lg:pt-16 dark:border-gray-800">
+                <div className="grid grid-cols-1 mt-8 gap-8 border-t border-gray-100 pt-0 sm:grid-cols-2 lg:grid-cols-4 lg:pt-16 dark:border-stone-300 pb-8">
                     {/* LEFT */}
                     <div>
                         <p className="font-medium text-gray-900 dark:text-white">Map</p>

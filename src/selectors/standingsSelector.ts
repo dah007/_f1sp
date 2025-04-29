@@ -2,10 +2,17 @@ import { RootState } from 'app/store';
 import { teamColors } from 'utils/teamColors';
 
 export const constructorsConfig = () => {
+    const label = (team: string) => {
+        const teamName = team.replace(/_/g, ' ');
+        const capitalizedTeamName = teamName.charAt(0).toUpperCase() + teamName.slice(1);
+        return capitalizedTeamName;
+    };
+
+    // const label = (team: string) =>
     return Object.keys(teamColors).reduce(
         (acc, team) => {
             acc[team] = {
-                label: team,
+                label: label(team),
                 color: teamColors[team],
             };
             return acc;
@@ -13,6 +20,8 @@ export const constructorsConfig = () => {
         {} as { [key: string]: { label: string; color: string } },
     );
 };
+
+console.log('---------------------- constructorsConfig', constructorsConfig());
 
 export const driversConfig = () => {
     return Object.keys(teamColors).reduce(
@@ -27,9 +36,6 @@ export const driversConfig = () => {
         {} as { [key: string]: { label: string; color: string; constructor_id: string } },
     );
 };
-
-console.log('teamColors', teamColors);
-console.log('driversConfig', driversConfig());
 
 export const selectConstructorStandings = (state: RootState) => {
     const standings = state.standings.constructors;
@@ -46,10 +52,10 @@ export const selectConstructorStandings = (state: RootState) => {
 export const selectDriverStandings = (state: RootState) => {
     const standings = state.standings.drivers;
     return standings.map((standing) => {
-        console.log('standing', standing, {
-            fill: teamColors[standing?.team_name],
-            color: teamColors[standing?.team_name],
-        });
+        // console.log('standing', standing, {
+        //     fill: teamColors[standing?.team_name],
+        //     color: teamColors[standing?.team_name],
+        // });
         return {
             ...standing,
             fill: teamColors[standing?.team_name],

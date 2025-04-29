@@ -31,7 +31,7 @@ export const circuitsApi = createApi({
     endpoints: (builder) => ({
         getCircuits: builder.query({
             query: ({ startYear, endYear }) => ({
-                url: `/circuitWYear?$filter=startYear gt ${startYear} and endYear lte ${endYear}`,
+                url: `/circuitWYear?$filter=(race_year gt ${startYear}) and (race_year le ${endYear})`,
                 method: 'GET',
             }),
             transformResponse: (response: { value: CircuitProps[] }) => {

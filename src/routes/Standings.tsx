@@ -20,6 +20,7 @@ import { setConstructorStandings, setDriverStandings } from 'slices/standingsSli
 import { ConstructorStanding, DriverStanding } from '@/types/standings';
 import { cn } from '@/lib/utils';
 import { FULL_ROW_HEIGHT } from '@/constants/constants';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 function DriverChart({
     data,
@@ -78,8 +79,9 @@ function ConstructorChart({
                     axisLine={false}
                     tickFormatter={(value) => value.slice(0, 3)}
                 />
+                {/* <ChartTooltip label={`hello`} cursor={false} content={<HoverTip />} /> */}
+                <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
                 <Bar dataKey="points" fill="var(--color-desktop)" radius={4} />
-                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             </BarChart>
         </ChartContainer>
     );
@@ -146,9 +148,6 @@ const Standings: React.FC = (): JSX.Element => {
     //     }));
     // }, [colorDrivers]);
 
-    console.log('colorConstructors', colorConstructors);
-    console.log('colorDrivers', colorDrivers);
-
     const { data: constructorsData } = useGetConstructorStandingsQuery(selectedYear) as {
         data: ConstructorStanding[] | undefined;
     };
@@ -183,13 +182,18 @@ const Standings: React.FC = (): JSX.Element => {
                         CONSTRUCTORS
                 */}
             <div className={cn(FULL_ROW_HEIGHT, 'flex flex-col lg:flex-row gap-4 m-0 mb-4 p-0')}>
-                <Card
+                {/* <Card
                     className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-stone-800 bg-stone-300 w-full')}
                 >
                     <CardContent className="w-full m-0 p-4 content-end">
                         <ConstructorChart data={colorConstructors} constructorsChartConfig={constructorsChartConfig} />
                     </CardContent>
-                </Card>
+                </Card> */}
+                <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-stone-800 bg-stone-300 w-full')}>
+                    <AspectRatio ratio={16 / 9}>
+                        <ConstructorChart data={colorConstructors} constructorsChartConfig={constructorsChartConfig} />
+                    </AspectRatio>
+                </div>
 
                 <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-stone-800 bg-stone-300 w-full')}>
                     <CardTitle className="pl-4 pt-0 m-0">Constructors Standings</CardTitle>
@@ -208,13 +212,19 @@ const Standings: React.FC = (): JSX.Element => {
                     <DriverStandings className={FULL_ROW_HEIGHT} year={selectedYear} />
                 </Card>
 
-                <Card
+                <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-stone-800 bg-stone-300')}>
+                    <AspectRatio ratio={16 / 9}>
+                        <DriverChart data={colorDrivers} driversChartConfig={driversChartConfig} />
+                    </AspectRatio>
+                </div>
+
+                {/* <Card
                     className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-stone-800 bg-stone-300 w-full')}
                 >
                     <CardContent className="w-full m-0 p-4 content-end">
                         <DriverChart data={colorDrivers} driversChartConfig={driversChartConfig} />
                     </CardContent>
-                </Card>
+                </Card> */}
             </div>
         </PageContainer>
     );
