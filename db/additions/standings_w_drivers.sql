@@ -3,9 +3,10 @@
 create or replace
 algorithm = UNDEFINED view `standings_w_drivers` as
 select
+    `dwc`.`full_name` as team_name,    
     `d`.`id` as `id`,
     `d`.`name` as `name`,
-    `d`.permanent_number as `permanent_number`,
+    `d`.`permanent_number` as `permanent_number`,
     `sds`.`year` as `year`,
     `sds`.`position_display_order` as `position_display_order`,
     `sds`.`position_number` as `position_number`,
@@ -15,4 +16,6 @@ select
 from
     (`season_driver_standing` `sds`
 join `driver` `d` on
-    ((`sds`.`driver_id` = `d`.`id`)));
+    ((`sds`.`driver_id` = `d`.`id`)))
+join `driver_w_constructor_by_year` as `dwc`
+    on (`d`.id = dwc.driver_id)

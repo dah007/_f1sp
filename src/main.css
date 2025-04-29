@@ -93,3 +93,46 @@
     font-family: 'Racing Sans One', serif;
     font-weight: 700;
 }
+
+/* team colors */
+.alpine {
+    background-color: #02192b;
+}
+
+.aston-martin {
+    background-color: #002420;
+}
+
+.ferrari {
+    background-color: #ef1a2d;
+}
+
+.hass {
+    background-color: #e6002b;
+}
+
+.mclaren {
+    background-color: #ff8000;
+}
+
+.mercedes {
+    background-color: #00a19b;
+}
+
+.red-bull {
+    background-color: #c0bfbf;
+}
+
+.rb {
+    background-color: #2240ce;
+}
+
+.kick-sauber {
+    background-color: #00e701;
+}
+
+.williams {
+    background-color: #00a0de;
+}
+
+/* end team colors */

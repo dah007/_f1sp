@@ -8,14 +8,14 @@ import { setLastRaceResults, setRaceWGP } from 'slices/racesSlice';
 import { setError } from 'slices/siteWideSlice';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { ScrollArea } from './ui/scroll-area';
-import CardContainer from './CardContainer';
+import { cn } from '@/lib/utils';
 
 const LastRaceResultsPod: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
 
     const raceResults: RaceResultProps[] = useAppSelector((state: RootState) => state.races.lastRaceResults) ?? [];
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
-    const raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
+    // const raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
 
     const { data: raceWGPData } = useGetRaceWithGPQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
         data: Partial<RaceProps> | undefined;
@@ -68,28 +68,22 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
     };
 
     return (
-        <CardContainer
-            className="overflow-hidden"
-            childrenClassName="w-full m-0 p-0"
-            title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
-        >
-            <ScrollArea className="xl:h-[40vh] md:h-[20vh] h-[14vh] w-full border-t">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-2 text-right">Pos</TableHead>
-                            <TableHead className="w-2 text-right">No</TableHead>
-                            <TableHead>Driver</TableHead>
-                            <TableHead className="w-2 text-right">Gap</TableHead>
-                            <TableHead className="w-2 text-right">Points</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <RaceResults raceResults={raceResults} />
-                    </TableBody>
-                </Table>
-            </ScrollArea>
-        </CardContainer>
+        <ScrollArea className={cn('w-full height-full border-t mb-40')}>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-2 text-right">Pos</TableHead>
+                        <TableHead className="w-2 text-right">No</TableHead>
+                        <TableHead>Driver</TableHead>
+                        <TableHead className="w-2 text-right">Gap</TableHead>
+                        <TableHead className="w-2 text-right">Points</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <RaceResults raceResults={raceResults} />
+                </TableBody>
+            </Table>
+        </ScrollArea>
     );
 };
 

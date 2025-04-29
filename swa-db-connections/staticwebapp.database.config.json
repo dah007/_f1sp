@@ -195,6 +195,20 @@
                 }
             ]
         },
+
+        "standingsWithConstructors": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "standings_w_constructors"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
         "standingsWithDrivers": {
             "source": {
                 "type": "view",

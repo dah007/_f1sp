@@ -2,6 +2,7 @@ export interface ConstructorStanding {
     cName: string;
     constructor_id: string;
     emName: string;
+    full_name: string;
     engine_manufacturer_id: string;
     points: number;
     position_display_order: number;
@@ -19,4 +20,5 @@ export interface DriverStanding {
     position_number: number;
     position_text: string;
     year: number;
+    team_name: string;
 }

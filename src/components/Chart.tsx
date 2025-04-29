@@ -29,7 +29,7 @@ const Chart: React.FC<ChartProps> = ({
     yAxis,
 }) => {
     return (
-        <ChartContainer config={config} className={`min-h-[13vh] w-full ${className}`}>
+        <ChartContainer config={config} className={`xl:h-[40vh] md:h-[20vh] h-[14vh] w-full ${className}`}>
             <BarChart accessibilityLayer data={data} layout={layout} margin={{ top: 0 }}>
                 <CartesianGrid horizontal={false} />
                 <YAxis

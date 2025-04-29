@@ -1,17 +1,39 @@
 import { useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
-import CardContainer from './CardContainer';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { DriverStanding } from '@/types/standings';
-import { useGetDriverStandingsQuery } from '@/features/standingsApi';
 
-import { YEAR } from 'constants/constants';
-import { setDriverStandings } from '@/slices/standingsSlice';
-import { setError } from '@/slices/siteWideSlice';
+import { useGetDriverStandingsQuery } from 'features/standingsApi';
+import { setDriverStandings } from 'slices/standingsSlice';
+import { setError } from 'slices/siteWideSlice';
 
-const DriverStandings = ({ year = YEAR }: { year?: number }): JSX.Element => {
+import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
+import { cn } from '@/lib/utils';
+import { type DriverStanding } from 'types/standings';
+
+/**
+ * A component that displays the Formula 1 driver standings for a specified year.
+ *
+ * This component fetches driver standings data using the useGetDriverStandingsQuery hook
+ * and displays it in a tabular format. If data is available, it's stored in Redux state
+ * via the setDriverStandings action. If an error occurs during the data fetching,
+ * it dispatches the setError action.
+ *
+ * @component
+ * @param {object} props - The component props
+ * @param {number} [props.year=YEAR] - The year for which to display driver standings, defaults to current year constant
+ * @returns {JSX.Element} A table displaying driver positions, numbers, names, and points or a message if no data is available
+ *
+ * @example
+ * // Display standings for current year
+ * <DriverStandings />
+ *
+ * @example
+ * // Display standings for a specific year
+ * <DriverStandings year={2022} />
+ */
+const DriverStandings = ({ year = YEAR, className = '' }: { year?: number; className?: string }): JSX.Element => {
     const dispatch = useAppDispatch();
     const driverStandings = useAppSelector((state: RootState) => state.standings.drivers);
 
@@ -27,117 +49,37 @@ const DriverStandings = ({ year = YEAR }: { year?: number }): JSX.Element => {
             return;
         }
         if (!driverStandingsData) return;
-
-        console.info('%cDriverStandings data', 'background:green;color:white', driverStandingsData);
-
+        console.log('driverStandingsData', driverStandingsData);
         dispatch(setDriverStandings(driverStandingsData));
     }, [driverStandingsData, dispatch]);
 
-    // if (driverStandingsIsLoading) {
-    //     return <div>Loading...</div>;
-    // }
-
-    // if (driverStandingsIsError) {
-    //     return <div>Error loading driver standings.</div>;
-    // }
     if (!driverStandings) {
         return <div className="text-center italic">No driver standings available.</div>;
     }
     return (
-        <CardContainer className="overflow-hidden" childrenClassName="w-full m-0 p-0" title="Driver Standings">
-            <ScrollArea className="xl:h-[40] md:h-[20vh] h-[14vh] w-full border-t">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-4 text-right">Pos</TableHead>
-                            <TableHead className="w-4 text-right">No</TableHead>
-                            <TableHead>Driver</TableHead>
-                            <TableHead className="w-4 text-right">Points</TableHead>
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', className)}>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-4 text-right">Pos</TableHead>
+                        <TableHead className="w-4 text-right">No</TableHead>
+                        <TableHead>Driver</TableHead>
+                        <TableHead className="w-4 text-right">Points</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {driverStandings?.map((driver: DriverStanding, index: number) => (
+                        <TableRow key={`${driver.driver_id}-${index}`} className="h-8">
+                            <TableCell className="text-right">{driver.position_number}</TableCell>
+                            <TableCell className="text-right">{driver.permanent_number}</TableCell>
+                            <TableCell>{driver.name}</TableCell>
+                            <TableCell className="text-right">{driver.points}</TableCell>
                         </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {driverStandings?.map((driver: DriverStanding) => (
-                            <TableRow key={driver.driver_id}>
-                                <TableCell className="text-right">{driver.position_number}</TableCell>
-                                <TableCell className="text-right">{driver.permanent_number}</TableCell>
-                                <TableCell>{driver.name}</TableCell>
-                                <TableCell className="text-right">{driver.points}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </ScrollArea>
-        </CardContainer>
+                    ))}
+                </TableBody>
+            </Table>
+        </ScrollArea>
     );
 };
 
 export default DriverStandings;
-
-// import { useAppDispatch, useAppSelector } from '@/app/store';
-// import { YEAR } from '@/constants/constants';
-// import { useGetDriverStandingsQuery } from '@/features/standingsApi';
-// import React, { useEffect } from 'react';
-
-// // import { setDriverStandings } from 'slices/standingsSlice';
-// import { setError } from 'slices/siteWideSlice';
-// // import { useAppDispatch, useAppSelector } from 'app/store';
-// // import { useGetDriverStandingsQuery } from 'features/standingsApi';
-
-// import { intlNumberFormat } from 'utils/number';
-// import { ScrollArea, ScrollBar } from './ui/scroll-area';
-
-// interface DriverStandingProps {
-//     year?: number;
-// }
-
-// const DriverStandings: React.FC<DriverStandingProps> = ({ year = YEAR }: DriverStandingProps): JSX.Element => {
-//     const driverStandings = useAppSelector((state) => state.standings.drivers);
-
-//     const dispatch = useAppDispatch();
-
-//     const { data: dataDrivers, isError: error } = useGetDriverStandingsQuery(year) as {
-//         data: DriverStanding[] | undefined;
-//         isError: boolean;
-//     };
-
-//     useEffect(() => {
-//         if (!dataDrivers) return;
-//         console.log('DriverStandings dataDrivers', dataDrivers);
-//         dispatch(setDriverStandings(dataDrivers));
-//     }, [dataDrivers, dispatch]);
-
-//     if (error) {
-//         dispatch(setError(true));
-//     }
-//     const Drivers = ({ drivers }: { drivers: DriverStanding[] }) => {
-//         if (!drivers) return null;
-
-//         return driverStandings?.map((driver) => {
-//             return (
-//                 <div className="flex w-full gap-4 border-b border-gray-200 p-2 pr-6" key={driver.driver_id}>
-//                     <div className="p-0 pl-4 w-8 text-right">{driver.position_number}</div>
-//                     <div className="flex-1">{driver.name}</div>
-//                     <div className="p-0 pr-8 w-8 text-right">{intlNumberFormat(driver.points)}</div>
-//                 </div>
-//             );
-//         });
-//     };
-
-//     return (
-//         <div className="p-0 m-0">
-//             <div className="flex gap-4 p-2 pr-6 border-b border-gray-200">
-//                 <div className="p-0 w-8 ">Pos</div>
-//                 <div className="flex-1">Name</div>
-//                 <div className="p-0 pr-8 w-8">Points</div>
-//             </div>
-
-//             {/* <div className="grid grid-cols-3 grid-rows-1 gap-2"> */}
-//             <ScrollArea className="w-full h-full">
-//                 <ScrollBar />
-//                 {/* <Drivers drivers={driverStandings} /> */}
-//             </ScrollArea>
-//         </div>
-//     );
-// };
-
-// export default DriverStandings;

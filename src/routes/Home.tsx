@@ -1,8 +1,18 @@
 // import React, { useEffect } from 'react';
 // import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
+// import ConstructorStandings from '@/components/ConstructorsStandings';
+import CardContainer from '@/components/CardContainer';
 import DriverStandings from '@/components/DriverStandings';
-import { /*useAppDispatch, */ useAppSelector } from 'app/store';
+import ErrorDialog from '@/components/ErrorDialog';
+import LastRaceResultsPod from '@/components/LastRaceResultsPod';
+import NextReactBanner from '@/components/NextRaceBanner';
+import { FULL_ROW_HEIGHT } from '@/constants/constants';
+import { cn } from '@/lib/utils';
+import { RaceProps } from '@/types/races';
+// import { Card, CardContent, CardTitle } from '@/components/ui/card';
+// import { YEAR } from '@/constants/constants';
+import { /*useAppDispatch, */ RootState, useAppSelector } from 'app/store';
 // import CardContainer from 'components/CardContainer';
 // import ErrorDialog from 'components/ErrorDialog';
 // import LastRaceResultsPod from 'components/LastRaceResultsPod';
@@ -15,11 +25,11 @@ import { /*useAppDispatch, */ useAppSelector } from 'app/store';
 // import DriverOfTheDay from 'components/DriverOfTheDay';
 // import DriverStandings from 'components/DriverStandings';
 // import { YEAR } from 'constants/constants';
-import ErrorDialog from 'components/ErrorDialog';
+// import ErrorDialog from 'components/ErrorDialog';
 // import DriverStandings from 'components/DriverStandings';
 // import { YEAR } from 'constants/constants';
-import LastRaceResultsPod from 'components/LastRaceResultsPod';
-import NextReactBanner from 'components/NextRaceBanner';
+// import LastRaceResultsPod from 'components/LastRaceResultsPod';
+// import NextReactBanner from 'components/NextRaceBanner';
 // import DriverStandings from '/components/DriverStandings';
 // import Standings from './Standings';
 // import TotalWinsPod from 'components/TotalWinsPod';
@@ -46,6 +56,7 @@ import NextReactBanner from 'components/NextRaceBanner';
 
 const Home: React.FC = () => {
     // const dispatch = useAppDispatch();
+    const raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
     const systemError = useAppSelector((state) => state.siteWide.error);
 
     return (
@@ -73,10 +84,30 @@ const Home: React.FC = () => {
                 w-full"
                 >
                     <div className="row-start-1 col-start-1 w-full">
-                        <LastRaceResultsPod />
+                        <CardContainer
+                            className={cn('overflow-hidden dark:bg-stone-800 bg-stone-300', FULL_ROW_HEIGHT)}
+                            childrenClassName="w-full m-0 p-0"
+                            title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
+                        >
+                            <LastRaceResultsPod />
+                        </CardContainer>
+                    </div>
+                    <div className="row-start-2 col-start-1 w-full">
+                        {/* <Card className={cn(rowHeight, 'overflow-hidden', 'dark:bg-stone-800 bg-stone-300')}>
+                            <CardTitle className="pl-4 pt-0 m-0">Constructors Standings</CardTitle>
+                            <CardContent className="w-full m-0 p-0">
+                                <ConstructorsStanding className={rowHeight} year={YEAR} />
+                            </CardContent>
+                        </Card> */}
                     </div>
                     <div className="col-start-2 row-start-1">
-                        <DriverStandings />
+                        <CardContainer
+                            className={cn('overflow-hidden dark:bg-stone-800 bg-stone-300', FULL_ROW_HEIGHT)}
+                            childrenClassName="w-full m-0 p-0"
+                            title="Driver Standings"
+                        >
+                            <DriverStandings />
+                        </CardContainer>
                     </div>
                     {/* <div className="col-start-3 row-start-2">
                         <CardContainer

@@ -1,61 +1,76 @@
-import React /*, { useEffect, useState }*/ from 'react';
-// import { useGetConstructorStandingsQuery } from '../features/standingsApi';
+import { useEffect } from 'react';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
-// import type { ConstructorStanding } from 'types/standings';
+import { ScrollArea } from './ui/scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { useGetConstructorStandingsQuery } from 'features/standingsApi';
 
-// import { useAppDispatch, useAppSelector } from '../app/store';
-// import { setSelectedYear } from 'slices/siteWideSlice';
-// import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { setConstructorStandings } from 'slices/standingsSlice';
+import { setError } from 'slices/siteWideSlice';
 
-interface ConstructorsStandingProps {
-    year: number;
-}
+import { YEAR } from 'constants/constants';
+import { type ConstructorStanding } from 'types/standings';
+import { cn } from '@/lib/utils';
 
-const ConstructorsStanding: React.FC<ConstructorsStandingProps> = () => {
-    // const dispatch = useAppDispatch();
+const ConstructorStandings = ({ className, year = YEAR }: { className?: string; year?: number }): JSX.Element => {
+    const dispatch = useAppDispatch();
+    const constructorStandings = useAppSelector((state: RootState) => state.standings.constructors);
 
-    // const { data, isError, isLoading } = useGetConstructorStandingsQuery(year);
-    // const [constructors, setConstructors] = useState<ConstructorStanding[]>([]);
-    // const selectedYear = useAppSelector((state) => state.siteWide.selectedYear);
+    const { data: constructorStandingsData, isError: constructorStandingsIsError } = useGetConstructorStandingsQuery(
+        year,
+    ) as {
+        data: ConstructorStanding[] | undefined;
+        isLoading?: boolean;
+        isError: boolean;
+    };
 
-    // useEffect(() => {
-    //     if (selectedYear !== year) {
-    //         dispatch(setSelectedYear(year));
-    //     }
-    // }, [selectedYear, year, dispatch]);
+    useEffect(() => {
+        if (constructorStandingsIsError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (!constructorStandingsData) return;
+        console.log('constructorStandingsData', constructorStandingsData);
+        dispatch(setConstructorStandings(constructorStandingsData));
+    }, [constructorStandingsData, dispatch]);
 
-    // useEffect(() => {
-    //     if (data) {
-    //         setConstructors(data);
-    //     }
-    // }, [data]);
-
-    // if (isLoading) return <div>Loading...</div>;
-    // if (isError) return <div>Error: {isError.toString()}</div>;
-
-    // return (
-    //     <div className="flex flex-col gap-1">
-    //         <Table>
-    //             <TableHeader>
-    //                 <TableRow>
-    //                     <TableHead>Constructor</TableHead>
-    //                     <TableHead>Engine Manufacturer</TableHead>
-    //                     <TableHead className="text-right">Points</TableHead>
-    //                 </TableRow>
-    //             </TableHeader>
-    //             <TableBody>
-    //                 {constructors.map((constructor) => (
-    //                     <TableRow key={constructor.cName}>
-    //                         <TableCell>{constructor.cName}</TableCell>
-    //                         <TableCell>{constructor.emName}</TableCell>
-    //                         <TableCell className="text-right">{constructor.points}</TableCell>
-    //                     </TableRow>
-    //                 ))}
-    //             </TableBody>
-    //         </Table>
-    //     </div>
-    // );
-    return <>constructor</>;
+    if (!constructorStandings) {
+        return <div className="text-center italic">No constructors standings available.</div>;
+    }
+    return (
+        <ScrollArea className={cn(`w-full border-t mb-40`, className)}>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-4 text-right">Pos</TableHead>
+                        <TableHead>Constructor</TableHead>
+                        <TableHead className="w-4 text-right">Points</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {constructorStandings?.map((constructor: ConstructorStanding) => (
+                        <TableRow key={constructor.constructor_id}>
+                            <TableCell className="text-right">{constructor.position_number}</TableCell>
+                            <TableCell>{constructor.full_name}</TableCell>
+                            <TableCell className="text-right">{constructor.points}</TableCell>
+                        </TableRow>
+                    ))}
+                    {/* ? basically just a footer spacer */}
+                    <TableRow>
+                        <TableCell className="text-right" colSpan={3}>
+                            &nsp;
+                        </TableCell>
+                    </TableRow>
+                    {/* ? basically just a footer spacer */}
+                    <TableRow>
+                        <TableCell className="text-right" colSpan={3}>
+                            &nsp;
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </ScrollArea>
+    );
 };
 
-export default ConstructorsStanding;
+export default ConstructorStandings;

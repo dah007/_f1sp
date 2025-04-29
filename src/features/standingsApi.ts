@@ -9,8 +9,12 @@ export const standingsApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
     endpoints: (builder) => ({
         getConstructorStandings: builder.query({
-            query: (year: number = 2025) => `/standingsWithConstructors?year=${year}`,
-            transformResponse: (response: { data: DriverStanding }) => response?.data ?? [],
+            query: (year: number = 2025) =>
+                `/standingsWithConstructors?$filter=year eq ${year}&$orderby=position_display_order`,
+            transformResponse: (response: { value: DriverStanding }) => {
+                console.log('Constructor standings response:', response.value);
+                return response?.value ?? [];
+            },
             transformErrorResponse: (error) => {
                 console.error('Error fetching constructor standings:', error);
                 return buildErrorObject(error);
@@ -28,17 +32,6 @@ export const standingsApi = createApi({
                 return buildErrorObject(error);
             },
         }),
-
-        // getConstructosrStandings: builder.query({
-        //     queryFn: async (year: number = 2024) => {
-        //         try {
-        //             const data = await dbFetch(`/standingsWithConstructors?year=${year}`);
-        //             return { data: data.data };
-        //         } catch (error) {
-        //             return buildErrorObject(error);
-        //         }
-        //     },
-        // }),
     }),
 });
 

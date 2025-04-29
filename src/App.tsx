@@ -55,8 +55,9 @@ const App = () => {
             <div className="absolute right-4 top-4">
                 <ModeToggle />
             </div>
+
             <Router>
-                <div className="pt-0 mt-0 pb-10 flex flex-col gap-4">
+                <div className="pt-0 mt-0 pb-10 flex flex-col gap-4 h-[100vh]">
                     <div
                         className="border-2 border-b-0 border-l-0 border-r-0
                                 sm:border-amber-300 
