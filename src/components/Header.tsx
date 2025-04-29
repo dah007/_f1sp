@@ -43,7 +43,8 @@ const Header: React.FC = () => {
                 gap-6 
                 items-center 
                 content-end
-                justify-end
+                justify-start
+                w-full
                 bg-stone-300 
                 border-b 
                 border-b-stone-800 

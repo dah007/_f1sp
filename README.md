@@ -23,14 +23,12 @@ Formula 1 Stats and Predictions
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-[![Contributors][contributors-shield]][contributors-url]
+<!-- [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
-[![Azure Static Web Apps CI/CD](https://github.com/dah007/f1sp/actions/workflows/azure-static-web-apps-thankful-meadow-0f2e4ef10.yml/badge.svg)](https://github.com/dah007/f1sp/actions/workflows/azure-static-web-apps-thankful-meadow-0f2e4ef10.yml)
+[![LinkedIn][linkedin-shield]][linkedin-url] -->
 [![Vite][ViteJS-shield]][ViteJS-url] [![React][React.js]][React-url]
 [![TypeScript][TypeScript-shield]][TypeScript-url]
 [![React Router][React_Router-shield]][React_Router-url]
@@ -39,21 +37,19 @@ Formula 1 Stats and Predictions
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/dah007/f1sp">
-    <img src="src/assets/logos/f1_rank_just_car.png" alt="Logo" width="300">
+  <a href="https://github.com/dah007/_f1sp">
+    <img src="src/assets/f1sp.png" alt="F1//sp" width="175">
   </a>
 
-<h3 align="center">F1 // SP</h3>
-
   <p align="center">
-    F1 Stats and Voting app for the awesome F1DB.
+    F1 Stats and Fantasy style voting web app for the awesome F1DB.
     <br />
     <a href="https://github.com/dah007/f1sp/docs/SETUP.md"><strong>Setup »</strong></a>
     <br />
     <a href="https://github.com/dah007/f1sp/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/dah007/f1sp">View Demo</a>
+    <a href="https://f1db.app">View Site</a>
     ·
     <a href="https://github.com/dah007/f1sp/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -89,7 +85,8 @@ Formula 1 Stats and Predictions
 ## About The Project
 
 <p align="center">
-  <img src="public/screenshot.png" width="400" alt="site screenshot" />
+  <img src="public/29-Apr-2025_CircuitsSS.png" width="400" alt="site screenshot" />
+  <img src="public/29-Apr-2025_DriversSS.png" width="400" alt="site screenshot" />
 </p>
 
 Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `dah007`, `f1rank`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
@@ -100,8 +97,9 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Here are the steps required to get this project up and running in a local (or cloud) environment.
+
+I tried to make this a provider neutral project. If you find any places that I could have done more in that regard, please consider contributing.
 
 ### Prerequisites
 
@@ -184,10 +182,7 @@ See the [open issues](https://github.com/dah007/f1sp/issues) for a full list of 
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+I really could use some help with few different parts of the system. If you are interesting in contributing, here are the basic "rules"
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -216,7 +211,8 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Demian H. - <dholmberg@gmail.com>
+🌐: <a href="https://dah007.dev" target="_blank" rel="noreferrer">dah007.dev</a>
+📧: <a href="mailto:dah007@me.com">dah007@me.com</a>
 
 Project Link: [https://github.com/dah007/f1sp](https://github.com/dah007/f1sp)
 
@@ -246,7 +242,7 @@ Project Link: [https://github.com/dah007/f1sp](https://github.com/dah007/f1sp)
 [VSCode-url]: https://code.visualstudio.com/
 [ViteJS-shield]: https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff
 [ViteJS-url]: https://vitejs.dev
-[contributors-shield]: https://img.shields.io/github/contributors/dah007/f1sp.svg?style=for-the-badge
+<!-- [contributors-shield]: https://img.shields.io/github/contributors/dah007/f1sp.svg?style=for-the-badge
 [contributors-url]: https://github.com/dah007/f1sp/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/dah007/f1sp.svg?style=for-the-badge
 [forks-url]: https://github.com/dah007/f1sp/network/members
@@ -257,4 +253,4 @@ Project Link: [https://github.com/dah007/f1sp](https://github.com/dah007/f1sp)
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/dah007/
 [stars-shield]: https://img.shields.io/github/stars/dah007/f1sp.svg?style=for-the-badge
-[stars-url]: https://github.com/dah007/f1sp/stargazers
+[stars-url]: https://github.com/dah007/f1sp/stargazers -->
