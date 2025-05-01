@@ -1,3 +1,4 @@
+import { LucideCoffee } from 'lucide-react';
 import dah007Logo from '../assets/dah007-icon-logo.png';
 
 const Footer = () => {
@@ -14,6 +15,16 @@ const Footer = () => {
                     </div>
 
                     <ul className="mt-8 flex justify-start gap-6 sm:mt-0 sm:justify-end">
+                        <li className="text-nowrap">
+                            <a
+                                href="https://buymeacoffee.com/dah007"
+                                rel="noreferrer"
+                                target="_blank"
+                                title="Buy me a coffee"
+                            >
+                                <LucideCoffee className="text-yellow-400" />
+                            </a>
+                        </li>
                         <li>
                             <a
                                 href="http://www.github.com/dah007/_f1sp"

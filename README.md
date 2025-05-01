@@ -9,8 +9,7 @@ A comprehensive Formula 1 statistics portal built with React and TypeScript. Con
 
 ## 🏎️ Live App
 
-[View](https://f1db.app) <!-- Replace with your actual Azure Static Web App URL -->
-
+[View](https://f1db.app)
 ![Drivers Screenshot](/public/29-Apr-2025_DriversSS.png)
 ![Circuits Screenshot](/public/29-Apr-2025_CircuitsSS.png)
 
