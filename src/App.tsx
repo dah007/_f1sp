@@ -15,6 +15,7 @@ import { setRaceNext } from './slices/racesSlice';
 import Footer from './components/Footer';
 
 import Error404Image from './assets/images/404.png';
+import Leaderboard from './routes/Leaderboard';
 
 const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
 const Constructors = lazy(() => import('./routes/Constructors'));
@@ -86,6 +87,8 @@ const App = () => {
 
                         <Route path="drivers/:year?" element={<Drivers />} />
                         <Route path="drivers/:year/driver/:id" element={<DriverDetail />} />
+
+                        <Route path="leaderboard" element={<Leaderboard />} />
 
                         <Route path="account/new" element={<AccountNew />} />
                         <Route path="login" element={<LoginForm />} />

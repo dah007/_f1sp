@@ -227,6 +227,31 @@
             ]
         },
 
+        "createVote": {
+            "source": {
+                "type": "table",
+                "object": "vote",
+                "key-fields": ["id"]
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ],
+            "rest": {
+                "methods": ["post", "get"],
+                "path": "/createVote"
+            },
+            "graphql": {
+                "enabled": true,
+                "type": {
+                    "singular": "createVote",
+                    "plural": "createVote"
+                }
+            }
+        },
+
         "createUser": {
             "source": {
                 "type": "table",

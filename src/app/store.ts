@@ -18,6 +18,7 @@ import routeSlice from 'slices/routeSlice';
 import seasonApi from 'slices/seasonsSlice';
 import siteWideSlice from 'slices/siteWideSlice';
 import standingsReducer from 'slices/standingsSlice';
+import userReducer from 'slices/userSlice';
 
 // ? WHAT IS THIS CRACK!?
 /* The line `import { seasonsApi } from 'features/seasonsApi';` is importing the `seasonsApi` object
@@ -47,7 +48,9 @@ export const store = configureStore({
         seasons: seasonApi,
         siteWide: siteWideSlice,
         standings: standingsReducer,
+        user: userReducer,
     },
+
     // Adding the api middleware enables caching, invalidation, polling, and other features of RTK Query
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()

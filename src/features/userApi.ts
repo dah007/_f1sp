@@ -1,12 +1,8 @@
 import { REST_URL } from '@/constants/constants';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    passcode?: string;
-}
+import { VoteValueProps } from '@/types/vote';
+import { Driver } from '@/types/drivers';
+import { User } from '@/slices/userSlice';
 
 export interface CreateUserRequest {
     name: string;
@@ -14,31 +10,60 @@ export interface CreateUserRequest {
     passcode: string;
 }
 
+export interface SubmitVoteRequest {
+    userId: number;
+    raceId: number;
+    voteData: VoteValueProps;
+    email?: string;
+    passcode?: string;
+}
+
+export interface Vote {
+    blueTires: boolean;
+    driversInCrash: { [key: string]: string };
+    fastestLap: string;
+    finishOrder: Driver[];
+    firstLapCrash: boolean;
+    greenTires: boolean;
+    rain: boolean;
+    reds: number;
+    yellows: number;
+}
+
 export const userApi = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
+    baseQuery: fetchBaseQuery({
+        baseUrl: REST_URL,
+        prepareHeaders: (headers) => {
+            headers.set('Content-Type', 'application/json');
+            return headers;
+        },
+    }),
     endpoints: (builder) => ({
         getUser: builder.query<User, number | undefined>({
             query: (id: number | undefined) => `user/${id}`,
         }),
 
-        // Update to use proper endpoint path matching your Azure Data API config
         createUser: builder.mutation<User, CreateUserRequest>({
             query: (createUser) => ({
-                url: 'createUser', // This should match your Data API Builder REST path
+                url: 'user_add',
                 method: 'POST',
                 body: createUser,
             }),
         }),
 
-        // useCreateUserMutation: builder.mutation<User, Partial<User>>({
-        //     query: (newUser) => ({
-        //         url: 'user',
-        //         method: 'POST',
-        //         body: newUser,
-        //     }),
-        // }),
+        submitVote: builder.mutation<Vote, SubmitVoteRequest>({
+            query: (voteRequest) => ({
+                url: 'createVote',
+                method: 'POST',
+                body: voteRequest,
+            }),
+            transformErrorResponse: (response) => {
+                console.error('Vote submission error:', response);
+                return response;
+            },
+        }),
     }),
     reducerPath: 'userApi',
 });
 
-export const { useGetUserQuery, useCreateUserMutation } = userApi;
+export const { useGetUserQuery, useCreateUserMutation, useSubmitVoteMutation } = userApi;

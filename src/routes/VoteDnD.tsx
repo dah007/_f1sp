@@ -1,29 +1,32 @@
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import { useNavigate } from 'react-router-dom';
 import { DndContext, UniqueIdentifier } from '@dnd-kit/core';
 import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable';
 import { useEffect, useState } from 'react';
 
-import { Scrollbar } from '@radix-ui/react-scroll-area';
-import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-
-import { ScrollArea } from 'components/ui/scroll-area';
-import { useGetDriversByYearQuery } from 'features/driversApi';
-import { setDriversByYear } from 'slices/driversSlice';
-import { setError } from 'slices/siteWideSlice';
-import { Label } from 'components/ui/label';
+import Button from 'components/Button';
+import DriverCheckbox from 'components/Driver/DriverCheckbox';
+import LoadingToast from 'components/LoadingToast';
 import SortableItem from 'components/dnd-kit/SortableItem';
-import { useForm } from 'react-hook-form';
+import Toggle from 'components/Toggle';
+import { Card, CardTitle } from 'components/ui/card';
 import { Form } from 'components/ui/form';
 import { Input } from 'components/ui/input';
-import { cn } from '@/lib/utils';
-import LoadingToast from 'components/LoadingToast';
+import { Label } from 'components/ui/label';
+// import LoginForm from './LoginForm';
+import { ScrollArea } from 'components/ui/scroll-area';
+import { Scrollbar } from '@radix-ui/react-scroll-area';
+import { setDriversByYear } from 'slices/driversSlice';
+import { setError } from 'slices/siteWideSlice';
+import { useForm, FieldValues } from 'react-hook-form';
 
+import { useGetDriversByYearQuery } from 'features/driversApi';
+import { useSubmitVoteMutation } from 'features/userApi';
+
+import { YEAR } from 'constants/constants';
+import { cn } from '@/lib/utils';
 import { type Driver } from 'types/drivers';
 import { type VoteValueProps } from 'types/vote';
-import DriverCheckbox from 'components/Driver/DriverCheckbox';
-import { Card, CardTitle } from 'components/ui/card';
-import Toggle from 'components/Toggle';
-import { YEAR } from 'constants/constants';
-import LoginForm from './LoginForm';
 
 // export const FULL_ROW_HEIGHT = 'xl:h-[30vh] lg:h-[28vh] md:h-[25vh] h-[23vh] w-full';
 const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[30vh] min-h-[30vh]'; // Fixed typo from max-[30hx] to max-h-[30vh]
@@ -70,10 +73,20 @@ const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[30vh] min-h-[30vh]
 const Vote = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const form = useForm();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const driversByYear = useAppSelector((state: RootState) => state.drivers.driversByYear);
     const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
+    const user = useAppSelector((state: RootState) => state.user.user);
+
+    const [submitStatus, setSubmitStatus] = useState({
+        isSubmitting: false,
+        isSuccess: false,
+        isError: false,
+        errorMessage: '',
+    });
+
+    const [submitVote, { isLoading: isSubmittingVote }] = useSubmitVoteMutation();
 
     const [, setOriginalOrderDrivers] = useState<Driver[]>([]);
     const [voteOrderedDrivers, setVoteOrderedDrivers] = useState<Driver[]>(driversByYear ?? []);
@@ -124,7 +137,6 @@ const Vote = (): JSX.Element => {
             setVoteOrderedDrivers((drivers) => {
                 const oldIndex = drivers.findIndex((driver) => driver.id === active.id);
                 const newIndex = over ? drivers.findIndex((driver) => driver.id === over.id) : -1;
-                // update the voteValues with the new order
                 updateVoteValues({ finishOrder: arrayMove(drivers, oldIndex, newIndex) });
 
                 const updatedDrivers = arrayMove(drivers, oldIndex, newIndex);
@@ -133,16 +145,71 @@ const Vote = (): JSX.Element => {
         }
     };
 
+    const onSubmit = async (formData: FieldValues) => {
+        console.log('onSubmit');
+        console.log('formData', formData);
+        // try {
+        setSubmitStatus({
+            isSubmitting: true,
+            isSuccess: false,
+            isError: false,
+            errorMessage: '',
+        });
+
+        if (!raceNext?.id) {
+            throw new Error('Race information is missing');
+        }
+
+        const completeVoteData = {
+            ...voteValues,
+            finishOrder: voteOrderedDrivers.map((driver) => ({
+                position: driver.id,
+                name: driver.name,
+                id: driver.id,
+            })),
+            ...formData,
+        };
+
+        const userId = user?.id || 0;
+
+        const response = await submitVote({
+            userId,
+            raceId: raceNext.id,
+            voteData: completeVoteData,
+            email: user?.email || formData.email,
+            // passcode: user?.passcode || formData.passcode,
+        }).unwrap();
+
+        console.log('Vote submitted successfully:', response);
+
+        setSubmitStatus({
+            isSubmitting: false,
+            isSuccess: true,
+            isError: false,
+            errorMessage: '',
+        });
+
+        setTimeout(() => {
+            navigate('/vote/success');
+        }, 2000);
+        // } catch (error) {
+        //     console.error('Error submitting vote:', error);
+
+        //     setSubmitStatus({
+        //         isSubmitting: false,
+        //         isSuccess: false,
+        //         isError: true,
+        //         errorMessage: 'Error submitting vote. Please try again.',
+        //     });
+        // }
+    };
+
     if (driversByYearLoading) return <LoadingToast isLoading={driversByYearLoading} />;
 
     if (driversByYearError) {
         dispatch(setError(true));
         return <div>Error loading drivers</div>;
     }
-
-    const onSubmit = () => {
-        console.log('submitting vote...', voteValues);
-    };
 
     return (
         <Form {...form}>
@@ -154,6 +221,10 @@ const Vote = (): JSX.Element => {
                 >
                     Voting for: {raceNext?.date} - {raceNext?.short_name}
                 </div>
+
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4 krona-one-regular">
+                    Voting closes 1 hours before lights out & opens on Tuesday after a race.
+                </p>
 
                 <div
                     className="
@@ -302,7 +373,50 @@ const Vote = (): JSX.Element => {
                         </Card>
                     </div>
                     <div className="col-start-1 md:col-start-2 row-start-1 md:row-start-2 h-[1/3]">
-                        <LoginForm />
+                        <Card className="p-4 dark:bg-stone-800 bg-stone-300">
+                            <CardTitle className="mb-4">Submit Vote</CardTitle>
+
+                            {submitStatus.isError && (
+                                <div className="mb-4 p-3 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 rounded">
+                                    {submitStatus.errorMessage}
+                                </div>
+                            )}
+
+                            {submitStatus.isSuccess ? (
+                                <div className="text-center p-4">
+                                    <p className="text-green-600 dark:text-green-400 font-semibold">
+                                        Vote submitted successfully!
+                                    </p>
+                                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Redirecting...</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                                        <strong>NOTE:</strong> You are limited to a single vote per race. Any attempts
+                                        to vote more than once will just overwrite your previous vote.
+                                    </p>
+                                    <Button
+                                        type="submit"
+                                        variant="default"
+                                        className="w-full border border-stone-300 shadow-2xl"
+                                        disabled={isSubmittingVote || submitStatus.isSubmitting}
+                                    >
+                                        {isSubmittingVote ? 'Submitting...' : 'Submit Vote'}
+                                    </Button>
+
+                                    <div className="mt-4 text-center">
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            className="text-blue-500 hover:text-blue-700"
+                                            onClick={() => navigate('/account/new')}
+                                        >
+                                            New Account
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+                        </Card>
                     </div>
                 </div>
             </form>
