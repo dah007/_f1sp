@@ -20,11 +20,12 @@ const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
 const Constructors = lazy(() => import('./routes/Constructors'));
 const DriverDetail = lazy(() => import('./routes/DriverDetail'));
 const Drivers = lazy(() => import('./routes/Drivers'));
-// const LoginForm = lazy(() => import('./components/LoginForm'));
+const LoginForm = lazy(() => import('./routes/LoginForm'));
 const Races = lazy(() => import('./routes/Races'));
 const Seasons = lazy(() => import('./routes/Seasons'));
 const Standings = lazy(() => import('./routes/Standings'));
 const VoteDnD = lazy(() => import('./routes/VoteDnD'));
+const AccountNew = lazy(() => import('./routes/AccountNew'));
 
 const App = () => {
     const dispatch = useAppDispatch();
@@ -78,17 +79,25 @@ const App = () => {
                 >
                     <Routes>
                         <Route path="/" element={<Home />} />
+
                         <Route path="circuits" element={<Circuits />} />
+
                         <Route path="constructors/:year?" element={<Constructors />} />
+
                         <Route path="drivers/:year?" element={<Drivers />} />
                         <Route path="drivers/:year/driver/:id" element={<DriverDetail />} />
-                        {/* <Route path="login" element={<LoginForm />} /> */}
+
+                        <Route path="account/new" element={<AccountNew />} />
+                        <Route path="login" element={<LoginForm />} />
 
                         <Route path="races/:year?/*" element={<Races />} />
 
                         <Route path="seasons/:year?" element={<Seasons />} />
+
                         <Route path="standings" element={<Standings />} />
+
                         <Route path="vote" element={<VoteDnD />} />
+
                         <Route
                             path="*"
                             element={

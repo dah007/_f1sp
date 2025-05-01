@@ -9,7 +9,7 @@ import ModeToggle from './ModeToggle';
 const MenuButton = ({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) => (
     <Button
         variant="ghost"
-        className={cn('dark:text-red-700 text-red-900 hover:underline cursor-pointer font-bold', className)}
+        className={cn('dark:text-stone-300 text-stone-800 hover:underline cursor-pointer font-bold', className)}
         onClick={onClick}
     >
         {label}

@@ -18,8 +18,12 @@
         "host": {
             "mode": "production",
             "cors": {
-                "origins": ["http://localhost:4280"],
-                "allow-credentials": false
+                "origins": [
+                    "http://localhost:4280",
+                    "https://localhost:3000",
+                    "chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff"
+                ],
+                "allow-credentials": true
             },
             "authentication": {
                 "provider": "StaticWebApps"
@@ -221,6 +225,59 @@
                     "role": "anonymous"
                 }
             ]
+        },
+
+        "createUser": {
+            "source": {
+                "type": "table",
+                "object": "user",
+                "key-fields": ["id"]
+            },
+            "permissions": [
+                {
+                    "actions": ["create", "read"],
+                    "role": "anonymous"
+                },
+                {
+                    "actions": ["update", "delete"],
+                    "role": "authenticated"
+                }
+            ],
+            "rest": {
+                "methods": ["post", "get"],
+                "path": "/createUser"
+            },
+            "graphql": {
+                "enabled": true,
+                "type": {
+                    "singular": "User",
+                    "plural": "Users"
+                }
+            }
+        },
+        "readUser": {
+            "source": {
+                "type": "table",
+                "object": "user",
+                "key-fields": ["id"]
+            },
+            "permissions": [
+                {
+                    "actions": ["read"],
+                    "role": "anonymous"
+                }
+            ],
+            "rest": {
+                "methods": ["get"],
+                "path": "/readUser"
+            },
+            "graphql": {
+                "enabled": true,
+                "type": {
+                    "singular": "User",
+                    "plural": "Users"
+                }
+            }
         }
     }
 }

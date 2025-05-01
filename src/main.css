@@ -216,3 +216,15 @@
 }
 
 /* end team colors */
+
+span[data=switch-thumb] {
+    background-color: red;
+    /* var(--foreground); */
+    text-color: blue;
+}
+
+
+#airplane-mode {
+    z-index: 100;
+    /* background-color: red */
+}

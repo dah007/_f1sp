@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 import { dbFetch } from 'utils/index';

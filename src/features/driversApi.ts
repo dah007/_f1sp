@@ -28,14 +28,9 @@ export const driversApi = createApi({
             },
         }),
         getDriversByYear: builder.query({
-            queryFn: async (year: number = 2024) => {
-                try {
-                    const data = await dbFetch(`/driversByYear?year=${year}`);
-                    console.log('data:', data);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
+            query: (year: number = 2024) => `/drivers?$filter=year eq ${year}`,
+            transformResponse: (response: { value: Driver[] }) => {
+                return response;
             },
         }),
         getDriversByIds: builder.query({

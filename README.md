@@ -153,3 +153,7 @@ This project is licensed under the terms of the license included in the [LICENSE
 ## 📞 Support
 
 In general, this is offered as is, with no warranty. That said, if you need help figuring an issue. Or just have general questions, let me know <a href="mailto:dah007@me.com">email me</a>.
+
+## Legal
+
+All content presented on this site, including statistics, predictions, and analyses, is provided for informational and entertainment purposes only. This site respects all copyright laws and intellectual property rights. Any Formula 1-related trademarks, logos, or content remain the property of their respective owners. Do not think bad thoughts about Happy Fun Ball. This site is not affiliated with Formula 1 or its parent organizations. If you believe any material featured on this site violates copyright or intellectual property laws, please contact us immediately for review and resolution.
