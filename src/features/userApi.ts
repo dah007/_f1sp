@@ -51,6 +51,14 @@ export const userApi = createApi({
             }),
         }),
 
+        createVote: builder.mutation<User, CreateUserRequest>({
+            query: (userData) => ({
+                url: 'users',
+                method: 'POST',
+                body: userData,
+            }),
+        }),
+
         submitVote: builder.mutation<Vote, SubmitVoteRequest>({
             query: (voteRequest) => ({
                 url: 'createVote',
@@ -66,4 +74,4 @@ export const userApi = createApi({
     reducerPath: 'userApi',
 });
 
-export const { useGetUserQuery, useCreateUserMutation, useSubmitVoteMutation } = userApi;
+export const { useGetUserQuery, useCreateUserMutation, useCreateVoteMutation, useSubmitVoteMutation } = userApi;

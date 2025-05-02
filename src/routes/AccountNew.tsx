@@ -2,7 +2,21 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '@/components/Button';
 import PageContainer from '@/components/PageContainer';
-import { usecreateVoteMutation } from '@/features/userApi';
+import { useCreateVoteMutation } from '@/features/userApi';
+
+// Define types for the API
+export interface User {
+    id: string;
+    name: string;
+    email: string;
+}
+
+// Define the create user request type
+export interface CreateUserRequest {
+    name: string;
+    email: string;
+    passcode: string;
+}
 
 const AccountNew: React.FC = (): JSX.Element => {
     const [name, setName] = useState('');
@@ -14,7 +28,7 @@ const AccountNew: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
 
     // Use the RTK Query mutation hook
-    const [createVote, { isLoading }] = usecreateVoteMutation();
+    const [createVote, { isLoading }] = useCreateVoteMutation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

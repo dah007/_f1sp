@@ -13,7 +13,12 @@
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["/src/assets/images/*.{png,jpg,gif}", "/assets/*.{png,jpg,gif}", "/styles/*.{css}"]
+        "exclude": [
+            "/src/assets/images/*.{png,jpg,gif}",
+            "/src/assets/tracks/*.geojson",
+            "/assets/*.{png,jpg,gif}",
+            "/styles/*.{css}"
+        ]
     },
     "routes": [
         {
