@@ -25,11 +25,32 @@ const toggleMenu = () => {
     }
 };
 
+/**
+ * Header component for the F1//SP application.
+ *
+ * Renders a responsive navigation header with:
+ * - Logo that navigates to home page
+ * - Navigation menu with links to different sections
+ * - Dark mode toggle
+ * - Mobile-friendly menu with hamburger button for smaller screens
+ *
+ * The component adapts its layout based on screen size, showing different
+ * versions of the logo and menu for mobile vs desktop views.
+ *
+ * @returns JSX.Element - The rendered Header component
+ */
 const Header: React.FC = () => {
     const navigate = useNavigate();
 
+    /**
+     * Navigates to the specified path and toggles the menu state.
+     *
+     * @param path - The target path to navigate to
+     * @returns void
+     */
     const handleNavigation = (path: string) => {
         navigate(path);
+        toggleMenu();
     };
 
     return (
