@@ -1826,6 +1826,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-separator@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "@radix-ui/react-separator@npm:1.1.4"
+  dependencies:
+    "@radix-ui/react-primitive": "npm:2.1.0"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/79ce54baceeaff30a518bf99cc6cbc292767ee730eb20d276664791d1530e991f870440a4dbf82b93710fdd165d18be1f8e44a0bd3ffd1a0c52e49d71838e49c
+  languageName: node
+  linkType: hard
+
 "@radix-ui/react-slot@npm:1.2.0, @radix-ui/react-slot@npm:^1.2.0":
   version: 1.2.0
   resolution: "@radix-ui/react-slot@npm:1.2.0"
@@ -1863,6 +1882,36 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 10c0/0cae52e27fd65fc68dea5078312985c8b9f4c98447ddde9d0b913c2d31d79c1054975f2f6c52485d64c5804aa638a2e5b0877f7ea58e2cc46bfc60aaa442df2f
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-tooltip@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@radix-ui/react-tooltip@npm:1.2.4"
+  dependencies:
+    "@radix-ui/primitive": "npm:1.1.2"
+    "@radix-ui/react-compose-refs": "npm:1.1.2"
+    "@radix-ui/react-context": "npm:1.1.2"
+    "@radix-ui/react-dismissable-layer": "npm:1.1.7"
+    "@radix-ui/react-id": "npm:1.1.1"
+    "@radix-ui/react-popper": "npm:1.2.4"
+    "@radix-ui/react-portal": "npm:1.1.6"
+    "@radix-ui/react-presence": "npm:1.1.4"
+    "@radix-ui/react-primitive": "npm:2.1.0"
+    "@radix-ui/react-slot": "npm:1.2.0"
+    "@radix-ui/react-use-controllable-state": "npm:1.2.2"
+    "@radix-ui/react-visually-hidden": "npm:1.2.0"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/da07e538f26a309edac954bf6bd04835209e96ec79c6812cebd656f94513b4b6667501a610aeb85f3858310be2d6c4acb3a279857bafd2578be36f30962ebee6
   languageName: node
   linkType: hard
 
@@ -5267,8 +5316,10 @@ __metadata:
     "@radix-ui/react-navigation-menu": "npm:^1.2.10"
     "@radix-ui/react-scroll-area": "npm:^1.2.6"
     "@radix-ui/react-select": "npm:^2.2.2"
+    "@radix-ui/react-separator": "npm:^1.1.4"
     "@radix-ui/react-slot": "npm:^1.2.0"
     "@radix-ui/react-switch": "npm:^1.2.2"
+    "@radix-ui/react-tooltip": "npm:^1.2.4"
     "@reduxjs/toolkit": "npm:^2.7.0"
     "@tailwindcss/forms": "npm:^0.5.10"
     "@tailwindcss/vite": "npm:^4.0.6"
@@ -5296,7 +5347,7 @@ __metadata:
     globals: "npm:^15.14.0"
     jest-environment-jsdom: "npm:^29.7.0"
     jsdom: "npm:^26.0.0"
-    lucide-react: "npm:^0.503.0"
+    lucide-react: "npm:^0.506.0"
     mapbox-gl: "npm:^3.11.1"
     prettier: "npm:^3.5.0"
     react: "npm:^18.0.0"
@@ -7247,12 +7298,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.503.0":
-  version: 0.503.0
-  resolution: "lucide-react@npm:0.503.0"
+"lucide-react@npm:^0.506.0":
+  version: 0.506.0
+  resolution: "lucide-react@npm:0.506.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/97d282acf1a384da690cd973804d11737ebdba744cd11b2a3807a06d407e0f1f975723d9ce4afcb55058e6bd179d77029272cddcc726232339a3fde263b375b4
+  checksum: 10c0/2f6ece3804804e2a558d179a9df2a472b736f8152d3daa6847dd0bf62330aefc2b1d02354ce0ab09a8d4e3018a915c7977ff56dadbe1c0fb06bc34bceca214a8
   languageName: node
   linkType: hard
 

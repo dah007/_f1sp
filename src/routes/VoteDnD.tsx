@@ -217,7 +217,7 @@ const Vote = (): JSX.Element => {
                 {/* TITLE */}
                 <div
                     className="
-                    w-full dark:text-stone-300 text-stone-800 text-center p-4 text-2xl krona-one-regular"
+                    w-full dark:text-zinc-300 text-zinc-800 text-center p-4 text-2xl krona-one-regular"
                 >
                     Voting for: {raceNext?.date} - {raceNext?.short_name}
                 </div>
@@ -242,7 +242,7 @@ const Vote = (): JSX.Element => {
                             className={cn(
                                 columnHeights,
                                 'overflow-hidden',
-                                'dark:bg-stone-800 bg-stone-300 w-full h-full',
+                                'dark:bg-zinc-800 bg-zinc-300 w-full h-full',
                             )}
                         >
                             <CardTitle className="pl-4 pt-0 m-0">Finish Order</CardTitle>
@@ -267,14 +267,14 @@ const Vote = (): JSX.Element => {
                     </div>
                     {/* RIGHT COLUMNs */}
                     <div className="h-[3/5]">
-                        <Card className={cn('overflow-hidden', 'dark:bg-stone-800 bg-stone-300 w-full')}>
+                        <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full')}>
                             <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
                             <div className="flex gap-4 flex-col-[1fr,*]">
                                 {/* FIRST LAP CRASH */}
                                 <div className="overflow-hidden rounded-lg p-4 flex flex-col gap-3">
                                     <div className="flex items-center space-x-2">
                                         <Toggle
-                                            className="border-stone-500"
+                                            className="border-zinc-500"
                                             id="firstLapCrash"
                                             onClick={() => {
                                                 setToggleCrash(!toggleCrash);
@@ -284,10 +284,10 @@ const Vote = (): JSX.Element => {
                                         <Label htmlFor="firstLapCrash">Crash on First Lap</Label>
                                     </div>
 
-                                    <div className={cn('border', 'border-stone-400 p-4 rounded-lg')}>
+                                    <div className={cn('border', 'border-zinc-400 p-4 rounded-lg')}>
                                         <Label
                                             htmlFor="driversInCrash"
-                                            className="w-full p-1 pl-0 pb-0 border-b-stone-300 border-b text-lg"
+                                            className="w-full p-1 pl-0 pb-0 border-b-zinc-300 border-b text-lg"
                                         >
                                             Drivers in crash
                                         </Label>
@@ -317,7 +317,7 @@ const Vote = (): JSX.Element => {
                                         Total Yellows
                                     </Label>
                                     <Input
-                                        className="border-stone-400"
+                                        className="border-zinc-400"
                                         id="yellows"
                                         min={0}
                                         onChange={(e) => updateVoteValues({ yellows: Number(e.target.value) })}
@@ -329,7 +329,7 @@ const Vote = (): JSX.Element => {
                                     </Label>
 
                                     <Input
-                                        className="border-stone-400"
+                                        className="border-zinc-400"
                                         id="reds"
                                         min={0}
                                         onChange={(e) => updateVoteValues({ reds: Number(e.target.value) })}
@@ -373,7 +373,7 @@ const Vote = (): JSX.Element => {
                         </Card>
                     </div>
                     <div className="col-start-1 md:col-start-2 row-start-1 md:row-start-2 h-[1/3]">
-                        <Card className="p-4 dark:bg-stone-800 bg-stone-300">
+                        <Card className="p-4 dark:bg-zinc-800 bg-zinc-300">
                             <CardTitle className="mb-4">Submit Vote</CardTitle>
 
                             {submitStatus.isError && (
@@ -398,7 +398,7 @@ const Vote = (): JSX.Element => {
                                     <Button
                                         type="submit"
                                         variant="default"
-                                        className="w-full border border-stone-300 shadow-2xl"
+                                        className="w-full border border-zinc-300 shadow-2xl"
                                         disabled={isSubmittingVote || submitStatus.isSubmitting}
                                     >
                                         {isSubmittingVote ? 'Submitting...' : 'Submit Vote'}

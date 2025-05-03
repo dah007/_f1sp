@@ -4,10 +4,10 @@ import errorImage500 from 'assets/images/500.png';
 const ErrorDialog: React.FC = () => {
     return (
         <Dialog defaultOpen={true}>
-            <DialogContent className="z-50 border border-stone-300 bg-white dark:bg-stone-900 dark:border-stone-50">
-                <DialogHeader className="dark:border-stone-50">
-                    <DialogTitle className="text-3xl racingFont-bold dark:text-stone-50">500 Error</DialogTitle>
-                    <DialogDescription className="text-stone-500 dark:text-stone-400">
+            <DialogContent className="z-50 border border-zinc-300 bg-white dark:bg-zinc-900 dark:border-zinc-50">
+                <DialogHeader className="dark:border-zinc-50">
+                    <DialogTitle className="text-3xl racingFont-bold dark:text-zinc-50">500 Error</DialogTitle>
+                    <DialogDescription className="text-zinc-500 dark:text-zinc-400">
                         We are sorry, but something went wrong. Please try again later.
                         <br />
                         <img

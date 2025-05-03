@@ -66,7 +66,7 @@ const AccountNew: React.FC = (): JSX.Element => {
                 be used for is to track votes.
             </p>
             <p>You will never get email from the site, since I don&apos;t have an email service set up. :P</p>
-            <div className="max-w-md mx-auto mt-8 p-6 bg-stone-100 dark:bg-stone-800 rounded-lg shadow-md">
+            <div className="max-w-md mx-auto mt-8 p-6 bg-zinc-100 dark:bg-zinc-800 rounded-lg shadow-md">
                 {success ? (
                     <div className="text-center">
                         <h2 className="text-xl font-semibold text-green-600 dark:text-green-400">
@@ -93,7 +93,7 @@ const AccountNew: React.FC = (): JSX.Element => {
                                 type="text"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full p-2 border rounded dark:bg-stone-700 dark:border-stone-600"
+                                className="w-full p-2 border rounded dark:bg-zinc-700 dark:border-zinc-600"
                                 required
                             />
                         </div>
@@ -107,7 +107,7 @@ const AccountNew: React.FC = (): JSX.Element => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-2 border rounded dark:bg-stone-700 dark:border-stone-600"
+                                className="w-full p-2 border rounded dark:bg-zinc-700 dark:border-zinc-600"
                                 required
                             />
                         </div>
@@ -121,7 +121,7 @@ const AccountNew: React.FC = (): JSX.Element => {
                                 type="password"
                                 value={passcode}
                                 onChange={(e) => setPasscode(e.target.value)}
-                                className="w-full p-2 border rounded dark:bg-stone-700 dark:border-stone-600"
+                                className="w-full p-2 border rounded dark:bg-zinc-700 dark:border-zinc-600"
                                 required
                                 minLength={6}
                             />
@@ -133,7 +133,7 @@ const AccountNew: React.FC = (): JSX.Element => {
                         <Button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full flex justify-center border border-stone-800 dark:border-stone-300"
+                            className="w-full flex justify-center border border-zinc-800 dark:border-zinc-300"
                         >
                             {isLoading ? 'Creating...' : 'Create Account'}
                         </Button>

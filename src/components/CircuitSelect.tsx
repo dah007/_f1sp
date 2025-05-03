@@ -5,12 +5,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { BUTTON_CLASSES } from '@/constants/constants';
 
 interface CircuitSelectProps {
-    circuitsData: CircuitDetailsProps[]; // CircuitProps[];
-    circuit: CircuitProps;
-    map: Map | null;
-    setCircuit: (circuit: CircuitProps) => void;
-    setContinent: (continent: string) => void;
-    gotoCircuit: (props: GotoCircuitProps) => void;
+    circuitsData: CircuitDetailsProps; // CircuitProps[];
+    circuit?: CircuitProps;
+    map?: Map | null;
+    setCircuit?: (circuit: CircuitProps) => void;
+    setContinent?: (continent: string) => void;
+    gotoCircuit?: (props: GotoCircuitProps) => void;
 }
 
 /**
@@ -37,22 +37,24 @@ const CircuitSelect = ({
     return (
         <div className="w-72">
             <Select
-                onValueChange={(circuit) =>
-                    gotoCircuit({
-                        circuitId: circuit,
-                        map: map,
-                        setCircuit,
-                        setContinent,
-                    })
-                }
+                onValueChange={(circuit) => {
+                    if (gotoCircuit && setCircuit && map) {
+                        gotoCircuit({
+                            circuitId: circuit,
+                            map: map,
+                            setCircuit,
+                            setContinent,
+                        });
+                    }
+                }}
             >
                 <SelectTrigger role="button" className={BUTTON_CLASSES}>
                     <SelectValue placeholder={circuit?.full_name || 'Select Circuit'} />
                 </SelectTrigger>
                 <SelectContent className="select">
-                    {circuitsData?.map((circuit, index) => (
-                        <SelectItem key={index} value={String(circuit.id)} className="cursor-pointer">
-                            {circuit.full_name.toString()}
+                    {Object.keys(circuitsData).map((key) => (
+                        <SelectItem key={key} value={key}>
+                            {circuitsData[key].full_name}
                         </SelectItem>
                     ))}
                 </SelectContent>

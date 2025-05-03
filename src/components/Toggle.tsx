@@ -63,12 +63,12 @@ const Toggle: React.FC<ToggleProps> = ({
                 }
             }}
             className={cn(
-                'relative block h-4 w-8 rounded-full bg-stone-700 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-green-600',
+                'relative block h-4 w-8 rounded-full bg-zinc-700 transition-colors [-webkit-tap-highlight-color:_transparent] has-checked:bg-green-600',
                 className,
             )}
         >
             <input type="checkbox" id={id} className="peer sr-only" {...props} />
-            <span className="absolute inset-y-0 left-0 aspect-square rounded-full bg-stone-300 shadow-md transition-all peer-checked:left-4 peer-checked:bg-stone-200"></span>
+            <span className="absolute inset-y-0 left-0 aspect-square rounded-full bg-zinc-300 shadow-md transition-all peer-checked:left-4 peer-checked:bg-zinc-200"></span>
         </label>
     );
 };

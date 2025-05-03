@@ -10,8 +10,8 @@ body {
 
 .select {
     @apply appearance-none;
-    @apply bg-stone-300;
-    @apply text-stone-800;
-    @apply dark:bg-stone-800;
-    @apply dark:text-stone-300;
+    @apply bg-zinc-300;
+    @apply text-zinc-800;
+    @apply dark:bg-zinc-800;
+    @apply dark:text-zinc-300;
 }

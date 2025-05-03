@@ -9,7 +9,7 @@ import ModeToggle from './ModeToggle';
 const MenuButton = ({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) => (
     <Button
         variant="ghost"
-        className={cn('dark:text-stone-300 text-stone-800 hover:underline cursor-pointer font-bold', className)}
+        className={cn('dark:text-zinc-300 text-zinc-800 hover:underline cursor-pointer font-bold', className)}
         onClick={onClick}
     >
         {label}
@@ -55,7 +55,7 @@ const Header: React.FC = () => {
 
     return (
         <>
-            <div className="absolute right-4 top-4 sm:hidden md:visible z-10">
+            <div className="absolute right-4 top-4 hidden md:visible z-50">
                 <ModeToggle />
             </div>
             <header
@@ -66,11 +66,11 @@ const Header: React.FC = () => {
                 content-end
                 justify-start
                 w-full
-                bg-stone-300 
+                bg-zinc-300 
                 border-b 
-                border-b-stone-800 
-                dark:border-b-stone-300 
-                dark:bg-stone-800 
+                border-b-zinc-800 
+                dark:border-b-zinc-300 
+                dark:bg-zinc-800 
                 p-4 
 
                 shadow-md"
@@ -90,7 +90,7 @@ const Header: React.FC = () => {
                 {/* MENU ITEMS> */}
                 <ul
                     id="menu"
-                    className="hidden fixed top-0 right-0 px-10 py-16 bg-stone-900 z-50 lg:relative lg:flex lg:p-0 lg:bg-transparent lg:flex-row lg:space-x-6"
+                    className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50 lg:relative lg:flex lg:p-0 lg:bg-transparent lg:flex-row lg:space-x-6"
                 >
                     <li className="md:hidden z-90 fixed top-4 right-6">
                         <a href="javascript:void(0)" className="text-right text-white text-4xl" onClick={toggleMenu}>

@@ -85,7 +85,7 @@ const Home: React.FC = () => {
                 >
                     <div className="row-start-1 col-start-1 w-full">
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-stone-800 bg-stone-300', FULL_ROW_HEIGHT)}
+                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', FULL_ROW_HEIGHT)}
                             childrenClassName="w-full m-0 p-0"
                             title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
                         >
@@ -93,7 +93,7 @@ const Home: React.FC = () => {
                         </CardContainer>
                     </div>
                     <div className="row-start-2 col-start-1 w-full">
-                        {/* <Card className={cn(rowHeight, 'overflow-hidden', 'dark:bg-stone-800 bg-stone-300')}>
+                        {/* <Card className={cn(rowHeight, 'overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300')}>
                             <CardTitle className="pl-4 pt-0 m-0">Constructors Standings</CardTitle>
                             <CardContent className="w-full m-0 p-0">
                                 <ConstructorsStanding className={rowHeight} year={YEAR} />
@@ -102,7 +102,7 @@ const Home: React.FC = () => {
                     </div>
                     <div className="col-start-2 row-start-1">
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-stone-800 bg-stone-300', FULL_ROW_HEIGHT)}
+                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', FULL_ROW_HEIGHT)}
                             childrenClassName="w-full m-0 p-0"
                             title="Driver Standings"
                         >

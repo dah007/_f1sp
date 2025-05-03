@@ -54,14 +54,14 @@ const ModeToggle = () => {
 
     return (
         <button
-            className="p-2 rounded-md bg-stone-200 dark:bg-stone-800 cursor-pointer"
+            className="p-2 rounded-md bg-zinc-200 dark:bg-zinc-800 cursor-pointer"
             onClick={modeToggleClickHandler}
             type="button"
             aria-label="Toggle dark mode"
             title="Toggle dark mode"
         >
-            {currentTheme === 'light' && <LucideSun className="h-5 w-5 text-stone-800 dark:text-stone-200" />}
-            {currentTheme === 'dark' && <LucideMoon className="h-5 w-5 text-stone-800 dark:text-stone-200" />}
+            {currentTheme === 'light' && <LucideSun className="h-5 w-5 text-zinc-800 dark:text-zinc-200" />}
+            {currentTheme === 'dark' && <LucideMoon className="h-5 w-5 text-zinc-800 dark:text-zinc-200" />}
         </button>
     );
 };

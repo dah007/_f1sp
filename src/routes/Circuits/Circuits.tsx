@@ -1,17 +1,8 @@
+import { RootState, useAppSelector } from 'app/store';
+import { useAppDispatch } from 'hooks/reduxHooks';
 import { useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
 import mapboxgl, { Map } from 'mapbox-gl';
 
-import { useGetCircuitsQuery } from '../../features/circuitsApi';
-
-import { CIRCUIT_DETAILS } from '../../constants/circuitConstants';
-
-import type { CircuitProps, CircuitDetailsProps } from 'types/circuits';
-
-import 'mapbox-gl/dist/mapbox-gl.css';
-// import { setRaceNext } from '../../slices/racesSlice';
-import { setError } from 'slices/siteWideSlice';
-import PageContainer from 'components/PageContainer';
 import {
     gotoCircuit,
     gotoContinent,
@@ -19,54 +10,41 @@ import {
     SHOW_PIN_ZOOM,
     updateMarkerVisibility,
 } from './CircuitFunctions';
-// import LoadingToast from '@/components/LoadingToast';
+
 import CircuitSelect from 'components/CircuitSelect';
 import ContinentSelect from './ContinentSelect';
+import PageContainer from 'components/PageContainer';
+
+import { setError } from 'slices/siteWideSlice';
+
+import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
+import { type CircuitProps } from 'types/circuits';
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
-const Circuits: React.FC = () => {
-    const originalLabel = '-- Select a circuit --';
+const Circuits: React.FC = (): JSX.Element => {
+    const [lat, setLat] = useState<string | number | undefined>(42.35);
+    const [lng, setLng] = useState<string | number | undefined>(-70.9);
+    const [zoom, setZoom] = useState<string | number | undefined>(9);
+
     const dispatch = useAppDispatch();
 
     const circuitsMap = useRef<HTMLDivElement | null>(null);
     const mapContainer = useRef<Map | null>(null);
+    const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
 
-    const [circuitsData, setCircuitsData] = useState<CircuitProps[]>();
-
-    const [, setDropdownLabel] = useState<string>(originalLabel);
-
-    const [lat, setLat] = useState<string | number | undefined>(42.35);
-    const [lng, setLng] = useState<string | number | undefined>(-70.9);
-
-    const [, setSelectedCircuit] = useState<CircuitProps>();
-    const [zoom, setZoom] = useState<string | number | undefined>(9);
-
-    const [circuit, setCircuit] = useState<CircuitProps | undefined>(CIRCUIT_DETAILS['baku']);
+    const [circuit, setCircuit] = useState(CIRCUIT_DETAILS['baku']);
+    const [circuitBBox, setCircuitBBox] = useState<CircuitProps['bbox']>(CIRCUIT_DETAILS['baku']?.bbox);
     const [continent, setContinent] = useState<string | undefined>('Europe');
-
-    const { data: circuitData } = useGetCircuitsQuery({
-        endYear: new Date().getFullYear(),
-        startYear: new Date().getFullYear() - 10,
-    });
-
-    const raceNext = useAppSelector((state) => state.races.raceNext);
 
     // ? begin map
     useEffect(() => {
         if (!circuitsMap.current) return;
-        if (!circuitData) return;
-
-        let circuitBBox = CIRCUIT_DETAILS['baku']?.bbox;
-        let circuit = CIRCUIT_DETAILS['baku']; // circuitData.find((circuit: CircuitProps) => circuit.full_name === 'Baku City Circuit');
 
         if (raceNext) {
-            circuitBBox = CIRCUIT_DETAILS[raceNext.circuit_id]?.bbox;
-            circuit = CIRCUIT_DETAILS['baku']; // circuitData.find((circuit: CircuitProps) => circuit.id === raceNext.circuit_id);
+            setCircuitBBox(CIRCUIT_DETAILS[raceNext.circuit_id]?.bbox);
+            setCircuit(CIRCUIT_DETAILS[raceNext.circuit_id]);
         }
-
-        setDropdownLabel(circuit?.full_name || originalLabel);
-        setSelectedCircuit(circuit);
 
         try {
             mapContainer.current = new mapboxgl.Map({
@@ -79,39 +57,36 @@ const Circuits: React.FC = () => {
             console.error('Error creating map:', error);
             dispatch(setError(true));
         }
-
-        // ? set all circuit state var
-        setCircuitsData(circuitData as CircuitProps[]);
-
         if (!mapContainer.current) return;
 
         mapContainer.current.on('load', () => {
             if (!mapContainer.current) return;
             loadCircuitLayers({
-                data: circuitData as CircuitProps[],
+                data: CIRCUIT_DETAILS,
                 mapContainer: mapContainer.current,
+            });
+            mapContainer.current?.fitBounds(circuitBBox, {
+                padding: 20,
+                maxZoom: SHOW_PIN_ZOOM,
             });
         });
 
-        mapContainer.current.fitBounds(circuitBBox, {
-            padding: { top: 25, bottom: 25, left: 15, right: 15 },
-        });
-
-        mapContainer.current.on('move', () => {
+        const moveHandler = () => {
             if (!mapContainer.current) return;
 
             setLng(mapContainer.current?.getCenter().lng.toFixed(4));
             setLat(mapContainer.current?.getCenter().lat.toFixed(4));
             setZoom(mapContainer.current?.getZoom().toFixed(2));
             updateMarkerVisibility(mapContainer.current?.getZoom() || SHOW_PIN_ZOOM);
-        });
+        };
 
-        return () => mapContainer.current!.remove();
-    }, [dispatch, circuitData, raceNext]);
-    // ? end map
+        mapContainer.current.on('move', moveHandler);
 
-    // if (isLoading) return <LoadingToast isLoading={raceNextLoading || isLoading} />;
-    // if (error || raceNextError) dispatch(setError(true));
+        return () => {
+            mapContainer.current!.off('move', moveHandler);
+            mapContainer.current!.remove();
+        };
+    }, [dispatch, CIRCUIT_DETAILS, raceNext]);
 
     const mapInfo = () => {
         const returnJSX = [];
@@ -128,9 +103,9 @@ const Circuits: React.FC = () => {
     return (
         <PageContainer title="Circuits" showBreadcrumbs showTitle>
             <div className="z-50 h-full relative w-full gap-4 rounded-md flex justify-around">
-                <div className="absolute z-50 flex gap-2 rounded-md mapInfo top-2 left-2">
+                <div className="absolute z-50 flex gap-2 rounded-md mapInfo top-2 left-2 right-2">
                     <CircuitSelect
-                        circuitsData={(circuitsData as unknown as CircuitDetailsProps[]) || []}
+                        circuitsData={CIRCUIT_DETAILS || []}
                         circuit={circuit || CIRCUIT_DETAILS['baku']}
                         map={mapContainer.current}
                         setCircuit={setCircuit}
@@ -140,12 +115,14 @@ const Circuits: React.FC = () => {
                     <ContinentSelect
                         continent={continent || 'Europe'}
                         map={mapContainer.current}
-                        setCircuit={setCircuit}
+                        setCircuit={(circuit) => setCircuit(circuit || CIRCUIT_DETAILS['baku'])}
                         setContinent={setContinent}
                         gotoContinent={gotoContinent}
                     />
                 </div>
-                <div className="absolute z-50 p-2 top-2 right-2 bg-opacity-4">{mapInfo()}</div>
+                <div className="absolute z-50 p-2 bg-black rounded-md mapInfo top-2 right-2 bg-opacity-40">
+                    {mapInfo()}
+                </div>
                 <div
                     className="rounded-lg z-40"
                     ref={circuitsMap}

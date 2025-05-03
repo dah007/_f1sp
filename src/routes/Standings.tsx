@@ -183,19 +183,19 @@ const Standings: React.FC = (): JSX.Element => {
                 */}
             <div className={cn(FULL_ROW_HEIGHT, 'flex flex-col lg:flex-row gap-4 m-0 mb-4 p-0')}>
                 {/* <Card
-                    className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-stone-800 bg-stone-300 w-full')}
+                    className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-zinc-800 bg-zinc-300 w-full')}
                 >
                     <CardContent className="w-full m-0 p-4 content-end">
                         <ConstructorChart data={colorConstructors} constructorsChartConfig={constructorsChartConfig} />
                     </CardContent>
                 </Card> */}
-                <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-stone-800 bg-stone-300 w-full')}>
+                <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-zinc-800 bg-zinc-300 w-full')}>
                     <AspectRatio ratio={16 / 9}>
                         <ConstructorChart data={colorConstructors} constructorsChartConfig={constructorsChartConfig} />
                     </AspectRatio>
                 </div>
 
-                <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-stone-800 bg-stone-300 w-full')}>
+                <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full')}>
                     <CardTitle className="pl-4 pt-0 m-0">Constructors Standings</CardTitle>
                     <CardContent className="w-full m-0 p-0">
                         <ConstructorsStanding className={FULL_ROW_HEIGHT} year={selectedYear} />
@@ -207,19 +207,19 @@ const Standings: React.FC = (): JSX.Element => {
                         DRIVERS
                 */}
             <div className={cn(FULL_ROW_HEIGHT, 'grid grid-cols-2 grid-rows-2 gap-4 m-0 p-0')}>
-                <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-stone-800 bg-stone-300')}>
+                <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300')}>
                     <CardTitle className="pl-4 pt-0 m-0">Driver Standings</CardTitle>
                     <DriverStandings className={FULL_ROW_HEIGHT} year={selectedYear} />
                 </Card>
 
-                <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-stone-800 bg-stone-300')}>
+                <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-zinc-800 bg-zinc-300')}>
                     <AspectRatio ratio={16 / 9}>
                         <DriverChart data={colorDrivers} driversChartConfig={driversChartConfig} />
                     </AspectRatio>
                 </div>
 
                 {/* <Card
-                    className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-stone-800 bg-stone-300 w-full')}
+                    className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-zinc-800 bg-zinc-300 w-full')}
                 >
                     <CardContent className="w-full m-0 p-4 content-end">
                         <DriverChart data={colorDrivers} driversChartConfig={driversChartConfig} />
