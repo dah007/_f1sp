@@ -22,7 +22,7 @@ const Footer = () => {
                                 target="_blank"
                                 title="Buy me a coffee"
                             >
-                                <LucideCoffee className="text-yellow-400" />
+                                <LucideCoffee className="text-yellow-400 light:text-brown-500" />
                             </a>
                         </li>
                         <li>

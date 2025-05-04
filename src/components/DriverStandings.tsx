@@ -49,7 +49,6 @@ const DriverStandings = ({ year = YEAR, className = '' }: { year?: number; class
             return;
         }
         if (!driverStandingsData) return;
-        console.log('driverStandingsData', driverStandingsData);
         dispatch(setDriverStandings(driverStandingsData));
     }, [driverStandingsData, dispatch]);
 

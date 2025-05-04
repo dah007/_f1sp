@@ -1,33 +1,22 @@
 import DataTable from '@/components/DataTable';
 import Flag from '@/components/Flag';
 import PageContainer from '@/components/PageContainer';
-import { useGetEnginesManufacturersQuery } from '@/features/constructorsApi';
-import { EngineManufacturerProps } from '@/types/constructors';
+import { useGetEnginesManufacturersQuery, useGetTyresManufacturersQuery } from '@/features/constructorsApi';
+import { ManufacturerProps } from '@/types/constructors';
 import { intlNumberFormat } from '@/utils/number';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Extra: React.FC = () => {
-    const { data: enginesManufacturers } = useGetEnginesManufacturersQuery(undefined);
+    const { data: enginesManufacturerData } = useGetEnginesManufacturersQuery(undefined);
+    const { data: tyreManufacturerData } = useGetTyresManufacturersQuery(undefined);
 
-    const enginesManufacturerColDefs = useMemo<ColumnDef<EngineManufacturerProps>[]>(
+    const manufacturerColDefs = useMemo<ColumnDef<ManufacturerProps>[]>(
         () => [
-            {
-                accessorKey: 'year',
-                cell: ({ row }) => {
-                    return <div className="min-w-8 w-8 max-w-8">{row.getValue('year') || 0}</div>;
-                },
-                size: 8,
-                maxWidth: 8,
-                minWidth: 8,
-                header: () => <div></div>,
-            },
             {
                 accessorKey: 'alpha2_code',
                 cell: ({ row }) => {
@@ -43,8 +32,8 @@ const Extra: React.FC = () => {
                 header: () => <div></div>,
             },
             {
-                accessorKey: 'manufacturer_name',
-                cell: ({ row }) => <div>{row.getValue('manufacturer_name') || ''}</div>,
+                accessorKey: 'name',
+                cell: ({ row }) => <div>{row.getValue('name') || ''}</div>,
                 header: ({ column }) => {
                     return (
                         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -55,12 +44,24 @@ const Extra: React.FC = () => {
                 },
             },
             {
-                accessorKey: 'best_championship_position',
-                cell: ({ row }) => <div>{intlNumberFormat(row.getValue('best_championship_position'))}</div>,
+                accessorKey: 'from_year',
+                cell: ({ row }) => <div>{row.getValue('from_year') || '-'}</div>,
                 header: ({ column }) => {
                     return (
                         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                            Best Champ Pos
+                            From
+                            <ArrowUpDown className="w-4 h-4 ml-2" />
+                        </Button>
+                    );
+                },
+            },
+            {
+                accessorKey: 'to_year',
+                cell: ({ row }) => <div>{row.getValue('to_year') || '-'}</div>,
+                header: ({ column }) => {
+                    return (
+                        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                            To
                             <ArrowUpDown className="w-4 h-4 ml-2" />
                         </Button>
                     );
@@ -140,7 +141,7 @@ const Extra: React.FC = () => {
             },
             {
                 accessorKey: 'total_race_laps',
-                cell: ({ row }) => <div>{row.getValue('total_race_laps') || 0}</div>,
+                cell: ({ row }) => <div>{intlNumberFormat(row.getValue('total_race_laps') || 0)}</div>,
                 header: ({ column }) => {
                     return (
                         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -152,7 +153,7 @@ const Extra: React.FC = () => {
             },
             {
                 accessorKey: 'total_podiums',
-                cell: ({ row }) => <div>{row.getValue('total_podiums') || 0}</div>,
+                cell: ({ row }) => <div>{intlNumberFormat(row.getValue('total_podiums') || 0)}</div>,
                 header: ({ column }) => {
                     return (
                         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
@@ -226,49 +227,45 @@ const Extra: React.FC = () => {
         [],
     );
 
+    const [enginesManufacturers, setEnginesManufacturer] = useState<ManufacturerProps[]>([]);
+    const [tyreManufacturers, setTyreManufacturers] = useState<ManufacturerProps[]>([]);
+
     const [whatTab, setWhatTab] = useState('enginesManufacturers');
+
+    useEffect(() => {
+        if (!enginesManufacturerData) return;
+        console.log('Engines Manufacturers:', enginesManufacturers);
+        setEnginesManufacturer(enginesManufacturerData);
+    }, [enginesManufacturers]);
+
+    useEffect(() => {
+        if (!tyreManufacturerData) return;
+        console.log('Tyre Manufacturers:', tyreManufacturers);
+        setTyreManufacturers(tyreManufacturerData);
+    }, [tyreManufacturers]);
 
     useEffect(() => {
         console.log('Current tab:', whatTab);
     }, [whatTab]);
 
     const tabs = [
-        { value: 'chassis', label: 'Chassis', children: <div>Chassis</div> },
+        { value: 'chassis', label: 'Chassis' },
+        { value: 'engines', label: 'Engines' },
         {
             value: 'enginesManufacturers',
             label: 'Engine Manufacturers',
-            children: (
-                <DataTable className="w-fit" columns={enginesManufacturerColDefs} data={enginesManufacturers ?? []} />
-            ),
+            children: <DataTable className="w-fit" columns={manufacturerColDefs} data={enginesManufacturers ?? []} />,
         },
-        { value: 'engines', label: 'Engines', children: <div>Engines</div> },
-        { value: 'tires', label: 'Tires', children: <div>Tires</div> },
+        {
+            value: 'tyreManufacturers',
+            label: 'Tyre Manufacturers',
+            children: <DataTable className="w-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />,
+        },
     ];
 
     return (
-        <PageContainer title="Extra" showBreadcrumbs={true} lastCrumb="Extra">
+        <PageContainer title="Extras" showBreadcrumbs={true} lastCrumb="Extras">
             <Tabs defaultValue="enginesManufacturers" value={whatTab} className="max-w-[85vw] w-[85vw] overflow-hidden">
-                {/* <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger 
-                        value="chassis" 
-                        className="cursor-pointer" onClick={() => setWhatTab('chassis')}>
-                        Chassis
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="enginesManufacturers"
-                        className="cursor-pointer bg-zinc-800"
-                        onClick={() => setWhatTab('enginesManufacturers')}
-                    >
-                        Engine Manufacturers
-                    </TabsTrigger>
-                    <TabsTrigger value="engines" className="cursor-pointer">
-                        Engines
-                    </TabsTrigger>
-                    <TabsTrigger value="tires" className="cursor-pointer">
-                        Tires
-                    </TabsTrigger>
-                </TabsList> */}
-
                 <TabsList className="grid w-full grid-cols-4">
                     {tabs.map((tab) => (
                         <TabsTrigger
@@ -282,58 +279,61 @@ const Extra: React.FC = () => {
                     ))}
                 </TabsList>
 
+                <TabsContent value="chassis">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Chassis</CardTitle>
+                        </CardHeader>
+
+                        <CardContent className="max-w-[96vw]">
+                            <div className="w-full h-full flex items-center justify-center">Coming soon</div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="engines">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Engines</CardTitle>
+                        </CardHeader>
+
+                        <CardContent className="max-w-[96vw]">
+                            <div className="w-full h-full flex items-center justify-center">Coming soon</div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
                 <TabsContent value="enginesManufacturers">
                     <Card>
                         <CardHeader>
                             <CardTitle>Engine Manufacturers</CardTitle>
-                            {/* <CardDescription>
-                                Make changes to your account here. Click save when youre done.???
-                            </CardDescription> */}
                         </CardHeader>
+
                         <CardContent className="max-w-[96vw]">
                             <DataTable
-                                className="w-fit"
-                                columns={enginesManufacturerColDefs}
+                                className="w-0-fit"
+                                columns={manufacturerColDefs}
                                 data={enginesManufacturers ?? []}
                             />
                         </CardContent>
                     </Card>
                 </TabsContent>
-                <TabsContent value="password">
+                <TabsContent value="tyreManufacturers">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Password</CardTitle>
-                            <CardDescription>
-                                Change your password here. After saving, youll be logged out.
-                            </CardDescription>
+                            <CardTitle>Tyre Manufacturers</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-2">
-                            <div className="space-y-1">
-                                <Label htmlFor="current">Current password</Label>
-                                <Input id="current" type="password" />
-                            </div>
-                            <div className="space-y-1">
-                                <Label htmlFor="new">New password</Label>
-                                <Input id="new" type="password" />
-                            </div>
+
+                        <CardContent className="max-w-[96vw]">
+                            <DataTable
+                                className="w-0-fit"
+                                columns={manufacturerColDefs}
+                                data={tyreManufacturers ?? []}
+                            />
                         </CardContent>
-                        <CardFooter>
-                            <Button>Save password</Button>
-                        </CardFooter>
                     </Card>
                 </TabsContent>
             </Tabs>
-            {/* <Tabs defaultValue="account" className="w-[80vw]">
-                <TabsList>
-                    <TabsTrigger value="tires">Tires</TabsTrigger>
-                    <TabsTrigger value="account">Engine Manufacturers</TabsTrigger>
-                    <TabsTrigger value="password">Password</TabsTrigger>
-                </TabsList>
-                <TabsContent value="account">
-                    <DataTable className="w-fit" columns={enginesManufacturerColDefs} data={enginesManufacturers ?? []} />
-                </TabsContent>
-                <TabsContent value="password">Change your password here.</TabsContent>
-            </Tabs> */}
         </PageContainer>
     );
 };

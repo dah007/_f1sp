@@ -4,6 +4,16 @@ import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
 import Button from './Button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Menubar, MenubarContent, MenubarMenu, MenubarTrigger } from './ui/menubar';
+import { MenubarItem } from '@radix-ui/react-menubar';
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+} from './ui/navigation-menu';
 
 const MenuButton = ({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) => (
     <Button
@@ -47,87 +57,153 @@ const Header: React.FC = () => {
      * @param path - The target path to navigate to
      * @returns void
      */
-    const handleNavigation = (path: string) => {
+    const handleNavigation = (path: string, makeActive?: string) => {
         navigate(path);
-        // toggleMenu();
+
+        // clear out all menu item underlines
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach((item) => {
+            item.classList.remove('underline');
+        });
+
+        if (makeActive) {
+            // add underline to the active menu item
+            const activeItem = document.querySelector(`.${makeActive}`);
+            if (activeItem) {
+                activeItem.classList.add('underline');
+            }
+        }
     };
 
+    const menuItemClassName =
+        'menu-item font-extrabold text-zinc-800 dark:text-zinc-300 cursor-pointer text-md hover:underline';
+
     return (
-        <>
-            <header
-                className="
-                flex 
-                gap-6 
-                items-center 
-                w-full
-                p-4 
+        <header
+            className="
+            flex 
+            gap-6 
+            items-end 
+            w-full
+            p-4 
 
-                shadow-md"
-            >
-                {/* LOGOS */}
-                <div className="flex lg:hidden xl:hidden justify-start grow">
-                    <img src={F1SPlogoHorizontal} alt="F1//SP Logo" className="w-36" />
-                </div>
-
-                <div className="hidden md:hidden lg:flex xl:flex justify-start cursor-pointer">
-                    <a title="F1//SP home" onClick={() => handleNavigation('/')}>
-                        <img src={F1SPlogo} alt="F1//SP Logo" className="w-32" />
-                    </a>
-                </div>
-
-                <ul
-                    id="menu"
-                    className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50 lg:relative lg:flex lg:p-0 lg:bg-transparent lg:flex-row lg:space-x-6"
+            shadow-md"
+        >
+            {/* HAMBURGER MENU */}
+            <div className="flex lg:hidden xl:hidden justify-end grow">
+                <button
+                    className="text-white text-4xl font-bold opacity-70 hover:opacity-100 duration-300"
+                    onClick={toggleMenu}
                 >
-                    <li className="md:hidden z-90 fixed top-4 right-6">
-                        <a href="javascript:void(0)" className="text-right text-white text-4xl" onClick={toggleMenu}>
-                            &times;
-                        </a>
-                    </li>
-                    <li>
-                        <MenuButton
-                            label="Vote"
-                            onClick={() => handleNavigation('/vote')}
-                            className="border dark:border-red-700 border-red-900"
-                        />
-                    </li>
-                    <li>
-                        <MenuButton label="Leaderboard" onClick={() => handleNavigation('/leaderboard')} />
-                    </li>
-                    <li>
-                        <MenuButton label="Standings" onClick={() => handleNavigation('/standings')} />
-                    </li>
-                    <li>
-                        <MenuButton label="Drivers" onClick={() => handleNavigation('/drivers')} />
-                    </li>
-                    <li>
-                        <MenuButton label="Races" onClick={() => handleNavigation('/races')} />
-                    </li>
-                    <li>
-                        <MenuButton label="Circuits" onClick={() => handleNavigation('/circuits')} />
-                    </li>
-                    <li>
-                        <MenuButton label="Constructors" onClick={() => handleNavigation('/constructors')} />
-                    </li>
-                    <li>
-                        <MenuButton label="Extra" onClick={() => handleNavigation('/extra')} />
-                    </li>
-                    <li>
-                        <MenuButton label="Toggle" onClick={() => handleNavigation('/constructors')} />
-                    </li>
-                </ul>
+                    &#9776;
+                </button>
+            </div>
 
-                {/* <!-- This is used to open the menu on mobile devices --> */}
-                {/* <div className="flex items-end grow md:lg content-end justify-end lg:hidden">
-                    <button
-                        className="text-white text-4xl font-bold opacity-70 hover:opacity-100 duration-300"
-                        onClick={toggleMenu}
+            {/* LOGOS */}
+            <div className="flex lg:hidden xl:hidden justify-start grow">
+                <a title="F1//SP home" onClick={() => handleNavigation('/')}>
+                    <img src={F1SPlogoHorizontal} alt="F1//SP Logo" className="w-36" />
+                </a>
+            </div>
+            <div className="hidden md:hidden lg:flex xl:flex justify-start cursor-pointer">
+                <a title="F1//SP home" onClick={() => handleNavigation('/')}>
+                    <img src={F1SPlogo} alt="F1//SP Logo" className="w-24" />
+                </a>
+            </div>
+
+            <NavigationMenu className="hidden md:hidden lg:flex xl:flex justify-end grow w-[80vw]">
+                <NavigationMenuList>
+                    <NavigationMenuItem>
+                        <NavigationMenuTrigger className="text-red-800 font-extrabold cursor-pointer text-md">
+                            Vote
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent className="bg-zinc-300 dark:bg-zinc-800">
+                            <NavigationMenuLink className={menuItemClassName} onClick={() => handleNavigation('/vote')}>
+                                Vote
+                            </NavigationMenuLink>
+                            <NavigationMenuLink
+                                className={menuItemClassName}
+                                onClick={() => handleNavigation('/leaderboard')}
+                            >
+                                Leaderboard
+                            </NavigationMenuLink>
+                        </NavigationMenuContent>
+                    </NavigationMenuItem>
+                    <NavigationMenuLink
+                        className={`standings ${menuItemClassName}`}
+                        onClick={() => handleNavigation('/standings', 'standings')}
                     >
-                        &#9776;
-                    </button>
-                </div> */}
-            </header>
-        </>
+                        Standings
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                        className={`drivers ${menuItemClassName}`}
+                        onClick={() => handleNavigation('/drivers', 'drivers')}
+                    >
+                        Drivers
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                        className={` ${menuItemClassName}`}
+                        onClick={() => handleNavigation('/races', 'races')}
+                    >
+                        Races
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                        className={` ${menuItemClassName}`}
+                        onClick={() => handleNavigation('/circuits', 'circuits')}
+                    >
+                        Circuits
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                        className={`constructors ${menuItemClassName}`}
+                        onClick={() => handleNavigation('/constructors', 'constructors')}
+                    >
+                        Constructors
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                        className={`extras ${menuItemClassName}`}
+                        onClick={() => handleNavigation('/extra', 'extras')}
+                    >
+                        Extras
+                    </NavigationMenuLink>
+                </NavigationMenuList>
+            </NavigationMenu>
+
+            <ul id="menu" className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50">
+                <li className="md:hidden z-90 fixed top-4 right-6">
+                    <a href="javascript:void(0)" className="text-right text-white text-4xl" onClick={toggleMenu}>
+                        &times;
+                    </a>
+                </li>
+                <li>
+                    <MenuButton
+                        label="Vote"
+                        onClick={() => handleNavigation('/vote')}
+                        className="border dark:border-red-700 border-red-900"
+                    />
+                </li>
+                <li>
+                    <MenuButton label="Leaderboard" onClick={() => handleNavigation('/leaderboard')} />
+                </li>
+                <li>
+                    <MenuButton label="Standings" onClick={() => handleNavigation('/standings')} />
+                </li>
+                <li>
+                    <MenuButton label="Drivers" onClick={() => handleNavigation('/drivers')} />
+                </li>
+                <li>
+                    <MenuButton label="Races" onClick={() => handleNavigation('/races')} />
+                </li>
+                <li>
+                    <MenuButton label="Circuits" onClick={() => handleNavigation('/circuits')} />
+                </li>
+                <li>
+                    <MenuButton label="Constructors" onClick={() => handleNavigation('/constructors')} />
+                </li>
+                <li>
+                    <MenuButton label="Extra" onClick={() => handleNavigation('/extra')} />
+                </li>
+            </ul>
+        </header>
     );
 };
 

@@ -100,7 +100,7 @@ const Circuits: React.FC = (): JSX.Element => {
         return returnJSX;
     };
 
-    const toolClasses = 'absolute z-50 p-2 rounded-md top-2 bg-opacity-40';
+    const toolClasses = 'absolute z-20 p-2 rounded-md top-2 bg-opacity-40';
 
     return (
         <PageContainer title="Circuits" showBreadcrumbs showTitle>
@@ -126,7 +126,7 @@ const Circuits: React.FC = (): JSX.Element => {
             <div className={`${toolClasses} right-2 bg-zinc-800 border border-zinc-700`}>{mapInfo()}</div>
 
             <div
-                className="z-20"
+                className="z-10"
                 ref={circuitsMap}
                 style={{
                     width: '100%',
