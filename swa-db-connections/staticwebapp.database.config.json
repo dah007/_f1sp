@@ -97,8 +97,8 @@
         "engine_manufacturers": {
             "source": {
                 "type": "view",
-                "key-fields": ["engine_manufacturer_id"],
-                "object": "season_em_w_data"
+                "key-fields": ["id"],
+                "object": "engine_manufacturers_w_country"
             },
             "permissions": [
                 {
@@ -110,8 +110,8 @@
         "tyres": {
             "source": {
                 "type": "view",
-                "key-fields": ["tyre_manufacturer_id"],
-                "object": "season_tyre_w_data"
+                "key-fields": ["id"],
+                "object": "tyre_manufacturer_w_data"
             },
             "permissions": [
                 {
