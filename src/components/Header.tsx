@@ -4,7 +4,6 @@ import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
 import Button from './Button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import ModeToggle from './ModeToggle';
 
 const MenuButton = ({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) => (
     <Button
@@ -50,32 +49,21 @@ const Header: React.FC = () => {
      */
     const handleNavigation = (path: string) => {
         navigate(path);
-        toggleMenu();
+        // toggleMenu();
     };
 
     return (
         <>
-            <div className="absolute right-4 top-4 hidden md:visible z-50">
-                <ModeToggle />
-            </div>
             <header
                 className="
                 flex 
                 gap-6 
                 items-center 
-                content-end
-                justify-start
                 w-full
-                bg-zinc-300 
-                border-b 
-                border-b-zinc-800 
-                dark:border-b-zinc-300 
-                dark:bg-zinc-800 
                 p-4 
 
                 shadow-md"
             >
-                {/* <div className="container px-4 md:px-0 h-full mx-auto flex justify-start items-center"> */}
                 {/* LOGOS */}
                 <div className="flex lg:hidden xl:hidden justify-start grow">
                     <img src={F1SPlogoHorizontal} alt="F1//SP Logo" className="w-36" />
@@ -87,7 +75,6 @@ const Header: React.FC = () => {
                     </a>
                 </div>
 
-                {/* MENU ITEMS> */}
                 <ul
                     id="menu"
                     className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50 lg:relative lg:flex lg:p-0 lg:bg-transparent lg:flex-row lg:space-x-6"
@@ -122,20 +109,23 @@ const Header: React.FC = () => {
                     <li>
                         <MenuButton label="Constructors" onClick={() => handleNavigation('/constructors')} />
                     </li>
-                    <li className="hidden lg:visible">
-                        <MenuButton label="Toggle dark mode" onClick={() => handleNavigation('/constructors')} />
+                    <li>
+                        <MenuButton label="Extra" onClick={() => handleNavigation('/extra')} />
+                    </li>
+                    <li>
+                        <MenuButton label="Toggle" onClick={() => handleNavigation('/constructors')} />
                     </li>
                 </ul>
 
                 {/* <!-- This is used to open the menu on mobile devices --> */}
-                <div className="flex items-end grow md:lg content-end justify-end lg:hidden">
+                {/* <div className="flex items-end grow md:lg content-end justify-end lg:hidden">
                     <button
                         className="text-white text-4xl font-bold opacity-70 hover:opacity-100 duration-300"
                         onClick={toggleMenu}
                     >
                         &#9776;
                     </button>
-                </div>
+                </div> */}
             </header>
         </>
     );

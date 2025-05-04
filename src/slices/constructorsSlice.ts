@@ -1,13 +1,16 @@
-import { ConstructorProps } from '@/types/constructors';
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
+import type { ConstructorProps, EngineManufacturerProps } from 'types/constructors';
+
 interface IState {
     constructors: ConstructorProps[];
+    enginesManufacturers: EngineManufacturerProps[];
 }
 
 const initialState: IState = {
     constructors: [],
+    enginesManufacturers: [],
 };
 
 export const constructorSlice = createSlice({
@@ -16,6 +19,9 @@ export const constructorSlice = createSlice({
     reducers: {
         setConstructors(state, action: PayloadAction<ConstructorProps[]>) {
             state.constructors = action.payload;
+        },
+        setEnginesManufacturers(state, action: PayloadAction<EngineManufacturerProps[]>) {
+            state.enginesManufacturers = action.payload;
         },
     },
 });

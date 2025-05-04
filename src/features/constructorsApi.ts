@@ -15,8 +15,16 @@ export const constructorsApi = createApi({
         getConstructorById: builder.query({
             query: (id: string) => `/constructor?$filter=id eq ${id}`,
         }),
+
+        getEnginesManufacturers: builder.query({
+            query: (year) => (year ? `/engine_manufacturers?$filter=year eq ${year}` : `/engine_manufacturers`),
+            transformResponse: (response: { value: ConstructorProps[] }) => {
+                console.log(response);
+                return response.value;
+            },
+        }),
     }),
     reducerPath: 'constructorsApi',
 });
 
-export const { useGetConstructorsQuery, useGetConstructorByIdQuery } = constructorsApi;
+export const { useGetConstructorsQuery, useGetConstructorByIdQuery, useGetEnginesManufacturersQuery } = constructorsApi;

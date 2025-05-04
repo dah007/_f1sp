@@ -104,7 +104,8 @@ const DataTable = <TData, TValue>({
 
             <ScrollArea className="h-[65vh] w-[95vw]">
                 <ScrollBar />
-                <Table>
+                <ScrollBar orientation="horizontal" />
+                <Table className="w-full pr-16">
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup, groupIndex) => (
                             <TableRow key={`${headerGroup.id}-${groupIndex}`}>

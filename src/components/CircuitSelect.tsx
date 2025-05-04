@@ -35,31 +35,29 @@ const CircuitSelect = ({
     gotoCircuit,
 }: CircuitSelectProps): JSX.Element => {
     return (
-        <div className="w-72">
-            <Select
-                onValueChange={(circuit) => {
-                    if (gotoCircuit && setCircuit && map) {
-                        gotoCircuit({
-                            circuitId: circuit,
-                            map: map,
-                            setCircuit,
-                            setContinent,
-                        });
-                    }
-                }}
-            >
-                <SelectTrigger role="button" className={BUTTON_CLASSES}>
-                    <SelectValue placeholder={circuit?.full_name || 'Select Circuit'} />
-                </SelectTrigger>
-                <SelectContent className="select">
-                    {Object.keys(circuitsData).map((key) => (
-                        <SelectItem key={key} value={key}>
-                            {circuitsData[key].full_name}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-        </div>
+        <Select
+            onValueChange={(circuit) => {
+                if (gotoCircuit && setCircuit && map) {
+                    gotoCircuit({
+                        circuitId: circuit,
+                        map: map,
+                        setCircuit,
+                        setContinent,
+                    });
+                }
+            }}
+        >
+            <SelectTrigger role="button" className={BUTTON_CLASSES}>
+                <SelectValue placeholder={circuit?.full_name || 'Select Circuit'} />
+            </SelectTrigger>
+            <SelectContent className="select">
+                {Object.keys(circuitsData).map((key) => (
+                    <SelectItem key={key} value={key}>
+                        {circuitsData[key].full_name}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
     );
 };
 

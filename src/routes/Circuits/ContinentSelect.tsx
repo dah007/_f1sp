@@ -36,32 +36,30 @@ const ContinentSelect = ({
     gotoContinent,
 }: ContinentSelectProps): JSX.Element => {
     return (
-        <div className="w-72">
-            <Select
-                data-testid="continent-select"
-                onValueChange={(continent) => {
-                    if (continent === undefined) return;
-                    console.log(continent);
-                    gotoContinent({
-                        c: continent,
-                        map: map,
-                        setC: setCircuit,
-                        setCon: setContinent,
-                    });
-                }}
-            >
-                <SelectTrigger role="button" className={BUTTON_CLASSES}>
-                    <SelectValue placeholder={continent ?? `Continent`} className="appearance-none" />
-                </SelectTrigger>
-                <SelectContent className="bg-zinc-300 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 appearance-none">
-                    {Object.keys(CONTINENTS).map((continent, index) => (
-                        <SelectItem key={index} value={continent} className="cursor-pointer">
-                            {continent}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-        </div>
+        <Select
+            data-testid="continent-select"
+            onValueChange={(continent) => {
+                if (continent === undefined) return;
+                console.log(continent);
+                gotoContinent({
+                    c: continent,
+                    map: map,
+                    setC: setCircuit,
+                    setCon: setContinent,
+                });
+            }}
+        >
+            <SelectTrigger role="button" className={BUTTON_CLASSES}>
+                <SelectValue placeholder={continent ?? `Continent`} className="appearance-none" />
+            </SelectTrigger>
+            <SelectContent className="bg-zinc-300 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 appearance-none">
+                {Object.keys(CONTINENTS).map((continent, index) => (
+                    <SelectItem key={index} value={continent} className="cursor-pointer">
+                        {continent}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
     );
 };
 

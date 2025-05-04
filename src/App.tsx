@@ -21,6 +21,7 @@ const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
 const Constructors = lazy(() => import('./routes/Constructors'));
 const DriverDetail = lazy(() => import('./routes/DriverDetail'));
 const Drivers = lazy(() => import('./routes/Drivers'));
+const Extra = lazy(() => import('./routes/Extra'));
 const LoginForm = lazy(() => import('./routes/LoginForm'));
 const Races = lazy(() => import('./routes/Races'));
 const Seasons = lazy(() => import('./routes/Seasons'));
@@ -63,7 +64,8 @@ const App = () => {
                             border-slate-700 
                             absolute top-0 
                             left-0 
-                            w-full 
+                            w-full
+                            h-[1px] 
                             z-50 
                             bg-zinc-550"
                 ></div>
@@ -87,6 +89,8 @@ const App = () => {
 
                         <Route path="drivers/:year?" element={<Drivers />} />
                         <Route path="drivers/:year/driver/:id" element={<DriverDetail />} />
+
+                        <Route path="extra" element={<Extra />} />
 
                         <Route path="leaderboard" element={<Leaderboard />} />
 

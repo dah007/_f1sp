@@ -77,8 +77,6 @@ const Drivers: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         if (!driversData) return;
-        if (driversData) console.log('hello');
-
         dispatch(setDrivers(driversData));
         setIsLoaded(true); // Mark data as loaded
     }, [driversData, dispatch, isLoaded, drivers]);

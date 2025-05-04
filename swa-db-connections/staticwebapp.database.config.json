@@ -94,6 +94,33 @@
             ]
         },
 
+        "engine_manufacturers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["engine_manufacturer_id"],
+                "object": "season_em_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "tyres": {
+            "source": {
+                "type": "view",
+                "key-fields": ["tyre_manufacturer_id"],
+                "object": "season_tyre_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
         "fastestLap": {
             "source": {
                 "type": "view",

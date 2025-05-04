@@ -100,38 +100,55 @@ const Circuits: React.FC = (): JSX.Element => {
         return returnJSX;
     };
 
+    const toolClasses = 'absolute z-50 p-2 rounded-md top-2 bg-opacity-40';
+
     return (
         <PageContainer title="Circuits" showBreadcrumbs showTitle>
-            <div className="z-50 h-full relative w-full gap-4 rounded-md flex justify-around">
-                <div className="absolute z-50 flex gap-2 rounded-md mapInfo top-2 left-2 right-2">
-                    <CircuitSelect
-                        circuitsData={CIRCUIT_DETAILS || []}
-                        circuit={circuit || CIRCUIT_DETAILS['baku']}
-                        map={mapContainer.current}
-                        setCircuit={setCircuit}
-                        setContinent={setContinent}
-                        gotoCircuit={gotoCircuit}
-                    />
-                    <ContinentSelect
-                        continent={continent || 'Europe'}
-                        map={mapContainer.current}
-                        setCircuit={(circuit) => setCircuit(circuit || CIRCUIT_DETAILS['baku'])}
-                        setContinent={setContinent}
-                        gotoContinent={gotoContinent}
-                    />
-                </div>
-                <div className="absolute z-50 p-2 bg-black rounded-md mapInfo top-2 right-2 bg-opacity-40">
-                    {mapInfo()}
-                </div>
-                <div
-                    className="rounded-lg z-40"
-                    ref={circuitsMap}
-                    style={{
-                        width: '100%',
-                        height: '70vh',
-                    }}
+            {/* upper right dropdowns    */}
+            <div className={`${toolClasses} left-2 flex gap-4`}>
+                <CircuitSelect
+                    circuitsData={CIRCUIT_DETAILS || []}
+                    circuit={circuit || CIRCUIT_DETAILS['baku']}
+                    map={mapContainer.current}
+                    setCircuit={setCircuit}
+                    setContinent={setContinent}
+                    gotoCircuit={gotoCircuit}
+                />
+                <ContinentSelect
+                    continent={continent || 'Europe'}
+                    map={mapContainer.current}
+                    setCircuit={(circuit) => setCircuit(circuit || CIRCUIT_DETAILS['baku'])}
+                    setContinent={setContinent}
+                    gotoContinent={gotoContinent}
                 />
             </div>
+
+            <div className={`${toolClasses} right-2 bg-zinc-800 border border-zinc-700`}>{mapInfo()}</div>
+
+            <div
+                className="z-20"
+                ref={circuitsMap}
+                style={{
+                    width: '100%',
+                    height: '70vh',
+                }}
+            />
+
+            {/* <div id="menu">
+                <Input id="satellite-streets-v12" type="radio" name="rtoggle" value="satellite" checked /> */}
+            {/* <!-- See a list of Mapbox-hosted public styles at -->
+        <!-- https://docs.mapbox.com/api/maps/styles/#mapbox-styles --> */}
+
+            {/* <div span="flex left">
+                    <Label htmlFor="light-v11">light</Label>
+                    <input id="dark-v11" type="radio" name="rtoggle" value="dark" />
+                    <Label htmlFor="dark-v11">dark</Label>
+                    <input id="streets-v12" type="radio" name="rtoggle" value="streets" />
+                    <Label htmlFor="streets-v12">streets</Label>
+                    <input id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" />
+                    <Label htmlFor="outdoors-v12">outdoors</Label>
+                </div>
+            </div> */}
         </PageContainer>
     );
 };

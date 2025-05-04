@@ -54,7 +54,7 @@ const ModeToggle = () => {
 
     return (
         <button
-            className="p-2 rounded-md bg-zinc-200 dark:bg-zinc-800 cursor-pointer"
+            className="p-2 rounded-md text-zinc-800 dark:text-zinc-300 cursor-pointer"
             onClick={modeToggleClickHandler}
             type="button"
             aria-label="Toggle dark mode"
