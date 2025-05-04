@@ -4,8 +4,7 @@ import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
 import Button from './Button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Menubar, MenubarContent, MenubarMenu, MenubarTrigger } from './ui/menubar';
-import { MenubarItem } from '@radix-ui/react-menubar';
+
 import {
     NavigationMenu,
     NavigationMenuContent,
