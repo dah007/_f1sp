@@ -74,6 +74,11 @@ const Header: React.FC = () => {
         }
     };
 
+    const handleNavigationMobile = (path: string) => {
+        navigate(path);
+        toggleMenu();
+    };
+
     const menuItemClassName =
         'menu-item font-extrabold text-zinc-800 dark:text-zinc-300 cursor-pointer text-md hover:underline';
 
@@ -85,7 +90,8 @@ const Header: React.FC = () => {
             items-end 
             w-full
             p-4 
-
+            pb-0 mb-0
+bg-zinc-800 
             shadow-md"
         >
             {/* HAMBURGER MENU */}
@@ -176,30 +182,30 @@ const Header: React.FC = () => {
                 <li>
                     <MenuButton
                         label="Vote"
-                        onClick={() => handleNavigation('/vote')}
+                        onClick={() => handleNavigationMobile('/vote')}
                         className="border dark:border-red-700 border-red-900"
                     />
                 </li>
                 <li>
-                    <MenuButton label="Leaderboard" onClick={() => handleNavigation('/leaderboard')} />
+                    <MenuButton label="Leaderboard" onClick={() => handleNavigationMobile('/leaderboard')} />
                 </li>
                 <li>
-                    <MenuButton label="Standings" onClick={() => handleNavigation('/standings')} />
+                    <MenuButton label="Standings" onClick={() => handleNavigationMobile('/standings')} />
                 </li>
                 <li>
-                    <MenuButton label="Drivers" onClick={() => handleNavigation('/drivers')} />
+                    <MenuButton label="Drivers" onClick={() => handleNavigationMobile('/drivers')} />
                 </li>
                 <li>
-                    <MenuButton label="Races" onClick={() => handleNavigation('/races')} />
+                    <MenuButton label="Races" onClick={() => handleNavigationMobile('/races')} />
                 </li>
                 <li>
-                    <MenuButton label="Circuits" onClick={() => handleNavigation('/circuits')} />
+                    <MenuButton label="Circuits" onClick={() => handleNavigationMobile('/circuits')} />
                 </li>
                 <li>
-                    <MenuButton label="Constructors" onClick={() => handleNavigation('/constructors')} />
+                    <MenuButton label="Constructors" onClick={() => handleNavigationMobile('/constructors')} />
                 </li>
                 <li>
-                    <MenuButton label="Extra" onClick={() => handleNavigation('/extra')} />
+                    <MenuButton label="Extra" onClick={() => handleNavigationMobile('/extra')} />
                 </li>
             </ul>
         </header>

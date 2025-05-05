@@ -19,7 +19,7 @@ import Leaderboard from './routes/Leaderboard';
 
 const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
 const Constructors = lazy(() => import('./routes/Constructors'));
-const DriverDetail = lazy(() => import('./routes/DriverDetail'));
+const DriverDetail = lazy(() => import('./routes/DriverDetailold'));
 const Drivers = lazy(() => import('./routes/Drivers'));
 const Extra = lazy(() => import('./routes/Extra'));
 const LoginForm = lazy(() => import('./routes/LoginForm'));

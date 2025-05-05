@@ -65,6 +65,10 @@ export const userApi = createApi({
                 method: 'POST',
                 body: voteRequest,
             }),
+            transformResponse: (response: Vote) => {
+                console.log('Vote submission response:', response);
+                return response;
+            },
             transformErrorResponse: (response) => {
                 console.error('Vote submission error:', response);
                 return response;

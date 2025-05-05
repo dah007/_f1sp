@@ -2,6 +2,7 @@ import DataTable from '@/components/DataTable';
 import Flag from '@/components/Flag';
 import PageContainer from '@/components/PageContainer';
 import { useGetEnginesManufacturersQuery, useGetTyresManufacturersQuery } from '@/features/constructorsApi';
+import { setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
 import { ManufacturerProps } from '@/types/constructors';
 import { intlNumberFormat } from '@/utils/number';
 import { ColumnDef } from '@tanstack/react-table';
@@ -10,10 +11,23 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RootState, useAppDispatch, useAppSelector } from '@/app/store';
+import { setError } from '@/slices/siteWideSlice';
 
 const Extra: React.FC = () => {
-    const { data: enginesManufacturerData } = useGetEnginesManufacturersQuery(undefined);
+    const dispatch = useAppDispatch();
+
+    const { data: enginesManufacturerData, isError: enginesManufacturerIsError } = useGetEnginesManufacturersQuery(
+        undefined,
+    ) as {
+        data: ManufacturerProps[];
+        isError: boolean;
+        isLoading: boolean;
+    };
     const { data: tyreManufacturerData } = useGetTyresManufacturersQuery(undefined);
+
+    const enginesManufacturers = useAppSelector((state: RootState) => state.constructors.enginesManufacturers);
+    const tyreManufacturers = useAppSelector((state: RootState) => state.constructors.tyresManufacturers);
 
     const manufacturerColDefs = useMemo<ColumnDef<ManufacturerProps>[]>(
         () => [
@@ -227,26 +241,21 @@ const Extra: React.FC = () => {
         [],
     );
 
-    const [enginesManufacturers, setEnginesManufacturer] = useState<ManufacturerProps[]>([]);
-    const [tyreManufacturers, setTyreManufacturers] = useState<ManufacturerProps[]>([]);
-
     const [whatTab, setWhatTab] = useState('enginesManufacturers');
 
     useEffect(() => {
+        if (enginesManufacturerIsError) dispatch(setError(true));
         if (!enginesManufacturerData) return;
-        console.log('Engines Manufacturers:', enginesManufacturers);
-        setEnginesManufacturer(enginesManufacturerData);
-    }, [enginesManufacturers]);
+
+        dispatch(setEnginesManufacturers(enginesManufacturerData));
+    }, [enginesManufacturerIsError, enginesManufacturerData]);
 
     useEffect(() => {
         if (!tyreManufacturerData) return;
-        console.log('Tyre Manufacturers:', tyreManufacturers);
-        setTyreManufacturers(tyreManufacturerData);
-    }, [tyreManufacturers]);
+        dispatch(setTyresManufacturers(tyreManufacturerData));
+    }, [tyreManufacturerData]);
 
-    useEffect(() => {
-        console.log('Current tab:', whatTab);
-    }, [whatTab]);
+    useEffect(() => {}, [whatTab]);
 
     const tabs = [
         { value: 'chassis', label: 'Chassis' },
@@ -265,7 +274,11 @@ const Extra: React.FC = () => {
 
     return (
         <PageContainer title="Extras" showBreadcrumbs={true} lastCrumb="Extras">
-            <Tabs defaultValue="enginesManufacturers" value={whatTab} className="max-w-[85vw] w-[85vw] overflow-hidden">
+            <Tabs
+                defaultValue="enginesManufacturers"
+                value={whatTab}
+                className="max-w-[85vw] w-[85vw] overflow-hidden pb-10"
+            >
                 <TabsList className="grid w-full grid-cols-4">
                     {tabs.map((tab) => (
                         <TabsTrigger
@@ -280,58 +293,19 @@ const Extra: React.FC = () => {
                 </TabsList>
 
                 <TabsContent value="chassis">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Chassis</CardTitle>
-                        </CardHeader>
-
-                        <CardContent className="max-w-[96vw]">
-                            <div className="w-full h-full flex items-center justify-center">Coming soon</div>
-                        </CardContent>
-                    </Card>
+                    <div className="w-full h-full flex items-center justify-center">Coming soon</div>
                 </TabsContent>
 
                 <TabsContent value="engines">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Engines</CardTitle>
-                        </CardHeader>
-
-                        <CardContent className="max-w-[96vw]">
-                            <div className="w-full h-full flex items-center justify-center">Coming soon</div>
-                        </CardContent>
-                    </Card>
+                    <div className="w-full h-full flex items-center justify-center">Coming soon</div>
                 </TabsContent>
 
                 <TabsContent value="enginesManufacturers">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Engine Manufacturers</CardTitle>
-                        </CardHeader>
-
-                        <CardContent className="max-w-[96vw]">
-                            <DataTable
-                                className="w-0-fit"
-                                columns={manufacturerColDefs}
-                                data={enginesManufacturers ?? []}
-                            />
-                        </CardContent>
-                    </Card>
+                    <DataTable className="w-0-fit" columns={manufacturerColDefs} data={enginesManufacturers ?? []} />
                 </TabsContent>
-                <TabsContent value="tyreManufacturers">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Tyre Manufacturers</CardTitle>
-                        </CardHeader>
 
-                        <CardContent className="max-w-[96vw]">
-                            <DataTable
-                                className="w-0-fit"
-                                columns={manufacturerColDefs}
-                                data={tyreManufacturers ?? []}
-                            />
-                        </CardContent>
-                    </Card>
+                <TabsContent value="tyreManufacturers">
+                    <DataTable className="w-0-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />
                 </TabsContent>
             </Tabs>
         </PageContainer>

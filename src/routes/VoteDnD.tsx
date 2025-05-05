@@ -13,7 +13,7 @@ import { Card, CardTitle } from 'components/ui/card';
 import { Form } from 'components/ui/form';
 import { Input } from 'components/ui/input';
 import { Label } from 'components/ui/label';
-// import LoginForm from './LoginForm';
+import LoginForm from 'components/LoginForm';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { Scrollbar } from '@radix-ui/react-scroll-area';
 import { setDriversByYear } from 'slices/driversSlice';
@@ -132,8 +132,17 @@ const Vote = (): JSX.Element => {
     const handleDragEnd = (event: { active: { id: UniqueIdentifier }; over: { id: UniqueIdentifier } | null }) => {
         const { active, over } = event;
 
+        const de = () => {
+            const oldIndex = voteOrderedDrivers.findIndex((driver) => driver.id === active.id);
+            const newIndex = over ? voteOrderedDrivers.findIndex((driver) => driver.id === over.id) : -1;
+            updateVoteValues({ finishOrder: arrayMove(voteOrderedDrivers, oldIndex, newIndex) });
+
+            const updatedDrivers = arrayMove(voteOrderedDrivers, oldIndex, newIndex);
+            return updatedDrivers;
+        };
+
         if (active.id !== over?.id) {
-            console.log('handleDragEnd');
+            console.log('handleDragEnd', de());
             setVoteOrderedDrivers((drivers) => {
                 const oldIndex = drivers.findIndex((driver) => driver.id === active.id);
                 const newIndex = over ? drivers.findIndex((driver) => driver.id === over.id) : -1;
@@ -156,12 +165,23 @@ const Vote = (): JSX.Element => {
             errorMessage: '',
         });
 
+        const baseVoteValues = {
+            blueTires: voteValues.blueTires ?? false,
+            driversInCrash: voteValues.driversInCrash ?? {},
+            fastestLap: '',
+            finishOrder: voteValues.finishOrder ?? [],
+            firstLapCrash: voteValues.firstLapCrash ?? false,
+            greenTires: voteValues.greenTires ?? false,
+            rain: voteValues.rain ?? false,
+            reds: voteValues.reds ?? 0,
+            yellows: voteValues.yellows ?? 0,
+        };
+
         if (!raceNext?.id) {
             throw new Error('Race information is missing');
         }
-
         const completeVoteData = {
-            ...voteValues,
+            ...baseVoteValues,
             finishOrder: voteOrderedDrivers.map((driver) => ({
                 position: driver.id,
                 name: driver.name,
@@ -170,13 +190,14 @@ const Vote = (): JSX.Element => {
             ...formData,
         };
 
-        const userId = user?.id || 0;
+        const userId = user?.id || 2;
+
+        console.log('completeVoteData', completeVoteData);
 
         const response = await submitVote({
-            userId,
-            raceId: raceNext.id,
-            voteData: completeVoteData,
             email: user?.email || formData.email,
+            id: 34,
+            ...completeVoteData,
             // passcode: user?.passcode || formData.passcode,
         }).unwrap();
 
@@ -233,16 +254,16 @@ const Vote = (): JSX.Element => {
                     grid-cols-1
                     md:grid-rows-2 
                     sm:grid-rows-3
-                    gap-4
+                    gap-0
                 "
                 >
                     {/* LEFT COLUMN */}
-                    <div className="row-span-1 lg:row-span-2 h-full w-full">
+                    <div className="row-span-1 lg:row-span-2 row-start-1 lg:h-full w-full">
                         <Card
                             className={cn(
                                 columnHeights,
                                 'overflow-hidden',
-                                'dark:bg-zinc-800 bg-zinc-300 w-full h-full',
+                                'dark:bg-zinc-800 bg-zinc-300 w-full h-fit',
                             )}
                         >
                             <CardTitle className="pl-4 pt-0 m-0">Finish Order</CardTitle>
@@ -266,7 +287,7 @@ const Vote = (): JSX.Element => {
                         </Card>
                     </div>
                     {/* RIGHT COLUMNs */}
-                    <div className="h-[3/5]">
+                    <div className="md:h-[3/6] lg:h-[2/6] row-start-2 md:row-start-1 lg:row-start-1 p-0 border border-amber-300 mb-0 overflow-hidden h-fit">
                         <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full')}>
                             <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
                             <div className="flex gap-4 flex-col-[1fr,*]">
@@ -372,7 +393,7 @@ const Vote = (): JSX.Element => {
                             </div>
                         </Card>
                     </div>
-                    <div className="col-start-1 md:col-start-2 row-start-1 md:row-start-2 h-[1/3]">
+                    <div className="col-start-1 md:col-start-2 row-start-3 md:row-start-2 h-fit border border-red-400 lg:h-[5/6] md:h-[2/5]">
                         <Card className="p-4 dark:bg-zinc-800 bg-zinc-300">
                             <CardTitle className="mb-4">Submit Vote</CardTitle>
 
@@ -395,6 +416,9 @@ const Vote = (): JSX.Element => {
                                         <strong>NOTE:</strong> You are limited to a single vote per race. Any attempts
                                         to vote more than once will just overwrite your previous vote.
                                     </p>
+
+                                    <LoginForm />
+
                                     <Button
                                         type="submit"
                                         variant="default"

@@ -177,7 +177,9 @@ const Standings: React.FC = (): JSX.Element => {
             showBreadcrumbs={true}
             lastCrumb="Standings"
         >
+            <p>This is a bit of a hawt mess, it will get better.</p>
             {/* 
+
                 
                         CONSTRUCTORS
                 */}

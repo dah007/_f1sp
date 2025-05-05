@@ -37,6 +37,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ExtendedColumnDef } from '@/types/dataTable';
 import { Input } from '@/components/ui/input';
 import { BUTTON_CLASSES } from '@/constants/constants';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 export type OptionProps = {
     label: string;
@@ -307,7 +308,10 @@ const Races: React.FC = (): JSX.Element => {
     });
 
     return (
-        <>
+        <ScrollArea className="h-full w-full overflow-hidden">
+            <ScrollBar orientation="horizontal" className="w-full" />
+            <ScrollBar orientation="vertical" className="w-full" />
+
             <div className="flex justify-between mb-2">
                 <h2>
                     Total Races: {races.length} / Pages: {currentPage} of {totalPages}
@@ -380,7 +384,7 @@ const Races: React.FC = (): JSX.Element => {
                     )}
                 </TableBody>
             </Table>
-        </>
+        </ScrollArea>
     );
 };
 
