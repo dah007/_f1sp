@@ -190,14 +190,15 @@ const Vote = (): JSX.Element => {
             ...formData,
         };
 
-        const userId = user?.id || 2;
+        // const userId = user?.id || 2;
 
-        console.log('completeVoteData', completeVoteData);
+        // console.log('completeVoteData', completeVoteData);
 
         const response = await submitVote({
+            userId: user?.id || formData.userId,
+            raceId: raceNext?.id,
+            voteData: completeVoteData,
             email: user?.email || formData.email,
-            id: 34,
-            ...completeVoteData,
             // passcode: user?.passcode || formData.passcode,
         }).unwrap();
 
