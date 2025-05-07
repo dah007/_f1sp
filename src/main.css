@@ -251,3 +251,8 @@ span[data=switch-thumb] {
     z-index: 100;
     /* background-color: red */
 }
+
+.driverDetail {
+    background: #94BBE9;
+    background: radial-gradient(circle, rgba(148, 187, 233, 1) 0%, rgba(0, 0, 0, 1) 100%);
+}

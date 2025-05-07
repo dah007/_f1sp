@@ -2,7 +2,7 @@ import { BUTTON_CLASSES } from '@/constants/constants';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 export const yearsDropdown = (useShadcn: boolean = true) => {
-    let year = 2024;
+    let year = new Date().getFullYear();
     const returnYears = [];
 
     if (!useShadcn) {

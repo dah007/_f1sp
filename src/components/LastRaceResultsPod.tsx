@@ -9,6 +9,7 @@ import { setError } from 'slices/siteWideSlice';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { ScrollArea } from './ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { FULL_ROW_HEIGHT } from '@/constants/constants';
 
 const LastRaceResultsPod: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -68,7 +69,7 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
     };
 
     return (
-        <ScrollArea className={cn('w-full height-full border-t mb-40')}>
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-40')}>
             <Table>
                 <TableHeader>
                     <TableRow>

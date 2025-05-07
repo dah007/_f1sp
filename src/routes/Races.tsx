@@ -38,6 +38,7 @@ import { ExtendedColumnDef } from '@/types/dataTable';
 import { Input } from '@/components/ui/input';
 import { BUTTON_CLASSES } from '@/constants/constants';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import PageContainer from '@/components/PageContainer';
 
 export type OptionProps = {
     label: string;
@@ -212,8 +213,11 @@ const Races: React.FC = (): JSX.Element => {
         {
             accessorKey: 'alpha2_code',
             cell: ({ row }) => {
-                return <Flag cCode={row.getValue('alpha2_code')} size={32} />;
+                return (
+                    <div className="min-w-8 w-8 max-w-8">{Flag({ cCode: row.getValue('alpha2_code'), size: 24 })}</div>
+                );
             },
+
             header: () => <div className="min-w-4"></div>,
         },
         {
@@ -259,11 +263,6 @@ const Races: React.FC = (): JSX.Element => {
             cell: ({ row }) => DistanceCellRenderer({ value: row.getValue('distance') }),
             header: () => <div className="min-w-8">Distance (km)</div>,
         },
-        // {
-        //     accessorKey: 'time',
-        //     cell: ({ row }) => row.getValue('time'),
-        //     header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Lap Time" />,
-        // },
     ]);
 
     const GetInVisibleColumn = (): Record<string, boolean> => {
@@ -308,83 +307,85 @@ const Races: React.FC = (): JSX.Element => {
     });
 
     return (
-        <ScrollArea className="h-full w-full overflow-hidden">
-            <ScrollBar orientation="horizontal" className="w-full" />
-            <ScrollBar orientation="vertical" className="w-full" />
+        <PageContainer className="h-full w-full" lastCrumb="Races" title="Races">
+            <ScrollArea className="h-full w-full overflow-hidden">
+                <ScrollBar orientation="horizontal" className="w-full" />
+                <ScrollBar orientation="vertical" className="w-full" />
 
-            <div className="flex justify-between mb-2">
-                <h2>
-                    Total Races: {races.length} / Pages: {currentPage} of {totalPages}
-                </h2>
-            </div>
-            <div className="flex p-2">
-                <div className="flex w-fit">
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious href="#" />
-                            </PaginationItem>
+                <div className="flex justify-between mb-2">
+                    <h2>
+                        Total Races: {races.length} / Pages: {currentPage} of {totalPages}
+                    </h2>
+                </div>
+                <div className="flex p-2">
+                    <div className="flex w-fit">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious href="#" />
+                                </PaginationItem>
 
-                            {/* {AddPaginationItems(1, totalPages)} */}
+                                {/* {AddPaginationItems(1, totalPages)} */}
 
-                            <PaginationItem>
-                                <PaginationEllipsis />
-                            </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationEllipsis />
+                                </PaginationItem>
 
-                            <PaginationItem>
-                                <PaginationNext onClick={gotoNext} href="#" />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
+                                <PaginationItem>
+                                    <PaginationNext onClick={gotoNext} href="#" />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
+
+                    <div className="flex items-center gap-4 grow">
+                        <Input
+                            placeholder="Filter..."
+                            value={table.getState().globalFilter ?? ''}
+                            onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+                            className={`${BUTTON_CLASSES} appearance-none`}
+                        />
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-4 grow">
-                    <Input
-                        placeholder="Filter..."
-                        value={table.getState().globalFilter ?? ''}
-                        onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-                        className={`${BUTTON_CLASSES} appearance-none`}
-                    />
-                </div>
-            </div>
-
-            <Table className="w-full">
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
-                                    </TableHead>
-                                );
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+                <Table className="w-full">
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                        </TableHead>
+                                    );
+                                })}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={colDefs.length} className="h-24 text-center">
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </ScrollArea>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={colDefs.length} className="h-24 text-center">
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </ScrollArea>
+        </PageContainer>
     );
 };
 

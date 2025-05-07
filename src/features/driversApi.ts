@@ -13,9 +13,16 @@ export const driversApi = createApi({
         }),
         getDriverTotalPositions: builder.query({
             query: (id: string = 'lando-norris') => `/driverPositionTotals?id=${id}`,
+            providesTags: (result, error, id) => {
+                if (error) {
+                    return [{ type: 'Drivers', id }];
+                }
+                return result ? [{ type: 'Drivers', id: id }] : [{ type: 'Drivers', id: id }];
+            },
         }),
         getDriver: builder.query({
-            query: (id: string = 'lando-norris') => `/driver?id=${id}`,
+            query: (id: string = 'lando-norris') => `/driver?$filter=id eq '${id}'`,
+            transformResponse: (response: { value: Driver[] }) => response.value,
         }),
         getDrivers: builder.query({
             query: (year: number = 2025) => `/drivers?$filter=year eq ${year}&$first=100`,
@@ -24,6 +31,7 @@ export const driversApi = createApi({
                 //     ...driver,
                 //     name: `${driver.givenName} ${driver.familyName}`,
                 // }));
+                console.log('drivers:', response);
                 return response.value;
             },
             transformErrorResponse: (response) => {

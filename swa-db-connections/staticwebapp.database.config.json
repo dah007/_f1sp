@@ -200,7 +200,7 @@
                 }
             ]
         },
-        "raceResult": {
+        "race_result": {
             "source": {
                 "type": "view",
                 "key-fields": ["race_id", "year"],

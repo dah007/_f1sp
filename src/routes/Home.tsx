@@ -3,6 +3,7 @@
 
 // import ConstructorStandings from '@/components/ConstructorsStandings';
 import CardContainer from '@/components/CardContainer';
+import DriverOfTheDay from '@/components/DriverOfTheDay';
 import DriverStandings from '@/components/DriverStandings';
 import ErrorDialog from '@/components/ErrorDialog';
 import LastRaceResultsPod from '@/components/LastRaceResultsPod';
@@ -100,6 +101,15 @@ const Home: React.FC = () => {
                             </CardContent>
                         </Card> */}
                     </div>
+                    {/* <div className="col-start-2 row-start-2 w-full">
+                        <CardContainer
+                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', FULL_ROW_HEIGHT)}
+                            childrenClassName="w-full m-0 p-0"
+                            title={`Driver of the Day: ${`lastRace ? lastRace.name : 'N/A'`}`}
+                        >
+                            <DriverOfTheDay />
+                        </CardContainer>
+                    </div> */}
                     <div className="col-start-2 row-start-1">
                         <CardContainer
                             className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', FULL_ROW_HEIGHT)}

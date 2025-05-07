@@ -7,6 +7,7 @@ export type Driver = {
     best_race_result: number;
     best_starting_grid_position: number;
     country_of_birth_country_id: string;
+    country: string;
     date_of_birth: string;
     date_of_death: string | null;
     field?: string;
