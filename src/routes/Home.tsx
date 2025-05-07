@@ -3,7 +3,7 @@
 
 // import ConstructorStandings from '@/components/ConstructorsStandings';
 import CardContainer from '@/components/CardContainer';
-import DriverOfTheDay from '@/components/DriverOfTheDay';
+// import DriverOfTheDay from '@/components/DriverOfTheDay';
 import DriverStandings from '@/components/DriverStandings';
 import ErrorDialog from '@/components/ErrorDialog';
 import LastRaceResultsPod from '@/components/LastRaceResultsPod';

@@ -1,5 +1,5 @@
 import { LucideCoffee } from 'lucide-react';
-import dah007Logo from '../assets/dah007-icon-logo.png';
+import dah007Logo from '../assets/dah007-icon-logo.svg';
 
 const Footer = () => {
     return (

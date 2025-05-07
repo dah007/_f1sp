@@ -1,5 +1,5 @@
-import F1SPlogo from 'assets/f1sp.png';
-import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.png';
+import F1SPlogo from 'assets/f1sp.svg';
+import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.svg';
 
 import Button from './Button';
 import { useNavigate } from 'react-router-dom';
