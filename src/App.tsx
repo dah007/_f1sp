@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import Home from './routes/Home';
-import { lazy, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { NextRaceProps, RaceResultProps } from './types/races';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
 import { useGetLastRaceResultsQuery, useGetNextRaceQuery } from './features/raceApi';
@@ -80,41 +80,44 @@ const App = () => {
                     sm:pl-4 sm:pr-4
                     pl-1 pr-1 w-[100vw]"
                 >
-                    <Routes>
-                        <Route path="/" element={<Home />} />
+                    <Suspense fallback={<div className="flex justify-center items-center h-[50vh]">Loading...</div>}>
+                        <Routes>
+                            <Route path="/" element={<Home />} />
 
-                        <Route path="circuits" element={<Circuits />} />
+                            <Route path="circuits" element={<Circuits />} />
 
-                        <Route path="constructors/:year?" element={<Constructors />} />
+                            <Route path="constructors/:year?" element={<Constructors />} />
 
-                        <Route path="drivers/:year?" element={<Drivers />} />
-                        <Route path="drivers/:year/driver/:id" element={<DriverDetail />} />
+                            <Route path="drivers/:year?" element={<Drivers />}>
+                                <Route path="driver/:id" element={<DriverDetail />} />
+                            </Route>
 
-                        <Route path="extra" element={<Extra />} />
+                            <Route path="extra" element={<Extra />} />
 
-                        <Route path="leaderboard" element={<Leaderboard />} />
+                            <Route path="leaderboard" element={<Leaderboard />} />
 
-                        <Route path="account/new" element={<AccountNew />} />
-                        <Route path="login" element={<LoginForm />} />
+                            <Route path="account/new" element={<AccountNew />} />
+                            <Route path="login" element={<LoginForm />} />
 
-                        <Route path="races/:year?/*" element={<Races />} />
+                            <Route path="races/:year?/*" element={<Races />} />
 
-                        <Route path="seasons/:year?" element={<Seasons />} />
+                            <Route path="seasons/:year?" element={<Seasons />} />
 
-                        <Route path="standings" element={<Standings />} />
+                            <Route path="standings" element={<Standings />} />
 
-                        <Route path="vote" element={<VoteDnD />} />
+                            <Route path="vote" element={<VoteDnD />} />
 
-                        <Route
-                            path="*"
-                            element={
-                                <div className="flex flex-col items-center justify-center h-[85vh]">
-                                    <h1 className="mb-6 text-3xl font-bold">404 - Not Found</h1>
-                                    <img className="max-w-[40%] rounded-3xl" src={Error404Image} alt="404 Error" />
-                                </div>
-                            }
-                        />
-                    </Routes>
+                            <Route
+                                path="*"
+                                element={
+                                    <div className="flex flex-col items-center justify-center h-[85vh]">
+                                        <h1 className="mb-6 text-3xl font-bold">404 - Not Found</h1>
+                                        <img className="max-w-[40%] rounded-3xl" src={Error404Image} alt="404 Error" />
+                                    </div>
+                                }
+                            />
+                        </Routes>
+                    </Suspense>
                 </main>
 
                 <Footer />
