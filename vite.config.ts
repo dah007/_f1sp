@@ -1,13 +1,47 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
-
 import { defineConfig } from 'vitest/config';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
     base: './',
-    plugins: [react(), tailwindcss(), tsconfigPaths()],
+    plugins: [
+        react(),
+        tailwindcss(),
+        tsconfigPaths(),
+        visualizer({
+            filename: 'dist/stats.html',
+            open: false,
+            gzipSize: true,
+        }),
+    ],
+    build: {
+        // Add optimization settings
+        chunkSizeWarningLimit: 1000, // Increase warning threshold
+        cssCodeSplit: true,
+        reportCompressedSize: true,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: ['react', 'react-dom', 'react-router-dom', '@reduxjs/toolkit', 'react-redux'],
+                    // Split large UI libraries
+                    ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-navigation-menu'],
+                    // Split mapbox separately as it's typically large
+                    maps: ['mapbox-gl'],
+                },
+            },
+        },
+        // Enable minification
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true,
+                drop_debugger: true,
+            },
+        },
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),

@@ -1,0 +1,18 @@
+# Dev files
+node_modules/
+.git/
+.github/
+coverage/
+tests/
+**/*.test.*
+**/*.spec.*
+
+# Large media files that can be externalized
+src/assets/videos/
+public/videos/
+public/large-assets/
+
+# Development configurations
+.vscode/
+.idea/
+*.log
