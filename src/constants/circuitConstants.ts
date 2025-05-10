@@ -444,5 +444,3 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
 };
 
 export const CIRCUITS = Object.keys(CIRCUIT_DETAILS).map((key) => key);
-
-console.log('CIRCUITS:', CIRCUITS);

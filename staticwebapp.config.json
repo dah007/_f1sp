@@ -13,7 +13,14 @@
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["/src/assets/images/*.{png,jpg,gif}", "/assets/*.{png,jpg,gif}", "/styles/*.{css}"]
+        "exclude": [
+            "/src/assets/drivers/*.{png,jpg,gif}",
+            "/assets/drivers/*.{png,jpg,gif}",
+            "/src/assets/images/*.{png,jpg,gif}",
+            "/src/assets/tracks/*.geojson",
+            "/assets/*.{png,jpg,gif}",
+            "/styles/*.{css}"
+        ]
     },
     "routes": [
         {
@@ -23,6 +30,13 @@
         {
             "route": "/data-api/*",
             "allowedRoles": ["anonymous"]
+        },
+        {
+            "route": "/assets/*",
+            "headers": {
+                "cache-control": "must-revalidate, max-age=15770000"
+            }
         }
-    ]
+    ],
+    "trailingSlash": "auto"
 }

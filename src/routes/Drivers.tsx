@@ -1,64 +1,65 @@
-import { JSX, useCallback, useEffect, useMemo, useState } from 'react';
-import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-import { ColumnDef } from '@tanstack/react-table';
+import { JSX, useEffect, useCallback, useRef, useMemo, useState } from 'react';
+import { RootState, useAppDispatch } from 'app/store';
+import { useAppSelector } from 'hooks/reduxHooks';
+import { Outlet, useNavigate } from 'react-router-dom';
 
-import { setDrivers } from '../slices/driversSlice';
-import { useGetDriversQuery } from '../features/driversApi';
-import { useNavigate } from 'react-router-dom';
+import Button from '@/components/Button';
+import {
+    ColumnDef,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import DropdownYears from '@/components/YearsDropdown';
+import Flag from '../components/Flag';
+import PageContainer from '@/components/PageContainer';
+import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Scrollbar } from '@radix-ui/react-scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-import DataTable from 'components/DataTable';
-import DropdownYears from 'components/YearsDropdown';
-import Flag from 'components/Flag';
-import PageContainer from 'components/PageContainer';
-import { AdditionalFiltersYearProps } from 'types/index';
+import { setDrivers } from 'slices/driversSlice';
+
+import { BUTTON_CLASSES } from '@/constants/constants';
 import { ArrowUpDown } from 'lucide-react';
-import { Button } from 'components/ui/button';
-import { intlNumberFormat } from 'utils/number';
-import { setSelectedYear } from 'slices/siteWideSlice';
 
+import { useGetDriversQuery } from '@/features/driversApi';
+import { setError, setSelectedYear } from '@/slices/siteWideSlice';
+
+import { intlNumberFormat } from '@/utils/number';
+
+import { type AdditionalFiltersYearProps } from '@/types';
 import { type Driver } from 'types/drivers';
+import { type ExtendedColumnDef } from '@/types/dataTable';
 
-/**
- * `Drivers` is a React functional component that displays a list of drivers by year.
- * It fetches driver data based on the selected year and allows navigating to driver details.
- *
- * @component
- *
- * @returns {JSX.Element} The rendered component.
- *
- * @example
- * ```tsx
- * <Drivers />
- * ```
- *
- * @remarks
- * This component uses Redux for state management and React Router for navigation.
- * It also utilizes the `useGetDriversQuery` hook to fetch driver data.
- *
- * @hook
- * - `useAppDispatch` to dispatch actions to the Redux store.
- * - `useAppSelector` to select state from the Redux store.
- * - `useNavigate` to navigate between routes.
- * - `useGetDriversQuery` to fetch driver data based on the selected year.
- * - `useEffect` to update the component when driver data changes.
- * - `useState` to manage local state for loading status and column definitions.
- *
- * @returns {JSX.Element} The rendered component.
- */
+export type OptionProps = {
+    label: string;
+    value: string;
+};
+
 const Drivers: React.FC = (): JSX.Element => {
+    // Ref to store current drivers to avoid dependency cycle
+    const driversRef = useRef<Driver[]>([]);
+
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const drivers = useAppSelector((state: RootState) => state.drivers.drivers);
+
+    useEffect(() => {
+        driversRef.current = drivers ?? [];
+    }, [drivers]);
 
     let selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
 
-    const drivers = useAppSelector((state: RootState) => state.drivers.drivers);
-    const [isLoaded, setIsLoaded] = useState(false);
-
-    const navigate = useNavigate();
     const navigateYearCB = (newYear: string) => {
-        setIsLoaded(false);
         dispatch(setSelectedYear(Number(newYear)));
         navigate(`/drivers/${newYear}`);
     };
+
     const navigateDriver = useCallback(
         (driverId: string) => {
             navigate(`/drivers/${selectedYear}/driver/${driverId}`);
@@ -73,15 +74,26 @@ const Drivers: React.FC = (): JSX.Element => {
         selectedYear = newYear;
     };
 
-    const { data: driversData } = useGetDriversQuery(selectedYear);
+    const {
+        data: driverData,
+        isLoading: driverDataIsLoading,
+        isError: driverDataIsError,
+    } = useGetDriversQuery(selectedYear) as {
+        data: Driver[] | undefined;
+        isLoading: boolean;
+        isError: boolean;
+    };
 
     useEffect(() => {
-        if (!driversData) return;
-        if (driversData) console.log('hello');
-
-        dispatch(setDrivers(driversData));
-        setIsLoaded(true); // Mark data as loaded
-    }, [driversData, dispatch, isLoaded, drivers]);
+        if (driverDataIsLoading) return;
+        if (driverDataIsError) {
+            dispatch(setError(true));
+            console.error('Error fetching driver data');
+            return;
+        }
+        if (!driverData) return;
+        dispatch(setDrivers(driverData));
+    }, [dispatch, driverData, driverDataIsError, driverDataIsLoading]);
 
     const colDefs = useMemo<ColumnDef<Driver>[]>(
         () => [
@@ -109,7 +121,7 @@ const Drivers: React.FC = (): JSX.Element => {
             },
             {
                 accessorKey: 'abbreviation',
-                cell: ({ row }) => <div className="text-right">{row.getValue('abbreviation')}</div>,
+                cell: ({ row }) => <div>{row.getValue('abbreviation')}</div>,
                 header: () => <div className="text-right"></div>,
             },
             {
@@ -153,16 +165,17 @@ const Drivers: React.FC = (): JSX.Element => {
             {
                 accessorKey: 'best_championship_position',
                 cell: ({ row }) => <div className="text-right">{row.getValue('best_championship_position')}</div>,
+                minWidth: 10,
                 header: ({ column }) => {
                     return (
                         <>
-                            <ArrowUpDown className="w-4 h-4 ml-2" />
                             <Button
                                 variant="ghost"
-                                className="flex flex-col"
+                                className="flex"
                                 onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                             >
-                                <span>Champ Pos</span>
+                                Champ Pos
+                                <ArrowUpDown className="w-4 h-4 ml-2" />
                             </Button>
                         </>
                     );
@@ -174,7 +187,7 @@ const Drivers: React.FC = (): JSX.Element => {
                 header: ({ column }) => {
                     return (
                         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                            Race Result
+                            Driver Result
                             <ArrowUpDown className="w-4 h-4 ml-2" />
                         </Button>
                     );
@@ -232,6 +245,41 @@ const Drivers: React.FC = (): JSX.Element => {
         [navigateDriver],
     );
 
+    const GetInVisibleColumn = (): Record<string, boolean> => {
+        const inVisibleColumns: ExtendedColumnDef[] = colDefs.filter(
+            (col) => 'visible' in col && col.visible === false,
+        ) as unknown as ExtendedColumnDef[];
+
+        const removedColumn = {} as Record<string, boolean>;
+
+        for (const item of inVisibleColumns) {
+            removedColumn[item.accessorKey as string] = false;
+        }
+        return removedColumn;
+    };
+
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 100, //default page is 10
+    });
+
+    const table = useReactTable({
+        columns: colDefs,
+        data: drivers ?? [],
+        getCoreRowModel: getCoreRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        onPaginationChange: setPagination,
+        state: {
+            pagination,
+        },
+        rowCount: drivers?.length ?? 0,
+        initialState: {
+            columnVisibility: GetInVisibleColumn(),
+        },
+    });
+
     const AdditionalFilters: React.FC<AdditionalFiltersYearProps> = ({
         onFilterTextBoxChanged,
         selectedYear,
@@ -240,16 +288,64 @@ const Drivers: React.FC = (): JSX.Element => {
     );
 
     return (
-        <PageContainer lastCrumb="Drivers" title="Drivers">
-            <DataTable
-                className="w-fit"
-                columns={colDefs}
-                data={drivers ?? []}
-                additionalFilters={AdditionalFilters({
-                    onFilterTextBoxChanged,
-                    selectedYear: selectedYear.toString(),
-                })}
-            />
+        <PageContainer className="w-[95%] flex flex-col" lastCrumb="Drivers" title="Drivers">
+            <div className="flex gap-4 max-w-[75vw]">
+                <Input
+                    placeholder="Filter..."
+                    value={table.getState().globalFilter ?? ''}
+                    onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+                    className={`${BUTTON_CLASSES} appearance-none`}
+                />
+
+                <AdditionalFilters
+                    onFilterTextBoxChanged={onFilterTextBoxChanged}
+                    selectedYear={selectedYear.toString()}
+                />
+            </div>
+
+            {/* detail page shows here... */}
+            <Outlet />
+
+            <ScrollArea className="h-full w-[98vw]">
+                <Scrollbar orientation="horizontal" className="w-2" />
+                <Scrollbar orientation="vertical" className="w-2" />
+                <Table className="w-full">
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                        </TableHead>
+                                    );
+                                })}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={colDefs.length} className="h-24 text-center">
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </ScrollArea>
         </PageContainer>
     );
 };

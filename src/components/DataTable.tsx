@@ -104,13 +104,14 @@ const DataTable = <TData, TValue>({
 
             <ScrollArea className="h-[65vh] w-[95vw]">
                 <ScrollBar />
-                <Table>
+                <ScrollBar orientation="horizontal" />
+                <Table className="w-full pr-16">
                     <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
+                        {table.getHeaderGroups().map((headerGroup, groupIndex) => (
+                            <TableRow key={`${headerGroup.id}-${groupIndex}`}>
+                                {headerGroup.headers.map((header, headerIndex) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={`${header.id}-${headerIndex}-${groupIndex}`}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(header.column.columnDef.header, header.getContext())}
@@ -122,10 +123,10 @@ const DataTable = <TData, TValue>({
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                            table.getRowModel().rows.map((row, index) => (
+                                <TableRow key={`${row.id}--${index}`} data-state={row.getIsSelected() && 'selected'}>
+                                    {row.getVisibleCells().map((cell, cellIndex) => (
+                                        <TableCell key={`${cell.id}--${cellIndex}`}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}

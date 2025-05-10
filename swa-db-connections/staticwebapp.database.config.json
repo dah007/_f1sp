@@ -18,8 +18,12 @@
         "host": {
             "mode": "production",
             "cors": {
-                "origins": ["http://localhost:4280"],
-                "allow-credentials": false
+                "origins": [
+                    "http://localhost:4280",
+                    "https://localhost:3000",
+                    "chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff"
+                ],
+                "allow-credentials": true
             },
             "authentication": {
                 "provider": "StaticWebApps"
@@ -40,9 +44,35 @@
                 }
             ]
         },
+        "constructors": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "constructors_with_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
 
         "driver": {
             "source": "driver",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "driverOfTheDay": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "dod_w_driver"
+            },
             "permissions": [
                 {
                     "actions": ["*"],
@@ -68,6 +98,33 @@
                 "type": "view",
                 "key-fields": ["id"],
                 "object": "driver_w_standings"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "engine_manufacturers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "engine_manufacturers_w_country"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "tyres": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "tyre_manufacturer_w_data"
             },
             "permissions": [
                 {
@@ -103,12 +160,11 @@
                 }
             ]
         },
-
-        "race": {
+        "previousResultsByCircuit": {
             "source": {
                 "type": "view",
-                "key-fields": ["id"],
-                "object": "race_w_data"
+                "key-fields": ["circuit_id"],
+                "object": "previous_winners_circuit"
             },
             "permissions": [
                 {
@@ -156,7 +212,7 @@
                 }
             ]
         },
-        "raceResult": {
+        "raceResults": {
             "source": {
                 "type": "view",
                 "key-fields": ["race_id", "year"],
@@ -181,6 +237,124 @@
                     "role": "anonymous"
                 }
             ]
+        },
+
+        "standingsWithConstructors": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "standings_w_constructors"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "standingsWithDrivers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "standings_w_drivers"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "totalWinsByYear": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "total_wins_by_year"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "createVote": {
+            "source": {
+                "type": "table",
+                "object": "vote"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ],
+            "rest": {
+                "methods": ["post", "get"],
+                "path": "/createVote"
+            },
+            "graphql": {
+                "enabled": true,
+                "type": {
+                    "singular": "createVote",
+                    "plural": "createVote"
+                }
+            }
+        },
+
+        "createUser": {
+            "source": {
+                "type": "table",
+                "object": "user",
+                "key-fields": ["id"]
+            },
+            "permissions": [
+                {
+                    "actions": ["create", "read"],
+                    "role": "anonymous"
+                },
+                {
+                    "actions": ["update", "delete"],
+                    "role": "authenticated"
+                }
+            ],
+            "rest": {
+                "methods": ["post", "get"],
+                "path": "/createUser"
+            },
+            "graphql": {
+                "enabled": true,
+                "type": {
+                    "singular": "User",
+                    "plural": "Users"
+                }
+            }
+        },
+        "readUser": {
+            "source": {
+                "type": "table",
+                "object": "user",
+                "key-fields": ["id"]
+            },
+            "permissions": [
+                {
+                    "actions": ["read"],
+                    "role": "anonymous"
+                }
+            ],
+            "rest": {
+                "methods": ["get"],
+                "path": "/readUser"
+            },
+            "graphql": {
+                "enabled": true,
+                "type": {
+                    "singular": "User",
+                    "plural": "Users"
+                }
+            }
         }
     }
 }

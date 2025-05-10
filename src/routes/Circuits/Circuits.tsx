@@ -1,164 +1,170 @@
-import { useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import mapboxgl, { Map } from 'mapbox-gl';
+// import { RootState, useAppSelector } from 'app/store';
+// import { useAppDispatch } from 'hooks/reduxHooks';
+// import { useEffect, useRef, useState } from 'react';
 
-import { useGetCircuitsQuery } from '../../features/circuitsApi';
+// import type { Map } from 'mapbox-gl';
+// const mapboxgl = () => import('mapbox-gl').then((module) => module.default);
+// const mapboxInstance: (typeof import('mapbox-gl'))['default'] = await mapboxgl();
 
-import { CIRCUIT_DETAILS } from '../../constants/circuitConstants';
+// import {
+//     gotoCircuit,
+//     gotoContinent,
+//     loadCircuitLayers,
+//     SHOW_PIN_ZOOM,
+//     updateMarkerVisibility,
+// } from './CircuitFunctions';
 
-import type { CircuitProps, CircuitDetailsProps } from 'types/circuits';
+// import CircuitSelect from 'components/CircuitSelect';
+// import ContinentSelect from './ContinentSelect';
+// import PageContainer from 'components/PageContainer';
 
-import 'mapbox-gl/dist/mapbox-gl.css';
-// import { setRaceNext } from '../../slices/racesSlice';
-import { setError } from 'slices/siteWideSlice';
-import PageContainer from 'components/PageContainer';
-import {
-    gotoCircuit,
-    gotoContinent,
-    loadCircuitLayers,
-    SHOW_PIN_ZOOM,
-    updateMarkerVisibility,
-} from './CircuitFunctions';
-// import LoadingToast from '@/components/LoadingToast';
-import CircuitSelect from 'components/CircuitSelect';
-import ContinentSelect from './ContinentSelect';
+// import { setError } from 'slices/siteWideSlice';
 
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+// import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
+// import { type CircuitProps } from 'types/circuits';
 
-const Circuits: React.FC = () => {
-    const originalLabel = '-- Select a circuit --';
-    const dispatch = useAppDispatch();
+// mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
-    const circuitsMap = useRef<HTMLDivElement | null>(null);
-    const mapContainer = useRef<Map | null>(null);
+// const Circuits: React.FC = (): JSX.Element => {
+//     const [lat, setLat] = useState<string | number | undefined>(42.35);
+//     const [lng, setLng] = useState<string | number | undefined>(-70.9);
+//     const [zoom, setZoom] = useState<string | number | undefined>(9);
 
-    const [circuitsData, setCircuitsData] = useState<CircuitProps[]>();
+//     const dispatch = useAppDispatch();
 
-    const [, setDropdownLabel] = useState<string>(originalLabel);
+//     const circuitsMap = useRef<HTMLDivElement | null>(null);
+//     const mapContainer = useRef<Map | null>(null);
+//     const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
 
-    const [lat, setLat] = useState<string | number | undefined>(42.35);
-    const [lng, setLng] = useState<string | number | undefined>(-70.9);
+//     const [circuit, setCircuit] = useState(CIRCUIT_DETAILS['baku']);
+//     const [circuitBBox, setCircuitBBox] = useState<CircuitProps['bbox']>(CIRCUIT_DETAILS['baku']?.bbox);
+//     const [continent, setContinent] = useState<string | undefined>('Europe');
 
-    const [, setSelectedCircuit] = useState<CircuitProps>();
-    const [zoom, setZoom] = useState<string | number | undefined>(9);
+//     // ? begin map
+//     useEffect(() => {
+//         if (!circuitsMap.current) return;
+//         if (!mapboxInstance) return;
 
-    const [circuit, setCircuit] = useState<CircuitProps | undefined>(CIRCUIT_DETAILS['baku']);
-    const [continent, setContinent] = useState<string | undefined>('Europe');
+//         if (raceNext) {
+//             setCircuitBBox(CIRCUIT_DETAILS[raceNext.circuit_id]?.bbox);
+//             setCircuit(CIRCUIT_DETAILS[raceNext.circuit_id]);
+//         }
 
-    const { data: circuitData } = useGetCircuitsQuery({
-        endYear: new Date().getFullYear(),
-        startYear: new Date().getFullYear() - 10,
-    });
+//         try {
+//             mapContainer.current = new mapboxInstance.Map({
+//                 container: circuitsMap.current as string | HTMLElement,
+//                 style: 'mapbox://styles/mapbox/dark-v11',
+//                 center: [circuit?.longitude || 0, circuit?.latitude || 0],
+//                 zoom: 9,
+//             });
+//         } catch (error: unknown) {
+//             console.error('Error creating map:', error);
+//             dispatch(setError(true));
+//         }
+//         if (!mapContainer.current) return;
 
-    const raceNext = useAppSelector((state) => state.races.raceNext);
+//         mapContainer.current.on('load', () => {
+//             if (!mapContainer.current) return;
+//             loadCircuitLayers({
+//                 data: CIRCUIT_DETAILS,
+//                 mapContainer: mapContainer.current,
+//             });
+//             mapContainer.current?.fitBounds(circuitBBox, {
+//                 padding: 20,
+//                 maxZoom: SHOW_PIN_ZOOM,
+//             });
+//         });
 
-    // ? begin map
-    useEffect(() => {
-        if (!circuitsMap.current) return;
-        if (!circuitData) return;
+//         const moveHandler = () => {
+//             if (!mapContainer.current) return;
 
-        let circuitBBox = CIRCUIT_DETAILS['baku']?.bbox;
-        let circuit = CIRCUIT_DETAILS['baku']; // circuitData.find((circuit: CircuitProps) => circuit.full_name === 'Baku City Circuit');
+//             setLng(mapContainer.current?.getCenter().lng.toFixed(4));
+//             setLat(mapContainer.current?.getCenter().lat.toFixed(4));
+//             setZoom(mapContainer.current?.getZoom().toFixed(2));
+//             updateMarkerVisibility(mapContainer.current?.getZoom() || SHOW_PIN_ZOOM);
+//         };
 
-        if (raceNext) {
-            circuitBBox = CIRCUIT_DETAILS[raceNext.circuit_id]?.bbox;
-            circuit = CIRCUIT_DETAILS['baku']; // circuitData.find((circuit: CircuitProps) => circuit.id === raceNext.circuit_id);
-        }
+//         mapContainer.current.on('move', moveHandler);
 
-        setDropdownLabel(circuit?.full_name || originalLabel);
-        setSelectedCircuit(circuit);
+//         return () => {
+//             mapContainer.current!.off('move', moveHandler);
+//             mapContainer.current!.remove();
+//         };
+//     }, [dispatch, CIRCUIT_DETAILS, raceNext, mapboxInstance]);
 
-        try {
-            mapContainer.current = new mapboxgl.Map({
-                container: circuitsMap.current as string | HTMLElement,
-                style: 'mapbox://styles/mapbox/dark-v11',
-                center: [circuit?.longitude || 0, circuit?.latitude || 0],
-                zoom: 9,
-            });
-        } catch (error: unknown) {
-            console.error('Error creating map:', error);
-            dispatch(setError(true));
-        }
+//     const mapInfo = () => {
+//         const returnJSX = [];
 
-        // ? set all circuit state var
-        setCircuitsData(circuitData as CircuitProps[]);
+//         returnJSX.push(
+//             <div key={returnJSX.length + 1}>
+//                 Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+//             </div>,
+//         );
 
-        if (!mapContainer.current) return;
+//         return returnJSX;
+//     };
 
-        mapContainer.current.on('load', () => {
-            if (!mapContainer.current) return;
-            loadCircuitLayers({
-                data: circuitData as CircuitProps[],
-                mapContainer: mapContainer.current,
-            });
-        });
+//     const toolClasses = 'absolute z-20 p-2 rounded-md top-2 bg-opacity-40';
 
-        mapContainer.current.fitBounds(circuitBBox, {
-            padding: { top: 25, bottom: 25, left: 15, right: 15 },
-        });
+//     return (
+//         <PageContainer title="Circuits" showBreadcrumbs showTitle>
+//             {/* upper right dropdowns    */}
+//             <div className={`${toolClasses} left-2 flex gap-4`}>
+//                 <CircuitSelect
+//                     circuitsData={CIRCUIT_DETAILS || []}
+//                     circuit={circuit || CIRCUIT_DETAILS['baku']}
+//                     map={mapContainer.current}
+//                     setCircuit={setCircuit}
+//                     setContinent={setContinent}
+//                     gotoCircuit={gotoCircuit}
+//                 />
+//                 <ContinentSelect
+//                     continent={continent || 'Europe'}
+//                     map={mapContainer.current}
+//                     setCircuit={(circuit) => setCircuit(circuit || CIRCUIT_DETAILS['baku'])}
+//                     setContinent={setContinent}
+//                     gotoContinent={gotoContinent}
+//                 />
+//             </div>
 
-        mapContainer.current.on('move', () => {
-            if (!mapContainer.current) return;
+//             <div className={`${toolClasses} right-2 bg-zinc-800 border border-zinc-700`}>{mapInfo()}</div>
 
-            setLng(mapContainer.current?.getCenter().lng.toFixed(4));
-            setLat(mapContainer.current?.getCenter().lat.toFixed(4));
-            setZoom(mapContainer.current?.getZoom().toFixed(2));
-            updateMarkerVisibility(mapContainer.current?.getZoom() || SHOW_PIN_ZOOM);
-        });
+//             <div
+//                 className="z-10"
+//                 ref={circuitsMap}
+//                 style={{
+//                     width: '100%',
+//                     height: '70vh',
+//                 }}
+//             />
 
-        return () => mapContainer.current!.remove();
-    }, [dispatch, circuitData, raceNext]);
-    // ? end map
+//             {/* <div id="menu">
+//                 <Input id="satellite-streets-v12" type="radio" name="rtoggle" value="satellite" checked /> */}
+//             {/* <!-- See a list of Mapbox-hosted public styles at -->
+//         <!-- https://docs.mapbox.com/api/maps/styles/#mapbox-styles --> */}
 
-    // if (isLoading) return <LoadingToast isLoading={raceNextLoading || isLoading} />;
-    // if (error || raceNextError) dispatch(setError(true));
+//             {/* <div span="flex left">
+//                     <Label htmlFor="light-v11">light</Label>
+//                     <input id="dark-v11" type="radio" name="rtoggle" value="dark" />
+//                     <Label htmlFor="dark-v11">dark</Label>
+//                     <input id="streets-v12" type="radio" name="rtoggle" value="streets" />
+//                     <Label htmlFor="streets-v12">streets</Label>
+//                     <input id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" />
+//                     <Label htmlFor="outdoors-v12">outdoors</Label>
+//                 </div>
+//             </div> */}
+//         </PageContainer>
+//     );
+// };
 
-    const mapInfo = () => {
-        const returnJSX = [];
+// export default Circuits;
 
-        returnJSX.push(
-            <div key={returnJSX.length + 1}>
-                Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-            </div>,
-        );
-
-        return returnJSX;
-    };
-
+const Circuits: React.FC = (): JSX.Element => {
     return (
-        <PageContainer title="Circuits" showBreadcrumbs showTitle>
-            <div className="z-50 h-full relative w-full gap-4 rounded-md flex justify-around">
-                <div className="absolute z-50 flex gap-2 rounded-md mapInfo top-2 left-2 right-2">
-                    <CircuitSelect
-                        circuitsData={(circuitsData as unknown as CircuitDetailsProps[]) || []}
-                        circuit={circuit || CIRCUIT_DETAILS['baku']}
-                        map={mapContainer.current}
-                        setCircuit={setCircuit}
-                        setContinent={setContinent}
-                        gotoCircuit={gotoCircuit}
-                    />
-                    <ContinentSelect
-                        continent={continent || 'Europe'}
-                        map={mapContainer.current}
-                        setCircuit={setCircuit}
-                        setContinent={setContinent}
-                        gotoContinent={gotoContinent}
-                    />
-                </div>
-                <div className="absolute z-50 p-2 bg-black rounded-md mapInfo top-2 right-2 bg-opacity-40">
-                    {mapInfo()}
-                </div>
-                <div
-                    className="rounded-lg z-40"
-                    ref={circuitsMap}
-                    style={{
-                        width: '100%',
-                        height: '70vh',
-                    }}
-                />
-            </div>
-        </PageContainer>
+        <div>
+            <h1>Circuits</h1>
+            <p>Technical issues, but worry not! Coming soon.</p>
+        </div>
     );
 };
-
 export default Circuits;

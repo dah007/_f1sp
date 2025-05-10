@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState, useCallback, useRef } from 'react';
+import { JSX, useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
 import { skipToken } from '@reduxjs/toolkit/query';
@@ -37,6 +37,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ExtendedColumnDef } from '@/types/dataTable';
 import { Input } from '@/components/ui/input';
 import { BUTTON_CLASSES } from '@/constants/constants';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import PageContainer from '@/components/PageContainer';
 
 export type OptionProps = {
     label: string;
@@ -102,7 +104,6 @@ const Races: React.FC = (): JSX.Element => {
     // Memoized function to go to next page with useCallback to prevent recreation on render
     const gotoNext = useCallback(() => {
         if (nextLinkArray.length > 0 && !isLoadingMore && !nextPageLoading) {
-            console.log('--> Requesting next page with link:', nextLinkArray[0]);
             setIsLoadingMore(true);
 
             // Always use the first item in the array (index 0)
@@ -119,7 +120,6 @@ const Races: React.FC = (): JSX.Element => {
         }
         if (!raceData?.value) return;
 
-        console.log('Initial race data loaded:', raceData.value.length);
         setCurrentPage(1);
 
         // Check for OData nextLink format first, then fallback to standard nextLink
@@ -131,24 +131,19 @@ const Races: React.FC = (): JSX.Element => {
                 setNextLinkArray([queryPart]);
             }
         }
-
         dispatch(setRaces(raceData.value));
     }, [dispatch, raceData, raceDataIsError, raceDataIsLoading]);
 
     // Monitor API loading status
     useEffect(() => {
         if (nextPageLoading) {
-            console.log('Next page data loading...');
+            console.info('Next page data loading...');
         }
     }, [nextPageLoading]);
 
     // Process next page results when they arrive - removed races from dependencies
     useEffect(() => {
-        console.log('Next page data:', nextPageData);
-
         if (!nextPageSuccess || !nextPageData?.value) return;
-
-        console.log('Next page data loaded successfully:', nextPageData.value.length);
 
         // Get races from ref to avoid dependency cycle
         const currentRaces = racesRef.current;
@@ -210,8 +205,6 @@ const Races: React.FC = (): JSX.Element => {
     useEffect(() => {
         if (!raceTotalCountData) return;
 
-        console.log('raceTotalCountData:', raceTotalCountData);
-
         const tPages = Math.ceil((raceTotalCountData as unknown as number) / 100);
         setTotalPages(tPages);
     }, [raceTotalCountData]);
@@ -220,8 +213,11 @@ const Races: React.FC = (): JSX.Element => {
         {
             accessorKey: 'alpha2_code',
             cell: ({ row }) => {
-                return <Flag cCode={row.getValue('alpha2_code')} size={32} />;
+                return (
+                    <div className="min-w-8 w-8 max-w-8">{Flag({ cCode: row.getValue('alpha2_code'), size: 24 })}</div>
+                );
             },
+
             header: () => <div className="min-w-4"></div>,
         },
         {
@@ -238,6 +234,21 @@ const Races: React.FC = (): JSX.Element => {
             header: ({ column }) => <TableSortHeader<RaceProps> column={column} name="Name" />,
         },
         {
+            accessorKey: 'date',
+            cell: ({ row }) => row.getValue('date'),
+            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Date" />,
+        },
+        {
+            accessorKey: 'race_winner',
+            cell: ({ row }) => row.getValue('race_winner'),
+            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Race Winner" />,
+        },
+        {
+            accessorKey: 'sprint_winner',
+            cell: ({ row }) => row.getValue('sprint_winner'),
+            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Sprint Winner" />,
+        },
+        {
             accessorKey: 'country_name',
             cell: ({ row }) => row.getValue('country_name'),
             header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Location" />,
@@ -251,16 +262,6 @@ const Races: React.FC = (): JSX.Element => {
             accessorKey: 'distance',
             cell: ({ row }) => DistanceCellRenderer({ value: row.getValue('distance') }),
             header: () => <div className="min-w-8">Distance (km)</div>,
-        },
-        {
-            accessorKey: 'driver',
-            cell: ({ row }) => row.getValue('driver'),
-            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Winner" />,
-        },
-        {
-            accessorKey: 'time',
-            cell: ({ row }) => row.getValue('time'),
-            header: ({ column }) => <TableSortHeader className="min-w-8" column={column} name="Lap Time" />,
         },
     ]);
 
@@ -277,6 +278,13 @@ const Races: React.FC = (): JSX.Element => {
         return removedColumn;
     };
 
+    const pagination = useMemo(() => {
+        return {
+            pageIndex: 0,
+            pageSize: races.map((d) => `${d.subRows}`?.length ?? 0).reduce((acc, val) => acc + val, 0) + races.length,
+        };
+    }, [races]);
+
     const table = useReactTable({
         columns: colDefs,
         data: races,
@@ -290,6 +298,7 @@ const Races: React.FC = (): JSX.Element => {
         state: {
             columnFilters,
             grouping,
+            pagination,
             sorting,
         },
         initialState: {
@@ -298,83 +307,85 @@ const Races: React.FC = (): JSX.Element => {
     });
 
     return (
-        <>
-            <div className="flex justify-between mb-4">
-                <h2>
-                    Total Races: {races.length} / Pages: {currentPage} of {totalPages}
-                </h2>
-            </div>
+        <PageContainer className="h-full w-full" lastCrumb="Races" title="Races">
+            <ScrollArea className="h-full w-full overflow-hidden">
+                <ScrollBar orientation="horizontal" className="w-full" />
+                <ScrollBar orientation="vertical" className="w-full" />
 
-            <p>well? {table.getRowModel().rows?.length}</p>
+                <div className="flex justify-between mb-2">
+                    <h2>
+                        Total Races: {races.length} / Pages: {currentPage} of {totalPages}
+                    </h2>
+                </div>
+                <div className="flex p-2">
+                    <div className="flex w-fit">
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious href="#" />
+                                </PaginationItem>
 
-            <div className="flex p-2">
-                <div className="flex w-fit">
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious href="#" />
-                            </PaginationItem>
+                                {/* {AddPaginationItems(1, totalPages)} */}
 
-                            {/* {AddPaginationItems(1, totalPages)} */}
+                                <PaginationItem>
+                                    <PaginationEllipsis />
+                                </PaginationItem>
 
-                            <PaginationItem>
-                                <PaginationEllipsis />
-                            </PaginationItem>
+                                <PaginationItem>
+                                    <PaginationNext onClick={gotoNext} href="#" />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
 
-                            <PaginationItem>
-                                <PaginationNext onClick={gotoNext} href="#" />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
+                    <div className="flex items-center gap-4 grow">
+                        <Input
+                            placeholder="Filter..."
+                            value={table.getState().globalFilter ?? ''}
+                            onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+                            className={`${BUTTON_CLASSES} appearance-none`}
+                        />
+                    </div>
                 </div>
 
-                <div className="flex items-center gap-4 grow">
-                    <Input
-                        placeholder="Filter..."
-                        value={table.getState().globalFilter ?? ''}
-                        onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-                        className={`${BUTTON_CLASSES} appearance-none`}
-                    />
-                </div>
-            </div>
-
-            <Table className="w-full">
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
-                                    </TableHead>
-                                );
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+                <Table className="w-full">
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                        </TableHead>
+                                    );
+                                })}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={colDefs.length} className="h-24 text-center">
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={colDefs.length} className="h-24 text-center">
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </ScrollArea>
+        </PageContainer>
     );
 };
 

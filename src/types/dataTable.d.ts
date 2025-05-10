@@ -35,6 +35,10 @@ export interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     hideColumns?: { [key: string]: boolean };
+    pagination?: {
+        pageIndex: number;
+        pageSize: number;
+    };
     useFilters?: boolean;
 }
 
@@ -42,4 +46,3 @@ export interface ExtendedColumnDef {
     accessorKey: string;
     visible?: boolean;
 }
-

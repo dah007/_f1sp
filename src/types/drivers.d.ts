@@ -7,6 +7,7 @@ export type Driver = {
     best_race_result: number;
     best_starting_grid_position: number;
     country_of_birth_country_id: string;
+    country: string;
     date_of_birth: string;
     date_of_death: string | null;
     field?: string;
@@ -58,7 +59,7 @@ export type DriverStats = {
     podiums: number;
 };
 
-export type DriverOfTheDay = {
+export type DriverOfTheDayProps = {
     constructor_id: string;
     id: string;
     driver_number: string;
@@ -79,3 +80,10 @@ export type PositionData = {
     count: number;
     position_number: number | null;
 };
+
+export interface TotalWinsByYear {
+    year: number;
+    total: number;
+    name: string;
+    id: string;
+}

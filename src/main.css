@@ -67,6 +67,30 @@
     --sidebar-ring: oklch(0.645 0.246 16.439);
 }
 
+@layer base {
+    :root {
+        --sidebar-background: 0 0% 98%;
+        --sidebar-foreground: 240 5.3% 26.1%;
+        --sidebar-primary: 240 5.9% 10%;
+        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 240 4.8% 95.9%;
+        --sidebar-accent-foreground: 240 5.9% 10%;
+        --sidebar-border: 220 13% 91%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+
+    .dark {
+        --sidebar-background: 240 5.9% 10%;
+        --sidebar-foreground: 240 4.8% 95.9%;
+        --sidebar-primary: 224.3 76.3% 48%;
+        --sidebar-primary-foreground: 0 0% 100%;
+        --sidebar-accent: 240 3.7% 15.9%;
+        --sidebar-accent-foreground: 240 4.8% 95.9%;
+        --sidebar-border: 240 3.7% 15.9%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+}
+
 .staatliches-regular {
     font-family: "Staatliches", sans-serif;
     font-weight: 400;
@@ -93,3 +117,262 @@
     font-family: 'Racing Sans One', serif;
     font-weight: 700;
 }
+
+/* team colors */
+.alpine {
+    background-color: #02192b;
+}
+
+.alpine-text {
+    color: #02192b;
+}
+
+.aston-martin {
+    background-color: #002420;
+}
+
+.aston-martin-text {
+    color: #002420;
+}
+
+.ferrari {
+    background-color: #ef1a2d;
+}
+
+.ferrari-text {
+    color: #ef1a2d;
+}
+
+.hass {
+    background-color: #e6002b;
+}
+
+.hass-text {
+    color: #e6002b;
+}
+
+.mclaren {
+    background-color: #ff8000;
+}
+
+.mclaren-text {
+    color: #ff8000;
+}
+
+.mercedes {
+    background-color: #00a19b;
+}
+
+.mercedes-text {
+    color: #00a19b;
+}
+
+.red-bull {
+    background-color: #c0bfbf;
+}
+
+.red-bull-text {
+    color: #c0bfbf;
+}
+
+.rb {
+    background-color: #2240ce;
+}
+
+.rb-text {
+    color: #2240ce;
+}
+
+.kick-sauber {
+    background-color: #00e701;
+}
+
+.kick-sauber-text {
+    color: #00e701;
+}
+
+.williams {
+    background-color: #00a0de;
+}
+
+.williams-text {
+    color: #00a0de;
+}
+
+.aston-martin {
+    background-color: #002420;
+}
+
+.aston-martin-text {
+    color: #002420;
+}
+
+.ferrari {
+    background-color: #ef1a2d;
+}
+
+.hass {
+    background-color: #e6002b;
+}
+
+.mclaren {
+    background-color: #ff8000;
+}
+
+.mercedes {
+    background-color: #00a19b;
+}
+
+.red-bull {
+    background-color: #c0bfbf;
+}
+
+.rb {
+    background-color: #2240ce;
+}
+
+.kick-sauber {
+    background-color: #00e701;
+}
+
+.williams {
+    background-color: #00a0de;
+}
+
+/* end team colors */
+
+span[data=switch-thumb] {
+    background-color: red;
+    /* var(--foreground); */
+    text-color: blue;
+}
+
+#airplane-mode {
+    z-index: 100;
+    /* background-color: red */
+}
+
+.driverDetail {
+    background: #94BBE9;
+    background: radial-gradient(circle, rgba(148, 187, 233, 1) 0%, rgba(0, 0, 0, 1) 100%);
+}
+
+
+/*
+
+    CLOCK
+
+*/
+.clock {
+    width: 60px;
+    height: 60px;
+    border: 0;
+    /* border-radius: 50%; */
+    position: relative;
+    padding: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    background: url('./assets/tag_60_bg.png') no-repeat center center;
+    /* background: white; */
+}
+
+.clock-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-3px);
+}
+
+.hand {
+    width: 50%;
+    background: black;
+    position: absolute;
+    top: 50%;
+    transform-origin: 100%;
+    transform: rotate(90deg);
+    transition: all 0.05s;
+    transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+}
+
+.hour-hand {
+    height: 2px;
+}
+
+.minute-hand {
+    height: 2px;
+}
+
+.second-hand {
+    height: 2px;
+    background: red;
+}
+
+/*
+.number {
+    position: absolute;
+    font-size: 12px;
+    transform: translate(-50%, -50%);
+}
+
+.number1 {
+    top: 20%;
+    left: 85%;
+}
+
+.number2 {
+    top: 35%;
+    left: 92%;
+}
+
+.number3 {
+    top: 50%;
+    left: 97%;
+}
+
+.number4 {
+    top: 65%;
+    left: 92%;
+}
+
+.number5 {
+    top: 80%;
+    left: 85%;
+}
+
+.number6 {
+    top: 85%;
+    left: 50%;
+}
+
+.number7 {
+    top: 80%;
+    left: 15%;
+}
+
+.number8 {
+    top: 65%;
+    left: 8%;
+}
+
+.number9 {
+    top: 50%;
+    left: 3%;
+}
+
+.number10 {
+    top: 35%;
+    left: 8%;
+}
+
+.number11 {
+    top: 20%;
+    left: 15%;
+}
+
+.number12 {
+    top: 15%;
+    left: 50%;
+}
+*/
+
+
+/*end clock*/

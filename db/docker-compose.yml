@@ -1,0 +1,20 @@
+services:
+    mysql:
+        container_name: f1sp-db
+        environment:
+            MYSQL_ROOT_PASSWORD: f1sp # This should NEVER make it past the dev environment!
+            MYSQL_ROOT_HOST: '%' # Allow root access from any host
+            MYSQL_DATABASE: f1sp-db
+            MYSQL_USER: f1sp
+            MYSQL_PASSWORD: f1sp # This should NEVER make it past the dev environment!
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'no' # Disallow empty passwords
+        image: mysql:latest
+        ports:
+            - '3306:3306'
+        restart: always
+        volumes:
+            - ./data:/var/lib/mysql
+            - ./f1sp.sql:/docker-entrypoint-initdb.d/f1sp.sql
+networks:
+    default:
+        name: f1sp-net

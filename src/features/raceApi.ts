@@ -27,7 +27,8 @@ export const raceApi = createApi({
             },
         }),
         getLastRaceResults: builder.query({
-            query: (raceId: number) => `raceResult?$filter=race_id eq ${parseInt((raceId - 1).toString(), 10)}`,
+            query: (raceId: number) =>
+                `raceResults?$orderby=position_display_order&$filter=race_id eq ${parseInt((raceId - 1).toString(), 10)}`,
             transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching last race results:', error);
@@ -61,7 +62,8 @@ export const raceApi = createApi({
             },
         }),
         getRaces: builder.query({
-            query: (year: number | undefined) => (year ? `/races?year=${year}` : `/races`),
+            query: (year: number | undefined) =>
+                year ? `/races?year=${year}&$orderby=date%20desc` : `/races?$orderby=date%20desc`,
             transformResponse: (response: NextLinkRaceProps) => response ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching races:', error);
@@ -100,16 +102,6 @@ export const raceApi = createApi({
                 }
             },
         }),
-        OLDgetFastestLap: builder.query({
-            queryFn: async (raceId: number | string = '') => {
-                try {
-                    const data = await dbFetch(`/fastestLap?raceId=${raceId}`);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
         getFastestPitStop: builder.query({
             queryFn: async (raceId: number | string = '') => {
                 try {
@@ -120,29 +112,16 @@ export const raceApi = createApi({
                 }
             },
         }),
-        // getLastRaceResults: builder.query({
-        //     queryFn: async () => {
-        //         console.log('getLastRaceResults??');
-        //         try {
-        //             console.log('getLastRaceResults');
-        //             const returnData = await fetch('http://localhost:4280/data-api/rest/race-result/race_id/1127');
-        //             console.log('returnData', returnData);
-        //             return { data: returnData };
-        //         } catch (error) {
-        //             console.log('error', error);
-        //             console.log('------------------------------------------------------------');
-        //             return buildErrorObject(error);
-        //         }
-        //     },
-        // }),
         getLastResultsAtCircuit: builder.query({
-            queryFn: async () => {
-                try {
-                    const returnData = await dbFetch('/previousResultsByCircuit');
-                    return { data: returnData };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
+            query: (circuitId: string) =>
+                circuitId ? `/previousResultsByCircuit?$filter=circuitId eq ${circuitId}` : `/previousResultsByCircuit`,
+            transformResponse: (response: { value: RaceProps }) => {
+                console.log('Last results at circuit:', response);
+                return response?.value ?? [];
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching last results at circuit:', error);
+                return error;
             },
         }),
         getRaceMaxYear: builder.query({
@@ -168,24 +147,12 @@ export const raceApi = createApi({
                 }
             },
         }),
-        // getRace: builder.query({
-        //     queryFn: async (year: number = YEAR) => {
-        //         try {
-        //             const data = await dbFetch(`/race?year=${year}`);
-        //             return { data };
-        //         } catch (error) {
-        //             return buildErrorObject(error);
-        //         }
-        //     },
-        // }),
         getRaceNext: builder.query({
-            queryFn: async (year: number) => {
-                try {
-                    const data = await dbFetch(`/raceNext?year=${year}`);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
+            query: () => `/raceNext`,
+            transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? {},
+            transformErrorResponse: (error) => {
+                console.error('Error fetching next race:', error);
+                return error;
             },
         }),
         getRaceResultsPrevious: builder.query({
@@ -200,30 +167,14 @@ export const raceApi = createApi({
         }),
         getRacesResultsWithQual: builder.query({
             query: (id: number) => `/raceResultsWithQual?$filter=id eq ${id}`,
-            // queryFn: async (id: string) => {
-            //     try {
-            //         const data = await dbFetch(`/raceResultsWithQual?$filter=id eq ${id}`);
-            //         return { data: data };
-            //     } catch (error) {
-            //         return buildErrorObject(error);
-            //     }
-            // },
         }),
         getRaceResultsWithQual: builder.query({
-            query: (year: number = YEAR) => `/raceResult?$filter=year eq ${year}`,
+            query: (year: number = YEAR) => `/race_result?$filter=year eq ${year}`,
             transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error', error);
                 return error;
             },
-            // queryFn: async (year: number = YEAR) => {
-            //     try {
-            //         const results = await dbFetch(`/racesResultsWithQual?year=${year}`);
-            //         return { data: results };
-            //     } catch (error) {
-            //         return buildErrorObject(error);
-            //     }
-            // },
         }),
         getTotalWins: builder.query({
             queryFn: async (year: number = YEAR) => {

@@ -9,6 +9,7 @@ import { driversApi } from 'features/driversApi';
 import { raceApi } from '@/features/raceApi';
 import { sessionsApi } from 'features/sessionsApi';
 import { standingsApi } from 'features/standingsApi';
+import { userApi } from 'features/userApi';
 
 import constructorsReducer from 'slices/constructorsSlice';
 import driversReducer from 'slices/driversSlice';
@@ -17,6 +18,7 @@ import routeSlice from 'slices/routeSlice';
 import seasonApi from 'slices/seasonsSlice';
 import siteWideSlice from 'slices/siteWideSlice';
 import standingsReducer from 'slices/standingsSlice';
+import userReducer from 'slices/userSlice';
 
 // ? WHAT IS THIS CRACK!?
 /* The line `import { seasonsApi } from 'features/seasonsApi';` is importing the `seasonsApi` object
@@ -37,6 +39,7 @@ export const store = configureStore({
         [seasonsApi.reducerPath]: seasonsApi.reducer,
         [sessionsApi.reducerPath]: sessionsApi.reducer,
         [standingsApi.reducerPath]: standingsApi.reducer,
+        [userApi.reducerPath]: userApi.reducer,
 
         constructors: constructorsReducer,
         currentRoute: routeSlice,
@@ -45,7 +48,9 @@ export const store = configureStore({
         seasons: seasonApi,
         siteWide: siteWideSlice,
         standings: standingsReducer,
+        user: userReducer,
     },
+
     // Adding the api middleware enables caching, invalidation, polling, and other features of RTK Query
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -55,7 +60,8 @@ export const store = configureStore({
             .concat(raceApi.middleware)
             .concat(seasonsApi.middleware)
             .concat(sessionsApi.middleware)
-            .concat(standingsApi.middleware),
+            .concat(standingsApi.middleware)
+            .concat(userApi.middleware),
 });
 
 // Enable listeners behavior for refetchOnMount and refetchOnReconnect behaviors

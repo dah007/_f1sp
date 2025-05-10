@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-import type { Driver, DriverOfTheDay, TDriverPodiums, DriverStats, PositionData } from 'types/drivers';
+import type { Driver, DriverOfTheDayProps, TDriverPodiums, DriverStats, PositionData } from 'types/drivers';
 
 interface DriversSliceProps {
     driver?: Driver;
     drivers?: Driver[];
     driversByYear?: Driver[];
-    driversOfTheDay: DriverOfTheDay[];
+    driversOfTheDay: DriverOfTheDayProps[];
     driverPositions?: PositionData[];
     podiumData?: TDriverPodiums;
     stats?: DriverStats;
@@ -17,7 +17,7 @@ interface DriversSliceProps {
 const initialState: DriversSliceProps = {
     driver: {} as Driver,
     drivers: [],
-    driversOfTheDay: [] as DriverOfTheDay[],
+    driversOfTheDay: [] as DriverOfTheDayProps[],
     driverPositions: [],
     podiumData: {} as TDriverPodiums,
     stats: {} as DriverStats,
@@ -41,7 +41,7 @@ export const driversSlice = createSlice({
         setDriversByYear: (state, action: PayloadAction<Driver[]>) => {
             state.driversByYear = action.payload;
         },
-        setDriversOfTheDay: (state, action: PayloadAction<DriverOfTheDay[]>) => {
+        setDriversOfTheDay: (state, action: PayloadAction<DriverOfTheDayProps[]>) => {
             let payload = action.payload;
 
             if (!payload) payload = [];

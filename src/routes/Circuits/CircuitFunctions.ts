@@ -1,9 +1,9 @@
 import { CIRCUIT_DETAILS, CONTINENTS } from 'constants/circuitConstants';
-import type { CircuitProps } from 'types/circuits';
+import type { CircuitDetailsProps, CircuitProps } from 'types/circuits';
 import { isBoundingBoxOutside, isPointInsideBoundingBox } from 'utils/maps';
 import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike, Map } from 'mapbox-gl';
 
-export const SHOW_PIN_ZOOM = 13;
+export const SHOW_PIN_ZOOM = 10;
 export const ORIGINAL_LABEL = '-- Select a circuit --';
 
 type CircuitLabelProps = {
@@ -45,7 +45,7 @@ export interface GotoContinentProps {
 }
 
 interface LoadCircuitLayersProps {
-    data: CircuitProps[];
+    data: CircuitDetailsProps;
     mapContainer: Map | null;
 }
 
@@ -99,12 +99,10 @@ export const createMarker = ({ circuit, mapContainer, mapboxgl }: CreateMarkerPr
  *
  * @throws {Error} If the specified continent does not exist in the CONTINENTS data.
  */
-export const flyToContinent = ({continent, map, setSelectedCircuit}
-    : FlyToProps
-) => {
+export const flyToContinent = ({ continent, map, setSelectedCircuit }: FlyToProps) => {
     setSelectedCircuit(undefined);
-    
-    console.log('continent',continent);
+
+    console.log('continent', continent);
 
     if (CONTINENTS[continent]) {
         zoomTo({
@@ -120,33 +118,22 @@ export const flyToContinent = ({continent, map, setSelectedCircuit}
 
 /**
  * Flies the map view to the point of interest (POI) specified by the given circuit.
- * 
+ *
  * @param {FlyToPOIProps} props - The properties required to fly to the POI.
  * @param {Circuit} props.circuit - The circuit to fly to.
  * @param {CircuitData[]} props.circuitsData - The data of all circuits.
  * @param {Map} props.map - The map instance to manipulate.
  * @param {Function} props.setDropdownLabel - Function to set the label of the dropdown.
  * @param {Function} props.setSelectedCircuit - Function to set the selected circuit.
- * 
+ *
  * @returns {void}
  */
-export const flyToPOI = ({
-    circuit,
-    circuitsData,
-    map,
-    setDropdownLabel,
-    setSelectedCircuit,
-}: FlyToPOIProps
-): void => {
+export const flyToPOI = ({ circuit, circuitsData, map, setDropdownLabel, setSelectedCircuit }: FlyToPOIProps): void => {
     // get the bbox for the _current_ map view
     const bbox = CIRCUIT_DETAILS[circuit.id]?.bbox;
     setSelectedCircuit(circuit);
 
-    if (
-        map &&
-        map.getBounds() &&
-        isBoundingBoxOutside(bbox, map.getBounds() as LngLatBounds)
-    ) {
+    if (map && map.getBounds() && isBoundingBoxOutside(bbox, map.getBounds() as LngLatBounds)) {
         console.warn('------------------ inside - what next');
         // ? maybe we do something here?
     } else {
@@ -162,12 +149,7 @@ export const flyToPOI = ({
         })
         .once('moveend', () => {
             if (!map) return;
-            if (
-                !isPointInsideBoundingBox(
-                    new LngLat(map.getCenter().lng, map.getCenter().lat),
-                    bbox as LngLatBounds,
-                )
-            ) {
+            if (!isPointInsideBoundingBox(new LngLat(map.getCenter().lng, map.getCenter().lat), bbox as LngLatBounds)) {
                 console.warn('OUTSIDE');
             }
 
@@ -177,7 +159,7 @@ export const flyToPOI = ({
                 circuitsData,
                 newBBox: bbox as number[],
                 id: circuit.id,
-                originalLabel:ORIGINAL_LABEL,
+                originalLabel: ORIGINAL_LABEL,
             });
 
             updateMarkerVisibility(map?.getZoom() || SHOW_PIN_ZOOM);
@@ -195,17 +177,12 @@ export const flyToPOI = ({
  *
  * @returns {void}
  */
-export const gotoCircuit = ({
-    circuitId,
-    map,
-    setCircuit,
-    setContinent,
-}: GotoCircuitProps) => {
+export const gotoCircuit = ({ circuitId, map, setCircuit, setContinent }: GotoCircuitProps): void => {
     const circuit = CIRCUIT_DETAILS[circuitId];
     if (setContinent && circuit?.continent) {
         setContinent(circuit.continent);
     }
-    
+
     setCircuit(circuit);
     flyToPOI({
         circuit,
@@ -219,7 +196,7 @@ export const gotoCircuit = ({
 export const gotoContinent = ({ c, map, setC, setCon }: GotoContinentProps) => {
     setC(undefined);
     setCon(c);
-    
+
     flyToContinent({
         continent: c,
         map,
@@ -228,54 +205,58 @@ export const gotoContinent = ({ c, map, setC, setCon }: GotoContinentProps) => {
     });
 };
 
-export const loadCircuitLayers = ({
-    data,
-    mapContainer
-}: LoadCircuitLayersProps) => {
+export const loadCircuitLayers = async ({ data, mapContainer }: LoadCircuitLayersProps) => {
     if (!data) return;
     if (!mapContainer) return;
 
-    const uniqueArray: CircuitProps[] = data?.filter(
+    // const uniqueArray: CircuitProps[] = data?.filter(
+    //     (obj: CircuitProps, index: number, self: CircuitProps[]) =>
+    //         index === self.findIndex((t: CircuitProps) => t.id === obj.id && t.name === obj.name),
+    // );
+
+    const uniqueArray: CircuitProps[] = Object.values(data).filter(
         (obj: CircuitProps, index: number, self: CircuitProps[]) =>
             index === self.findIndex((t: CircuitProps) => t.id === obj.id && t.name === obj.name),
     );
-    
-    uniqueArray?.map((circuit: CircuitProps) => {
-        if (!mapContainer) return;
 
-    createMarker({
-        circuit,
-        mapContainer,
-        mapboxgl,
-    });
-
-    fetch(`/src/assets/tracks/${circuit.id}.geojson`)
-        .then((response) => response.json())
-        .then((data) => {
-            if (!data) return;
+    await Promise.all(
+        uniqueArray?.map(async (circuit: CircuitProps) => {
             if (!mapContainer) return;
+            try {
+                const response = await fetch(`/src/assets/tracks/${circuit.id}.geojson`);
+                const data = await response.json();
+                if (!data) return;
+                if (!mapContainer) return;
 
-            mapContainer.addSource(circuit.id, {
-                type: 'geojson',
-                data,
-            });
+                mapContainer.addSource(circuit.id, {
+                    type: 'geojson',
+                    data,
+                });
 
-            mapContainer.addLayer({
-                id: `${circuit.id}-outline`,
-                type: 'line',
-                source: circuit.id,
-                layout: {},
-                paint: {
-                    'line-color': '#fff',
-                    'line-width': 3,
-                },
-            });
-        })
-        .catch((error) => {
-            console.warn(`Circuit ${circuit.id} has no geojson file.`);
-            console.error('Error loading geojson:', error);
+                mapContainer.addLayer({
+                    id: `${circuit.id}-outline`,
+                    type: 'line',
+                    source: circuit.id,
+                    layout: {},
+                    paint: {
+                        'line-color': '#fff',
+                        'line-width': 3,
+                    },
+                });
+            } catch (error) {
+                console.warn(`Circuit ${circuit.id} has no geojson file.`);
+                console.error('Error loading geojson:', error);
+            }
+        }) || [],
+    );
+
+    for (const circuit of uniqueArray) {
+        createMarker({
+            circuit,
+            mapContainer,
+            mapboxgl,
         });
-    });
+    }
 };
 
 export const updateDropdownLabel = ({
@@ -286,7 +267,7 @@ export const updateDropdownLabel = ({
     originalLabel,
 }: CircuitLabelProps) => {
     if (!mapContainer) return;
-    
+
     for (const circuit of circuitsData || []) {
         const circuitBounds = CIRCUIT_DETAILS[circuit.id]?.bbox;
 
@@ -303,16 +284,16 @@ export const updateDropdownLabel = ({
 /**
  * Updates the visibility of map markers based on the provided zoom level.
  *
- * @param zoomLevel - The current zoom level of the map. If the zoom level is greater than or equal to `SHOW_PIN_ZOOM`, 
+ * @param zoomLevel - The current zoom level of the map. If the zoom level is greater than or equal to `SHOW_PIN_ZOOM`,
  *                    the markers will be hidden. Otherwise, they will be visible.
  */
 export const updateMarkerVisibility = (zoomLevel: number) => {
-        const markers = document.getElementsByClassName('mapMarker');
-        for (let i = 0; i < markers.length; i++) {
-            const marker = markers[i] as HTMLElement;
-            marker.style.visibility = zoomLevel >= SHOW_PIN_ZOOM ? 'hidden' : 'visible';
-        }
-    };
+    const markers = document.getElementsByClassName('mapMarker');
+    for (let i = 0; i < markers.length; i++) {
+        const marker = markers[i] as HTMLElement;
+        marker.style.visibility = zoomLevel >= SHOW_PIN_ZOOM ? 'hidden' : 'visible';
+    }
+};
 
 /**
  * Zooms the map to a specified position and zoom level.
@@ -324,7 +305,7 @@ export const updateMarkerVisibility = (zoomLevel: number) => {
  *
  * @returns {void}
  */
-export const zoomTo = ({ position, zoomLevel = 15, map }: ZoomToProps) => {
+export const zoomTo = ({ position, zoomLevel = 15, map }: ZoomToProps): void => {
     updateMarkerVisibility(zoomLevel);
     if (!map) return;
 
@@ -345,7 +326,7 @@ export const zoomTo = ({ position, zoomLevel = 15, map }: ZoomToProps) => {
 
 /**
  * Default options for zooming functionality.
- * 
+ *
  * @property {number} speed - The speed of the zoom, where higher values indicate faster zooming.
  * @property {number} curve - The curve factor for the zoom, affecting the acceleration/deceleration.
  * @property {(t: number) => number} easing - The easing function to control the zoom transition.

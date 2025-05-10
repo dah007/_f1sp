@@ -36,32 +36,30 @@ const ContinentSelect = ({
     gotoContinent,
 }: ContinentSelectProps): JSX.Element => {
     return (
-        <div className="w-72">
-            <Select
-                data-testid="continent-select"
-                onValueChange={(continent) => {
-                    if (continent === undefined) return;
-                    console.log(continent);
-                    gotoContinent({
-                        c: continent,
-                        map: map,
-                        setC: setCircuit,
-                        setCon: setContinent,
-                    });
-                }}
-            >
-                <SelectTrigger role="button" className={BUTTON_CLASSES}>
-                    <SelectValue placeholder={continent ?? `Continent`} />
-                </SelectTrigger>
-                <SelectContent>
-                    {Object.keys(CONTINENTS).map((continent, index) => (
-                        <SelectItem key={index} value={continent} className="cursor-pointer">
-                            {continent}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-        </div>
+        <Select
+            data-testid="continent-select"
+            onValueChange={(continent) => {
+                if (continent === undefined) return;
+                console.log(continent);
+                gotoContinent({
+                    c: continent,
+                    map: map,
+                    setC: setCircuit,
+                    setCon: setContinent,
+                });
+            }}
+        >
+            <SelectTrigger role="button" className={BUTTON_CLASSES}>
+                <SelectValue placeholder={continent ?? `Continent`} />
+            </SelectTrigger>
+            <SelectContent>
+                {Object.keys(CONTINENTS).map((continent, index) => (
+                    <SelectItem key={index} value={continent} className="cursor-pointer">
+                        {continent}
+                    </SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
     );
 };
 

@@ -5,6 +5,7 @@ interface SortableItemProps {
     id: string;
     label: string;
     value: string;
+    index: number;
 }
 
 /**
@@ -38,14 +39,14 @@ const SortableItem: React.FC<SortableItemProps> = (props: SortableItemProps) => 
 
     return (
         <div
-            className="border border-gray-400 rounded-lg dark:font-white light:font-black p-4 cursor-pointer m-2"
+            className="border border-gray-400 rounded-lg dark:font-white light:font-black p-4 cursor-pointer m-2 bg-zinc-600"
             data-value={props.value}
             ref={setNodeRef}
             style={style}
             {...attributes}
             {...listeners}
         >
-            {props.label}
+            {props.index}. {props.label}
         </div>
     );
 };
