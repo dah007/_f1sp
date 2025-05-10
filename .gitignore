@@ -28,7 +28,6 @@ f1Api/db/f1db-9-2.db
 f1Api/db/f1db.db
 f1Api/f1db.db
 *.db
-src/assets/drivers/*.png
 
 db/data/*
 

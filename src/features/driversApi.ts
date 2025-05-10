@@ -2,7 +2,7 @@ import { REST_URL, YEAR } from '@/constants/constants';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { buildErrorObject } from 'utils/index';
 
-import type { Driver, TotalWinsByYear } from '@/types/drivers';
+import type { Driver, DriverOfTheDayProps, TotalWinsByYear } from '@/types/drivers';
 
 export const driversApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
@@ -27,7 +27,7 @@ export const driversApi = createApi({
 
                 return `/driverOfTheDay?$filter=race_id eq ${race_id}`;
             },
-            transformResponse: (response: { value: Driver[] }) => {
+            transformResponse: (response: { value: DriverOfTheDayProps[] }) => {
                 return response.value;
             },
             transformErrorResponse: (response) => {
