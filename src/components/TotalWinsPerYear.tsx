@@ -5,20 +5,28 @@ import { useEffect, useState } from 'react';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { cn } from '@/lib/utils';
+import { useAppDispatch } from '@/app/store';
+import { setError } from '@/slices/siteWideSlice';
 
 const TotalWinsPerYear: React.FC = ({ className }: { className?: string }): JSX.Element => {
-    const { data, isLoading, error } = useGetTotalWinsByYearQuery(YEAR);
+    const dispatch = useAppDispatch();
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error loading data</div>;
+    const {
+        data: totalWinsData,
+        isLoading: totalWinsLoading,
+        error: totalWinsError,
+    } = useGetTotalWinsByYearQuery(YEAR);
 
     const [totalWinsByYear, setTotalWinsByYear] = useState<TotalWinsByYear[]>([]);
 
     useEffect(() => {
-        if (!data) return;
-        console.log('Total wins by year:', data);
-        setTotalWinsByYear(data);
-    }, [data]);
+        if (totalWinsError) dispatch(setError(true));
+
+        if (!totalWinsLoading && !totalWinsError && totalWinsData) {
+            console.log('Total wins by year:', totalWinsData);
+            setTotalWinsByYear(totalWinsData);
+        }
+    }, [totalWinsData, totalWinsLoading, totalWinsError]);
 
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', className)}>

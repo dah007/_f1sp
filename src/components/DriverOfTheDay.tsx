@@ -57,8 +57,8 @@ const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {driversOfTheDay?.map((driver: DriverOfTheDayProps) => (
-                        <TableRow key={driver.id}>
+                    {driversOfTheDay?.map((driver: DriverOfTheDayProps, index) => (
+                        <TableRow key={`${index}-${driver.percentage}`} className="h-8">
                             <TableCell className="text-right">{driver.percentage}</TableCell>
                             <TableCell>{driver.name}</TableCell>
                         </TableRow>
