@@ -15,3 +15,95 @@ body {
     @apply dark:bg-zinc-800;
     @apply dark:text-zinc-300;
 }
+
+/* Hide the default blue marker pin inside our custom markers */
+.marker.mapMarker svg {
+    display: none !important;
+}
+
+/* Ensure the custom marker is visible and properly positioned */
+.marker {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    display: block;
+    transform-origin: center;
+    will-change: transform;
+    /* Hardware acceleration hint */
+    transform: translate3d(0, 0, 0);
+    /* Force GPU acceleration */
+    backface-visibility: hidden;
+    /* Additional performance boost */
+    perspective: 1000;
+    /* Additional performance boost */
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Add a slight hover effect */
+.marker:hover {
+    transform: scale(1.1) translate3d(0, 0, 0);
+}
+
+/* Hidden class for markers and popups - more efficient than inline style changes */
+.marker.hidden,
+.mapboxgl-popup.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.2s ease-out, visibility 0s 0.2s;
+}
+
+/* Control marker containers for animation hiding */
+.mapboxgl-marker {
+    will-change: transform, opacity, visibility;
+    transition: opacity 0.2s ease-out;
+}
+
+/* Ensure markers are completely hidden during animations */
+.mapboxgl-marker.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
+}
+
+/* Add a class for animation state that we can target with JS */
+.map-animating .mapboxgl-marker {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    display: none !important;
+}
+
+/* Popup styling and performance optimizations */
+.circuit-popup {
+    will-change: opacity, transform;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.circuit-popup .mapboxgl-popup-content {
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.95);
+    max-width: 220px;
+}
+
+/* Optimize map canvas performance */
+.mapboxgl-canvas {
+    will-change: transform;
+}
+
+/* Optimize map container for better rendering */
+.mapboxgl-map {
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+/* Prevent flickering during zoom transitions */
+.mapboxgl-canary {
+    visibility: hidden;
+}

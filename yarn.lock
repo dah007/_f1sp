@@ -1186,6 +1186,13 @@
     "@types/mapbox__point-geometry" "*"
     "@types/pbf" "*"
 
+"@types/mapbox-gl@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.npmjs.org/@types/mapbox-gl/-/mapbox-gl-3.4.1.tgz"
+  integrity sha512-NsGKKtgW93B+UaLPti6B7NwlxYlES5DpV5Gzj9F75rK5ALKsqSk15CiEHbOnTr09RGbr6ZYiCdI+59NNNcAImg==
+  dependencies:
+    "@types/geojson" "*"
+
 "@types/minimatch@*":
   version "5.1.2"
 
