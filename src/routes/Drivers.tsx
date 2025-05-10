@@ -389,13 +389,14 @@ const Drivers: React.FC = (): JSX.Element => {
                                                     >
                                                         <Outlet />
                                                     </Suspense>
-                                                    <div className="flex justify-end mt-4">
+                                                    <div className="flex mt-2">
                                                         <Button
+                                                            variant="link"
                                                             onClick={() => {
                                                                 setClickedRowId(null);
                                                                 navigate(`/drivers/${selectedYear}`);
                                                             }}
-                                                            className="px-2 py-1 text-sm"
+                                                            className="px-2 py-1 text-sm text-blue-700 dark:text-blue-300 hover:text-blue-500 cursor-pointer"
                                                         >
                                                             Close
                                                         </Button>

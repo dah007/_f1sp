@@ -5,17 +5,24 @@ import { intlNumberFormat } from '@/utils/number';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+/**
+ * Displays detailed information about a specific Formula 1 driver.
+ *
+ * Fetches driver data based on the ID parameter from the URL,
+ * and displays the driver's image, name, nationality flag, and career statistics
+ * including wins, points, podiums, pole positions, race starts, and championship wins.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered driver detail component
+ */
 const DriverDetail: React.FC = () => {
     const [driver, setDriver] = useState<Driver | null>(null);
     const { id, year } = useParams<{ id: string; year: string }>();
-
-    console.log('DriverDetail', id, year);
 
     const { data: driverData } = useGetDriverQuery(id);
 
     useEffect(() => {
         if (driverData) {
-            console.log('driver', driverData[0]);
             setDriver(driverData[0]);
         }
     }, [driverData]);
@@ -25,12 +32,12 @@ const DriverDetail: React.FC = () => {
     }
 
     return (
-        <div className="flex items-start gap-10">
+        <div className="flex items-start gap-10 max-h-[130px] overflow-hidden">
             <div className="flex items-start justify-start">
                 <img
                     src={`/src/assets/drivers/${year}/${driver?.id}.png`}
                     alt="Driver"
-                    className="max-h-[200px] object-contain"
+                    className="max-h-[175px] object-contain"
                     onError={(e) => {
                         e.currentTarget.src = '/src/assets/images/404.png';
                         e.currentTarget.onerror = null;
@@ -42,7 +49,7 @@ const DriverDetail: React.FC = () => {
                     <Flag nameAsId={driver?.nationality_country_id} size={48} />
                     {driver?.name}
                 </div>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-2 gap-10 text-sm">
                     <div>
                         <div>Total Wins: {driver?.total_race_wins}</div>
                         <div>Total Points: {intlNumberFormat(driver?.total_points)}</div>
