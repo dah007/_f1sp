@@ -6,7 +6,8 @@ select
     distinct `d`.`name` as `name`,
     `d`.`id` as `driver_id`,
     `c`.`full_name` as `full_name`,
-    `c`.`id` as `constructor_id`
+    `c`.`id` as `constructor_id`,
+    `r`.year
 from
     (((`driver` `d`
 join `race_data` `rd` on
@@ -16,8 +17,7 @@ join `race` `r` on
 join `constructor` `c` on
     ((`rd`.`constructor_id` = `c`.`id`)))
 where
-    (`rd`.`type` = 'RACE_RESULT')
-    and r.year = 2024
+    ((`rd`.`type` = 'RACE_RESULT'))
 group by
     `d`.`id`,
     `rd`.`race_id`,

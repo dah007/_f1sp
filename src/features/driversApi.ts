@@ -8,9 +8,6 @@ export const driversApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
     tagTypes: ['Drivers'], // TODO: figure this out
     endpoints: (builder) => ({
-        getDriverOfDay: builder.query({
-            query: (id: string = 'lando-norris') => `/driverOfDay?raceId=${id}`,
-        }),
         getDriverTotalPositions: builder.query({
             query: (id: string = 'lando-norris') => `/driverPositionTotals?id=${id}`,
             providesTags: (result, error, id) => {
@@ -24,14 +21,22 @@ export const driversApi = createApi({
             query: (id: string = 'lando-norris') => `/driver?$filter=id eq '${id}'`,
             transformResponse: (response: { value: Driver[] }) => response.value,
         }),
+        getDriverOfTheDay: builder.query({
+            query: (race_id: number = 0) => {
+                console.log('grDriverOfTheDay');
+
+                return `/driverOfTheDay?$filter=race_id eq ${race_id}`;
+            },
+            transformResponse: (response: { value: Driver[] }) => {
+                return response.value;
+            },
+            transformErrorResponse: (response) => {
+                return buildErrorObject(response);
+            },
+        }),
         getDrivers: builder.query({
             query: (year: number = 2025) => `/drivers?$filter=year eq ${year}&$first=100`,
             transformResponse: (response: { value: Driver[] }) => {
-                // const drivers = response.data.map((driver: any) => ({
-                //     ...driver,
-                //     name: `${driver.givenName} ${driver.familyName}`,
-                // }));
-                console.log('drivers:', response);
                 return response.value;
             },
             transformErrorResponse: (response) => {
@@ -47,14 +52,8 @@ export const driversApi = createApi({
                 return buildErrorObject(response);
             },
         }),
-        // getDriversByIds: builder.query({
-        //     queryFn: async (drivers: string[]) => {
-        //         const ids = drivers.join(',');
-        //         const result = await dbFetch(`driversByIds?ids=${ids}`);
-        //         console.log('result:', result);
-        //         return { data: result };
-        //     },
-        // }),
+
+        /** @deprecated */
         getDriverPodiums: builder.query({
             query: (driverId: string = 'lando-norris') => `/driverPodiums?id=${driverId}`,
         }),
@@ -80,7 +79,8 @@ export const driversApi = createApi({
 });
 
 export const {
-    useGetDriverOfDayQuery,
+    // useGetDriverOfDayQuery,
+    useGetDriverOfTheDayQuery,
     useGetDriverPodiumsQuery,
     useGetDriverQuery,
     // useGetDriverStatsQuery,

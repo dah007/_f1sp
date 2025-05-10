@@ -2,7 +2,7 @@
 
 create or replace
 algorithm = UNDEFINED view `rr_w_driver` as
-select 
+select
     `d`.`name` as `driver_name`,
     `rd`.`driver_number` as `driver_number`,
     `d`.`permanent_number` as `permanent_number`,
@@ -38,9 +38,11 @@ select
     `rd`.`race_driver_of_the_day` as `driver_of_the_day`,
     `rd`.`race_grand_slam` as `grand_slam`,
     `r`.`year` as `year`,
-    r.circuit_id 
-from `race_data` as `rd`
+    `r`.`circuit_id` as `circuit_id`
+from
+    ((`race_data` `rd`
 join `driver` `d` on
-    `rd`.`driver_id` = `d`.`id`
+    ((`rd`.`driver_id` = `d`.`id`)))
 join `race` `r` on
-    `rd`.`race_id` = `r`.`id`;
+    ((`rd`.`race_id` = `r`.`id`)))
+where rd.type = 'RACE_RESULT';

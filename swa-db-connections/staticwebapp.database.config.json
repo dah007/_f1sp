@@ -67,6 +67,19 @@
                 }
             ]
         },
+        "driverOfTheDay": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "dod_w_driver"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
         "drivers": {
             "source": {
                 "type": "view",
@@ -147,12 +160,11 @@
                 }
             ]
         },
-
-        "race": {
+        "previousResultsByCircuit": {
             "source": {
                 "type": "view",
-                "key-fields": ["id"],
-                "object": "race_w_data"
+                "key-fields": ["circuit_id"],
+                "object": "previous_winners_circuit"
             },
             "permissions": [
                 {
@@ -200,7 +212,7 @@
                 }
             ]
         },
-        "race_result": {
+        "raceResults": {
             "source": {
                 "type": "view",
                 "key-fields": ["race_id", "year"],

@@ -21,10 +21,10 @@ import { ConstructorStanding, DriverStanding } from '@/types/standings';
 import { cn } from '@/lib/utils';
 import { FULL_ROW_HEIGHT } from '@/constants/constants';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import ChartTest from '@/components/DriverStandingsChart';
 
-function DriverChart({
+export function DriverChart({
     data,
-    className,
     driversChartConfig,
 }: {
     data: DriverStanding[];
@@ -32,28 +32,44 @@ function DriverChart({
     driversChartConfig: ChartConfig;
 }): JSX.Element {
     return (
-        <ChartContainer config={driversChartConfig} className={cn('absolute top-0 left-0 right-0 bottom-0', className)}>
-            <BarChart accessibilityLayer data={data} className="h-[50] w-full">
-                <CartesianGrid vertical={false} />
-                <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                />
-                <Bar dataKey="points" fill="var(--color-desktop)" radius={4} height={1100} />
-                <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                    label={'Driver Name'}
-                    formatter={(value, name) => [value, name]}
-                    labelFormatter={(value) => value}
-                    labelClassName="text-sm font-medium text-gray-700"
-                />
-            </BarChart>
-        </ChartContainer>
+        <>
+            <ChartContainer config={driversChartConfig}>
+                <BarChart accessibilityLayer data={data}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis
+                        dataKey="name"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                        tickFormatter={(value) => value.slice(0, 3)}
+                    />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                    <Bar dataKey="points" radius={8} />
+                </BarChart>
+            </ChartContainer>
+        </>
     );
+    // <ChartContainer config={driversChartConfig}>
+    //     <BarChart accessibilityLayer data={data} className="h-[50] w-full">
+    //         <CartesianGrid vertical={false} />
+    //         <XAxis
+    //             dataKey="month"
+    //             tickLine={false}
+    //             tickMargin={10}
+    //             axisLine={false}
+    //             tickFormatter={(value) => value.slice(0, 3)}
+    //         />
+    //         <Bar dataKey="points" fill="var(--color-desktop)" radius={4} height={1100} />
+    //         <ChartTooltip
+    //             cursor={false}
+    //             content={<ChartTooltipContent hideLabel />}
+    //             label={'Driver Name'}
+    //             formatter={(value, name) => [value, name]}
+    //             labelFormatter={(value) => value}
+    //             labelClassName="text-sm font-medium text-gray-700"
+    //         />
+    //     </BarChart>
+    // </ChartContainer>
 }
 
 function ConstructorChart({
@@ -87,7 +103,7 @@ function ConstructorChart({
     );
 }
 
-interface LocalConstructorProps {
+export interface LocalConstructorProps {
     cName: string;
     constructor_id: string;
     emName: string;
@@ -97,7 +113,7 @@ interface LocalConstructorProps {
     year: number;
 }
 
-interface LocalDriverProps {
+export interface LocalDriverProps {
     driver_id: string;
     name: string;
     fill: string;
@@ -208,17 +224,16 @@ const Standings: React.FC = (): JSX.Element => {
                 
                         DRIVERS
                 */}
-            <div className={cn(FULL_ROW_HEIGHT, 'grid grid-cols-2 grid-rows-2 gap-4 m-0 p-0')}>
+            <div className={cn(FULL_ROW_HEIGHT, 'grid grid-cols-2 grid-rows-1 gap-4 m-0 p-0')}>
                 <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300')}>
                     <CardTitle className="pl-4 pt-0 m-0">Driver Standings</CardTitle>
                     <DriverStandings className={FULL_ROW_HEIGHT} year={selectedYear} />
                 </Card>
 
-                <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-zinc-800 bg-zinc-300')}>
-                    <AspectRatio ratio={16 / 9}>
-                        <DriverChart data={colorDrivers} driversChartConfig={driversChartConfig} />
-                    </AspectRatio>
-                </div>
+                <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-full', 'dark:bg-zinc-800 bg-zinc-300')}>
+                    <CardTitle className="pl-4 pt-0 m-0">Driver Chart</CardTitle>
+                    <ChartTest chartData={colorDrivers} className="max-h-[100vh]" />
+                </Card>
 
                 {/* <Card
                     className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-zinc-800 bg-zinc-300 w-full')}

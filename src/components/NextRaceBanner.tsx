@@ -1,6 +1,8 @@
 import { JSX } from 'react';
 import { RootState, useAppSelector } from 'app/store';
 
+// import CountdownClock from './CountdownClock';
+
 // // TODO: get clock countdown ready for next year (2026)
 // // import CountdownClock from './CountdownClock';
 
@@ -33,6 +35,9 @@ const NextReactBanner: React.FC = (): JSX.Element => {
             "
             >
                 <span>{`Next Race: ${raceNext.date || ''} @ ${raceNext.official_name || 'N/A'}`}</span>
+
+                {/* TODO: fix this busted clock! */}
+                {/* <CountdownClock targetDate={`${raceNext.date} 15:00`} /> */}
             </div>
         );
     };

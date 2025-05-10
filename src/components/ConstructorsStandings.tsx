@@ -8,7 +8,7 @@ import { useGetConstructorStandingsQuery } from 'features/standingsApi';
 import { setConstructorStandings } from 'slices/standingsSlice';
 import { setError } from 'slices/siteWideSlice';
 
-import { YEAR } from 'constants/constants';
+import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 import { type ConstructorStanding } from 'types/standings';
 import { cn } from '@/lib/utils';
 
@@ -38,8 +38,8 @@ const ConstructorStandings = ({ className, year = YEAR }: { className?: string; 
         return <div className="text-center italic">No constructors standings available.</div>;
     }
     return (
-        <ScrollArea className={cn(`w-full border-t mb-40`, className)}>
-            <Table>
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, className, 'overflow-hidden border-t', 'mb-40')}>
+            <Table className="w-full mb-10">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-4 text-right">Pos</TableHead>

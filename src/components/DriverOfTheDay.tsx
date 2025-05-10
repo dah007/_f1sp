@@ -1,86 +1,73 @@
 import React, { useEffect } from 'react';
-import { RootState, useAppDispatch } from 'app/store';
-import { useAppSelector } from '../hooks/reduxHooks';
-
-import { type ChartConfig } from 'components/ui/chart';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
 import { setDriversOfTheDay } from 'slices/driversSlice';
 import { setError } from 'slices/siteWideSlice';
 import { setRaceNext } from 'slices/racesSlice';
-import { useGetDriverOfDayQuery } from 'features/driversApi';
+import { useGetDriverOfTheDayQuery } from 'features/driversApi';
 import { useGetRaceNextQuery } from 'features/raceApi';
 
-import type { DriverOfTheDay } from 'types/drivers';
-import type { NextRaceProps } from 'types/races';
-import { YEAR } from 'constants/constants';
-import Chart from './Chart';
+import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 
-const DriverOfTheDay: React.FC = () => {
+import type { NextRaceProps } from 'types/races';
+import { ScrollArea } from './ui/scroll-area';
+import { cn } from '@/lib/utils';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+
+const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
     const dispatch = useAppDispatch();
 
-    const driversOfTheDay = useAppSelector<DriverOfTheDay[]>(
-        (state: RootState) => state.drivers?.driversOfTheDay || [],
-    );
-    const raceNext =
-        useAppSelector<NextRaceProps | null>((state: RootState) => state.races?.raceNext) ||
-        ({ id: '' } as NextRaceProps);
-    const raceLastName = useAppSelector<string>((state: RootState) =>
-        state?.races && state.races?.lastRaceResults?.length
-            ? (state.races?.lastRaceResults[0]?.short_name ?? 'N/A')
-            : 'N/A',
-    );
+    const driversOfTheDay = useAppSelector((state: RootState) => state.drivers?.driversOfTheDay || []);
+    const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
 
     const { data: raceNextData, isError: raceNextError } = useGetRaceNextQuery(YEAR);
 
     useEffect(() => {
         if (!raceNextData) return;
 
+        console.log('? raceNextData', raceNextData);
         dispatch(setRaceNext(raceNextData as unknown as NextRaceProps));
     }, [dispatch, raceNextData]);
 
-    const { data: dataDriversOfTheDay, isError: driverOfTheDayError } = useGetDriverOfDayQuery(raceNext?.id);
-
-    if (driverOfTheDayError || raceNextError) {
-        dispatch(setError(true));
-    }
+    const { data: dataDriversOfTheDay, isError: driverOfTheDayError } = useGetDriverOfTheDayQuery(
+        parseInt(raceNext?.id as unknown as string, 10) - 1 || 0,
+    );
 
     useEffect(() => {
+        if (driverOfTheDayError || raceNextError) {
+            dispatch(setError(true));
+        }
         if (!dataDriversOfTheDay) return;
 
+        console.log('dataDriversOfTheDay', dataDriversOfTheDay);
         dispatch(setDriversOfTheDay(dataDriversOfTheDay));
-    }, [dispatch, dataDriversOfTheDay]);
-
-    type TChartConfig = {
-        [key: string]: {
-            label: string;
-            color: string;
-        };
-    };
-
-    const cConfig: TChartConfig = {};
-
-    driversOfTheDay.forEach((driver) => {
-        cConfig[driver.permanent_number] = {
-            label: driver.full_name,
-            color: 'hsl(var(--chart-1))',
-        };
-    });
-
-    const maxPercentage = Math.max(...driversOfTheDay.map((driver) => driver.percentage));
+    }, [dispatch, dataDriversOfTheDay, driverOfTheDayError, raceNextError]);
 
     return (
-        <Chart
-            className="ml-4 mr-4 pb-1 w-[95%] h-[25vh]"
-            config={cConfig as unknown as ChartConfig}
-            data={driversOfTheDay as unknown as Record<string, number>[]}
-            description="The most voted drivers of the day"
-            layout="vertical"
-            maxValue={maxPercentage}
-            minValue={0}
-            title={`Drivers of the day @ ${raceLastName}`}
-            xAxis="percentage"
-            yAxis="full_name"
-        />
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, className, 'overflow-hidden border-t', 'mb-40')}>
+            <Table className="w-full mb-10">
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-4 text-right">%</TableHead>
+                        <TableHead>Driver</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {driversOfTheDay?.map((driver: { driver_id: string; percentage: number; name: string }) => (
+                        <TableRow key={driver.driver_id}>
+                            <TableCell className="text-right">{driver.percentage}</TableCell>
+                            <TableCell>{driver.name}</TableCell>
+                        </TableRow>
+                    ))}
+                    {/* ? basically just a footer spacer */}
+                    <TableRow>
+                        <TableCell className="text-right" colSpan={2}>
+                            &nbsp;
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </ScrollArea>
     );
 };
 

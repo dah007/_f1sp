@@ -256,3 +256,123 @@ span[data=switch-thumb] {
     background: #94BBE9;
     background: radial-gradient(circle, rgba(148, 187, 233, 1) 0%, rgba(0, 0, 0, 1) 100%);
 }
+
+
+/*
+
+    CLOCK
+
+*/
+.clock {
+    width: 60px;
+    height: 60px;
+    border: 0;
+    /* border-radius: 50%; */
+    position: relative;
+    padding: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    background: url('./assets/tag_60_bg.png') no-repeat center center;
+    /* background: white; */
+}
+
+.clock-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: translateY(-3px);
+}
+
+.hand {
+    width: 50%;
+    background: black;
+    position: absolute;
+    top: 50%;
+    transform-origin: 100%;
+    transform: rotate(90deg);
+    transition: all 0.05s;
+    transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+}
+
+.hour-hand {
+    height: 2px;
+}
+
+.minute-hand {
+    height: 2px;
+}
+
+.second-hand {
+    height: 2px;
+    background: red;
+}
+
+/*
+.number {
+    position: absolute;
+    font-size: 12px;
+    transform: translate(-50%, -50%);
+}
+
+.number1 {
+    top: 20%;
+    left: 85%;
+}
+
+.number2 {
+    top: 35%;
+    left: 92%;
+}
+
+.number3 {
+    top: 50%;
+    left: 97%;
+}
+
+.number4 {
+    top: 65%;
+    left: 92%;
+}
+
+.number5 {
+    top: 80%;
+    left: 85%;
+}
+
+.number6 {
+    top: 85%;
+    left: 50%;
+}
+
+.number7 {
+    top: 80%;
+    left: 15%;
+}
+
+.number8 {
+    top: 65%;
+    left: 8%;
+}
+
+.number9 {
+    top: 50%;
+    left: 3%;
+}
+
+.number10 {
+    top: 35%;
+    left: 8%;
+}
+
+.number11 {
+    top: 20%;
+    left: 15%;
+}
+
+.number12 {
+    top: 15%;
+    left: 50%;
+}
+*/
+
+
+/*end clock*/

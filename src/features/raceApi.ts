@@ -28,7 +28,7 @@ export const raceApi = createApi({
         }),
         getLastRaceResults: builder.query({
             query: (raceId: number) =>
-                `race_result?$orderby=position_display_order&$filter=race_id eq ${parseInt((raceId - 1).toString(), 10)}`,
+                `raceResults?$orderby=position_display_order&$filter=race_id eq ${parseInt((raceId - 1).toString(), 10)}`,
             transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching last race results:', error);
@@ -113,13 +113,15 @@ export const raceApi = createApi({
             },
         }),
         getLastResultsAtCircuit: builder.query({
-            queryFn: async () => {
-                try {
-                    const returnData = await dbFetch('/previousResultsByCircuit');
-                    return { data: returnData };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
+            query: (circuitId: string) =>
+                circuitId ? `/previousResultsByCircuit?$filter=circuitId eq ${circuitId}` : `/previousResultsByCircuit`,
+            transformResponse: (response: { value: RaceProps[] }) => {
+                console.log('Last results at circuit:', response);
+                return response?.value ?? [];
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching last results at circuit:', error);
+                return error;
             },
         }),
         getRaceMaxYear: builder.query({
@@ -146,13 +148,11 @@ export const raceApi = createApi({
             },
         }),
         getRaceNext: builder.query({
-            queryFn: async (year: number) => {
-                try {
-                    const data = await dbFetch(`/raceNext?year=${year}`);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
+            query: () => `/raceNext`,
+            transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? {},
+            transformErrorResponse: (error) => {
+                console.error('Error fetching next race:', error);
+                return error;
             },
         }),
         getRaceResultsPrevious: builder.query({

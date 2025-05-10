@@ -59,7 +59,7 @@ export type DriverStats = {
     podiums: number;
 };
 
-export type DriverOfTheDay = {
+export type DriverOfTheDayProps = {
     constructor_id: string;
     id: string;
     driver_number: string;

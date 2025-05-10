@@ -21,8 +21,15 @@ export const constructorsConfig = () => {
     );
 };
 
-console.log('---------------------- constructorsConfig', constructorsConfig());
-
+/**
+ * Creates a configuration object for F1 drivers based on team colors.
+ *
+ * @returns An object mapping team identifiers to configuration objects.
+ * Each configuration object contains:
+ * - constructor_id: The team identifier
+ * - label: The team name for display purposes
+ * - color: The color associated with the team from teamColors
+ */
 export const driversConfig = () => {
     return Object.keys(teamColors).reduce(
         (acc, team) => {
@@ -37,6 +44,15 @@ export const driversConfig = () => {
     );
 };
 
+/**
+ * Selects constructor standings from the Redux state and enhances them with team colors.
+ *
+ * This selector takes the constructor standings from the state and maps over each
+ * standing to add fill and color properties based on the constructor_id.
+ *
+ * @param state - The root Redux state
+ * @returns An array of constructor standings with added fill and color properties
+ */
 export const selectConstructorStandings = (state: RootState) => {
     const standings = state.standings.constructors;
 
@@ -52,10 +68,6 @@ export const selectConstructorStandings = (state: RootState) => {
 export const selectDriverStandings = (state: RootState) => {
     const standings = state.standings.drivers;
     return standings.map((standing) => {
-        // console.log('standing', standing, {
-        //     fill: teamColors[standing?.team_name],
-        //     color: teamColors[standing?.team_name],
-        // });
         return {
             ...standing,
             fill: teamColors[standing?.team_name],
