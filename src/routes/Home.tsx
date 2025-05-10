@@ -66,7 +66,7 @@ const Home: React.FC = () => {
                             className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
                             title="Total Wins"
                         >
-                            <TotalWinsPerYear />
+                            {/* <TotalWinsPerYear /> */}
                         </CardContainer>
                     </div>
 
@@ -106,7 +106,7 @@ const Home: React.FC = () => {
                             title="Driver of the Day"
                         >
                             &nbsp;
-                            {/* <DriverOfTheDay /> */}
+                            <DriverOfTheDay />
                         </CardContainer>
                     </div>
                 </div>

@@ -60,7 +60,7 @@ const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
                     {driversOfTheDay?.map((driver: DriverOfTheDayProps) => (
                         <TableRow key={driver.id}>
                             <TableCell className="text-right">{driver.percentage}</TableCell>
-                            <TableCell>{driver.full_name}</TableCell>
+                            <TableCell>{driver.name}</TableCell>
                         </TableRow>
                     ))}
                     {/* ? basically just a footer spacer */}
