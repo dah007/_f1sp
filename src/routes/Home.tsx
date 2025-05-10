@@ -13,6 +13,7 @@ import DriverStandingsChart from '@/components/DriverStandingsChart';
 import { CardFooter } from '@/components/ui/card';
 import ConstructorStandings from '@/components/ConstructorsStandings';
 import DriverOfTheDay from '@/components/DriverOfTheDay';
+import TotalWinsPerYear from '@/components/TotalWinsPerYear';
 
 const Home: React.FC = () => {
     const raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
@@ -65,7 +66,7 @@ const Home: React.FC = () => {
                             className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
                             title="Total Wins"
                         >
-                            Total Wins By driver, last season
+                            <TotalWinsPerYear />
                         </CardContainer>
                     </div>
 
@@ -104,7 +105,8 @@ const Home: React.FC = () => {
                             className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
                             title="Driver of the Day"
                         >
-                            <DriverOfTheDay />
+                            &nbsp;
+                            {/* <DriverOfTheDay /> */}
                         </CardContainer>
                     </div>
                 </div>

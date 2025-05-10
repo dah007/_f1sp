@@ -80,3 +80,10 @@ export type PositionData = {
     count: number;
     position_number: number | null;
 };
+
+export interface TotalWinsByYear {
+    year: number;
+    total: number;
+    name: string;
+    id: string;
+}

@@ -58,13 +58,13 @@ const ConstructorStandings = ({ className, year = YEAR }: { className?: string; 
                     {/* ? basically just a footer spacer */}
                     <TableRow>
                         <TableCell className="text-right" colSpan={3}>
-                            &nsp;
+                            &nbsp;
                         </TableCell>
                     </TableRow>
                     {/* ? basically just a footer spacer */}
                     <TableRow>
                         <TableCell className="text-right" colSpan={3}>
-                            &nsp;
+                            &nbsp;
                         </TableCell>
                     </TableRow>
                 </TableBody>

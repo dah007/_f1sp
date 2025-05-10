@@ -1,8 +1,8 @@
-import { REST_URL } from '@/constants/constants';
-import { Driver } from '@/types/drivers';
+import { REST_URL, YEAR } from '@/constants/constants';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
 import { buildErrorObject } from 'utils/index';
+
+import type { Driver, TotalWinsByYear } from '@/types/drivers';
 
 export const driversApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
@@ -68,25 +68,33 @@ export const driversApi = createApi({
         //     },
         // }),
         getDriverStandings: builder.query({
-            query: (year: string = '2024') => `/driverStandings?year=${year}`,
+            query: (year: number = YEAR) => `/driverStandings?year=${year}`,
         }),
 
+        /** @deprecated */
         getDriverWins: builder.query({
             query: (driverId: string = 'lando-norris') => `/driverWins?id=${driverId}`,
+        }),
+        getTotalWinsByYear: builder.query({
+            query: (year: number = YEAR) => `totalWinsByYear/?$filter=year eq ${year}`,
+            transformResponse: (response: { value: TotalWinsByYear[] }) => {
+                return response.value;
+            },
+            transformErrorResponse: (response) => {
+                return buildErrorObject(response);
+            },
         }),
     }),
     reducerPath: 'driversApi',
 });
 
 export const {
-    // useGetDriverOfDayQuery,
     useGetDriverOfTheDayQuery,
     useGetDriverPodiumsQuery,
     useGetDriverQuery,
-    // useGetDriverStatsQuery,
+    useGetDriversQuery,
     useGetDriverTotalPositionsQuery,
     useGetDriverWinsQuery,
-    // useGetDriversByIdsQuery,
     useGetDriversByYearQuery,
-    useGetDriversQuery,
+    useGetTotalWinsByYearQuery,
 } = driversApi;

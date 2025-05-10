@@ -115,7 +115,7 @@ export const raceApi = createApi({
         getLastResultsAtCircuit: builder.query({
             query: (circuitId: string) =>
                 circuitId ? `/previousResultsByCircuit?$filter=circuitId eq ${circuitId}` : `/previousResultsByCircuit`,
-            transformResponse: (response: { value: RaceProps[] }) => {
+            transformResponse: (response: { value: RaceProps }) => {
                 console.log('Last results at circuit:', response);
                 return response?.value ?? [];
             },

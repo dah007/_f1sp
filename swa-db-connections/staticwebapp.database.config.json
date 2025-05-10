@@ -266,6 +266,20 @@
             ]
         },
 
+        "totalWinsByYear": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "total_wins_by_year"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
         "createVote": {
             "source": {
                 "type": "table",

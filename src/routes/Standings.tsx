@@ -21,19 +21,12 @@ import { ConstructorStanding, DriverStanding } from '@/types/standings';
 import { cn } from '@/lib/utils';
 import { FULL_ROW_HEIGHT } from '@/constants/constants';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import ChartTest from '@/components/DriverStandingsChart';
 
-export function DriverChart({
-    data,
-    driversChartConfig,
-}: {
-    data: DriverStanding[];
-    className?: string;
-    driversChartConfig: ChartConfig;
-}): JSX.Element {
+export function DriverChart({ data, className }: { data: DriverStanding[]; className?: string }): JSX.Element {
+    const driversChartConfig = driversConfig() satisfies ChartConfig;
     return (
         <>
-            <ChartContainer config={driversChartConfig}>
+            <ChartContainer config={driversChartConfig} className={className}>
                 <BarChart accessibilityLayer data={data}>
                     <CartesianGrid vertical={false} />
                     <XAxis
@@ -72,15 +65,9 @@ export function DriverChart({
     // </ChartContainer>
 }
 
-function ConstructorChart({
-    data,
-    className,
-    constructorsChartConfig,
-}: {
-    data: ConstructorStanding[];
-    className?: string;
-    constructorsChartConfig: ChartConfig;
-}): JSX.Element {
+function ConstructorChart({ data, className }: { data: ConstructorStanding[]; className?: string }): JSX.Element {
+    const constructorsChartConfig = constructorsConfig() satisfies ChartConfig;
+
     return (
         <ChartContainer
             config={constructorsChartConfig}
@@ -181,9 +168,6 @@ const Standings: React.FC = (): JSX.Element => {
         dispatch(setDriverStandings(driversData));
     }, [dispatch, constructorsData, driversData]);
 
-    const constructorsChartConfig = constructorsConfig() satisfies ChartConfig;
-    const driversChartConfig = driversConfig() satisfies ChartConfig;
-
     // const driverStandings = useAppSelector((state: RootState) => state.standings.drivers);
 
     return (
@@ -209,7 +193,7 @@ const Standings: React.FC = (): JSX.Element => {
                 </Card> */}
                 <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-zinc-800 bg-zinc-300 w-full')}>
                     <AspectRatio ratio={16 / 9}>
-                        <ConstructorChart data={colorConstructors} constructorsChartConfig={constructorsChartConfig} />
+                        <ConstructorChart data={colorConstructors} />
                     </AspectRatio>
                 </div>
 
@@ -232,7 +216,7 @@ const Standings: React.FC = (): JSX.Element => {
 
                 <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-full', 'dark:bg-zinc-800 bg-zinc-300')}>
                     <CardTitle className="pl-4 pt-0 m-0">Driver Chart</CardTitle>
-                    <ChartTest chartData={colorDrivers} className="max-h-[100vh]" />
+                    <DriverChart data={colorDrivers} className="max-h-[100vh]" />
                 </Card>
 
                 {/* <Card

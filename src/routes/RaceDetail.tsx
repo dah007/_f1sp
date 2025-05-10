@@ -14,7 +14,7 @@ import Flag from 'components/Flag';
 import type { TNamedObject } from '../types';
 import { setError, setSelectedYear } from 'slices/siteWideSlice';
 
-import type { DriverOfTheDay } from 'types/drivers';
+import type { DriverOfTheDayProps } from 'types/drivers';
 import type { FastestLap, RaceProps } from 'types/races';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
@@ -29,7 +29,7 @@ const RaceDetail: React.FC = (): JSX.Element => {
     const { id } = useParams();
     const { year: initialYear } = useParams();
 
-    const [driverOfTheDay, setDriverOfTheDay] = useState<DriverOfTheDay>();
+    const [driverOfTheDay, setDriverOfTheDay] = useState<DriverOfTheDayProps>();
     const [fastestLap, setFastestLap] = useState<FastestLap>();
     const [fastestPit, setFastestPit] = useState<TNamedObject<string>>();
     const [firstRow, setFirstRow] = useState<RaceProps>();
@@ -45,7 +45,7 @@ const RaceDetail: React.FC = (): JSX.Element => {
     // TODO: Add error handling
     const { data: raceResultsData, isError: raceResultsError } = useGetRaceResultsWithQualQuery(parseInt(id!));
     const { data: driverOfTheDayData, isError: driverOfTheDayError } = useGetDriverOfTheDayQuery(id!) as {
-        data: DriverOfTheDay[];
+        data: DriverOfTheDayProps[];
         isError: boolean;
     };
     const { data: fastestLapData, isError: fastestLapError } = useGetFastestLapQuery(id!) as {
