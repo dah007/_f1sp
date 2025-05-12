@@ -16,7 +16,13 @@ import DriverOfTheDay from '@/components/DriverOfTheDay';
 import TotalWinsPerYear from '@/components/TotalWinsPerYear';
 
 const Home: React.FC = () => {
-    const raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
+    let raceWGP: Partial<RaceProps> | null = null;
+    try {
+        raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
+    } catch (error) {
+        console.error('?????? Error fetching raceWGP:', error);
+    }
+    // const raceWGP = useAppSelector((state: RootState) =>
     const systemError = useAppSelector((state) => state.siteWide.error);
 
     const widthsNHeights = 'h-[25vh] max-h-[25vh]';
@@ -30,7 +36,7 @@ const Home: React.FC = () => {
                 <div
                     className="
                 lg:grid
-                lg:grid-cols-3
+                lg:gzrid-cols-3
                 lg:grid-rows-3
 
                 md:flex
@@ -61,7 +67,7 @@ const Home: React.FC = () => {
                         </CardContainer>
                     </div>
 
-                    <div className={cn('col-start-2 row-start-2 ', widthsNHeights)}>
+                    <div className={cn('col-start-1 md:col-start-2 row-start-3 md:row-start-2 ', widthsNHeights)}>
                         <CardContainer
                             className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
                             title="Total Wins"
@@ -105,8 +111,7 @@ const Home: React.FC = () => {
                             className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
                             title="Driver of the Day"
                         >
-                            &nbsp;
-                            {/* <DriverOfTheDay /> */}
+                            <DriverOfTheDay />
                         </CardContainer>
                     </div>
                 </div>

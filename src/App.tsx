@@ -6,7 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import Home from './routes/Home';
-import { lazy, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { NextRaceProps, RaceResultProps } from './types/races';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
 import { useGetLastRaceResultsQuery, useGetNextRaceQuery } from './features/raceApi';
@@ -16,6 +16,7 @@ import Footer from './components/Footer';
 
 import Error404Image from './assets/images/404.png';
 import Leaderboard from './routes/Leaderboard';
+import { setError, setLoading } from './slices/siteWideSlice';
 
 const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
 const Constructors = lazy(() => import('./routes/Constructors'));
@@ -32,15 +33,26 @@ const AccountNew = lazy(() => import('./routes/AccountNew'));
 const App = () => {
     const dispatch = useAppDispatch();
 
+    const loading = useAppSelector((state: RootState) => state.siteWide.loading);
     // NEXT RACE
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
-    const { data: nextRaceData } = useGetNextRaceQuery(0) as {
+    const {
+        data: nextRaceData,
+        isLoading: nextRaceLoading,
+        isError: nextRaceError,
+    } = useGetNextRaceQuery(0) as {
         data: RaceResultProps | undefined;
+        isLoading: boolean;
         isError: boolean;
     };
     useEffect(() => {
+        if (nextRaceError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (nextRaceLoading) dispatch(setLoading(true));
         if (!nextRaceData) return;
-
+        dispatch(setLoading(false));
         dispatch(setRaceNext(nextRaceData as unknown as NextRaceProps));
 
         const lastRaceId = nextRaceData.id - 1 || 0;
@@ -49,7 +61,7 @@ const App = () => {
             console.error('Invalid lastRaceId:', lastRaceId);
             return;
         }
-    }, [nextRace, dispatch, useGetLastRaceResultsQuery, nextRaceData]);
+    }, [nextRace, dispatch, useGetLastRaceResultsQuery, nextRaceData, nextRaceLoading, nextRaceError]);
     // </nextRace>
 
     return (
@@ -72,6 +84,31 @@ const App = () => {
 
                 <Header />
 
+                {/*
+                LOADERS ARE COMMENTED OUT BECAUSE THEY ARE BUSTED
+                TODO: REFACTOR
+                */}
+                {/* {loading && (
+                    <div className="loader bg-zinc-300 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300">
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                    </div>
+                )} */}
+
                 <main
                     className="
                     xl:pl-20 xl:pr-20
@@ -80,41 +117,44 @@ const App = () => {
                     sm:pl-4 sm:pr-4
                     pl-1 pr-1 w-[100vw]"
                 >
-                    <Routes>
-                        <Route path="/" element={<Home />} />
+                    <Suspense fallback={<div className="flex justify-center items-center h-[50vh]">Loading...</div>}>
+                        <Routes>
+                            <Route path="/" element={<Home />} />
 
-                        <Route path="circuits" element={<Circuits />} />
+                            <Route path="circuits" element={<Circuits />} />
 
-                        <Route path="constructors/:year?" element={<Constructors />} />
+                            <Route path="constructors/:year?" element={<Constructors />} />
 
-                        <Route path="drivers/:year?" element={<Drivers />} />
-                        <Route path="drivers/:year/driver/:id" element={<DriverDetail />} />
+                            <Route path="drivers/:year?" element={<Drivers />}>
+                                <Route path="driver/:id" element={<DriverDetail />} />
+                            </Route>
 
-                        <Route path="extra" element={<Extra />} />
+                            <Route path="extra" element={<Extra />} />
 
-                        <Route path="leaderboard" element={<Leaderboard />} />
+                            <Route path="leaderboard" element={<Leaderboard />} />
 
-                        <Route path="account/new" element={<AccountNew />} />
-                        <Route path="login" element={<LoginForm />} />
+                            <Route path="account/new" element={<AccountNew />} />
+                            <Route path="login" element={<LoginForm />} />
 
-                        <Route path="races/:year?/*" element={<Races />} />
+                            <Route path="races/:year?/*" element={<Races />} />
 
-                        <Route path="seasons/:year?" element={<Seasons />} />
+                            <Route path="seasons/:year?" element={<Seasons />} />
 
-                        <Route path="standings" element={<Standings />} />
+                            <Route path="standings" element={<Standings />} />
 
-                        <Route path="vote" element={<VoteDnD />} />
+                            <Route path="vote" element={<VoteDnD />} />
 
-                        <Route
-                            path="*"
-                            element={
-                                <div className="flex flex-col items-center justify-center h-[85vh]">
-                                    <h1 className="mb-6 text-3xl font-bold">404 - Not Found</h1>
-                                    <img className="max-w-[40%] rounded-3xl" src={Error404Image} alt="404 Error" />
-                                </div>
-                            }
-                        />
-                    </Routes>
+                            <Route
+                                path="*"
+                                element={
+                                    <div className="flex flex-col items-center justify-center h-[85vh]">
+                                        <h1 className="mb-6 text-3xl font-bold">404 - Not Found</h1>
+                                        <img className="max-w-[40%] rounded-3xl" src={Error404Image} alt="404 Error" />
+                                    </div>
+                                }
+                            />
+                        </Routes>
+                    </Suspense>
                 </main>
 
                 <Footer />

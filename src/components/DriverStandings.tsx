@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 
 import { useGetDriverStandingsQuery } from 'features/standingsApi';
 import { setDriverStandings } from 'slices/standingsSlice';
-import { setError } from 'slices/siteWideSlice';
+import { setError, setLoading } from 'slices/siteWideSlice';
 
 import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 import { cn } from '@/lib/utils';
@@ -37,13 +37,19 @@ const DriverStandings = ({ year = YEAR, className = '' }: { year?: number; class
     const dispatch = useAppDispatch();
     const driverStandings = useAppSelector((state: RootState) => state.standings.drivers);
 
-    const { data: driverStandingsData, isError: driverStandingsIsError } = useGetDriverStandingsQuery(year) as {
+    const {
+        data: driverStandingsData,
+        isError: driverStandingsIsError,
+        isLoading: driverStandingsIsLoading,
+    } = useGetDriverStandingsQuery(year) as {
         data: DriverStanding[] | undefined;
         isLoading?: boolean;
         isError: boolean;
     };
 
     useEffect(() => {
+        if (driverStandingsIsLoading) dispatch(setLoading(true));
+
         if (driverStandingsIsError) {
             dispatch(setError(true));
             return;

@@ -21,20 +21,6 @@ export const seasonsApi = createApi({
                 return { data: result };
             },
         }),
-        getLatestSeasonYear: builder.query({
-            /* @ts-expect-error -- will fix later */
-            queryFn: async () => {
-                const response = await dbFetch(`/seasonLatestYear`);
-                console.log('result', response);
-
-                if ('error' in response) {
-                    return { error: response.error };
-                }
-
-                const year = response?.data?.year ?? 2024;
-                return { data: year };
-            },
-        }),
         getSeasonStats: builder.query({
             queryFn: async () => {
                 const result = await dbFetch(`/seasonStats`);
@@ -44,9 +30,4 @@ export const seasonsApi = createApi({
     }),
 });
 
-export const {
-    useGetConstructorSeasonsQuery,
-    useGetDriverSeasonsQuery,
-    useGetLatestSeasonYearQuery,
-    useGetSeasonStatsQuery,
-} = seasonsApi;
+export const { useGetConstructorSeasonsQuery, useGetDriverSeasonsQuery, useGetSeasonStatsQuery } = seasonsApi;

@@ -1,7 +1,7 @@
-import { JSX, useEffect, useCallback, useRef, useMemo, useState } from 'react';
+import { JSX, useEffect, useCallback, useRef, useMemo, useState, Suspense, startTransition } from 'react';
 import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import {
@@ -44,6 +44,28 @@ const Drivers: React.FC = (): JSX.Element => {
     // Ref to store current drivers to avoid dependency cycle
     const driversRef = useRef<Driver[]>([]);
 
+    // Get the current location to extract driverId from URL if present
+    const location = useLocation();
+
+    // Track the clicked driver ID
+    const [clickedRowId, setClickedRowId] = useState<string | null>(() => {
+        // Extract driverId from URL if viewing driver detail
+        const driverDetailMatch = location.pathname.match(/\/drivers\/\d+\/driver\/([^/]+)/);
+        const extractedId = driverDetailMatch ? driverDetailMatch[1] : null;
+
+        // Schedule scroll into view if we have an ID from the URL
+        if (extractedId) {
+            setTimeout(() => {
+                const rowElement = document.querySelector(`tr[data-driver-id="${extractedId}"]`);
+                if (rowElement) {
+                    rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 500); // Longer timeout to ensure the table is fully rendered
+        }
+
+        return extractedId;
+    });
+
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
@@ -59,12 +81,28 @@ const Drivers: React.FC = (): JSX.Element => {
         dispatch(setSelectedYear(Number(newYear)));
         navigate(`/drivers/${newYear}`);
     };
-
     const navigateDriver = useCallback(
         (driverId: string) => {
-            navigate(`/drivers/${selectedYear}/driver/${driverId}`);
+            // Use React's startTransition to handle the potentially suspended state
+            // This prevents the UI from showing loading indicators for quick transitions
+            // which is what the error message was warning about
+            startTransition(() => {
+                // Update URL without full navigation, preserving the table position
+                navigate(`/drivers/${selectedYear}/driver/${driverId}`, { replace: true });
+                // Set the clicked row ID to position the Outlet
+                setClickedRowId(driverId);
+
+                // Add slight delay to ensure the row is rendered before scrolling
+                setTimeout(() => {
+                    // Find the row element and scroll it into view
+                    const rowElement = document.querySelector(`tr[data-driver-id="${driverId}"]`);
+                    if (rowElement) {
+                        rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 100);
+            });
         },
-        [navigate, selectedYear],
+        [navigate, selectedYear, setClickedRowId],
     );
 
     const onFilterTextBoxChanged = (event: React.FormEvent<HTMLInputElement>) => {
@@ -78,19 +116,21 @@ const Drivers: React.FC = (): JSX.Element => {
         data: driverData,
         isLoading: driverDataIsLoading,
         isError: driverDataIsError,
+        error: driverDataError,
     } = useGetDriversQuery(selectedYear) as {
         data: Driver[] | undefined;
         isLoading: boolean;
         isError: boolean;
+        error: Error | unknown;
     };
 
     useEffect(() => {
-        if (driverDataIsLoading) return;
         if (driverDataIsError) {
+            console.error('Error fetching driver data', driverDataError);
             dispatch(setError(true));
-            console.error('Error fetching driver data');
             return;
         }
+        if (driverDataIsLoading) return;
         if (!driverData) return;
         dispatch(setDrivers(driverData));
     }, [dispatch, driverData, driverDataIsError, driverDataIsLoading]);
@@ -303,9 +343,6 @@ const Drivers: React.FC = (): JSX.Element => {
                 />
             </div>
 
-            {/* detail page shows here... */}
-            <Outlet />
-
             <ScrollArea className="h-full w-[98vw]">
                 <Scrollbar orientation="horizontal" className="w-2" />
                 <Scrollbar orientation="vertical" className="w-2" />
@@ -328,13 +365,49 @@ const Drivers: React.FC = (): JSX.Element => {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
+                                <>
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        data-driver-id={row.original.id}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                    {/* Render Outlet after the clicked row */}
+                                    {clickedRowId === row.original.id && (
+                                        <TableRow>
+                                            <TableCell colSpan={colDefs.length} className="p-0">
+                                                <div className="bg-slate-100 dark:bg-zinc-800 p-4 rounded-md shadow-md mt-2 mb-4">
+                                                    <Suspense
+                                                        fallback={
+                                                            <div className="p-4 text-center">
+                                                                Loading driver details...
+                                                            </div>
+                                                        }
+                                                    >
+                                                        <Outlet />
+                                                    </Suspense>
+                                                    <div className="flex mt-2">
+                                                        <Button
+                                                            variant="link"
+                                                            onClick={() => {
+                                                                setClickedRowId(null);
+                                                                navigate(`/drivers/${selectedYear}`);
+                                                            }}
+                                                            className="px-2 py-1 text-sm text-blue-700 dark:text-blue-300 hover:text-blue-500 cursor-pointer"
+                                                        >
+                                                            Close
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </>
                             ))
                         ) : (
                             <TableRow>

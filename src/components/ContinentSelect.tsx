@@ -35,6 +35,7 @@ const ContinentSelect = ({
     setContinent,
     gotoContinent,
 }: ContinentSelectProps): JSX.Element => {
+    if (!map) return <></>;
     return (
         <Select
             data-testid="continent-select"

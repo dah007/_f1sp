@@ -1,33 +1,32 @@
+import { useEffect, useState } from 'react';
+import { RootState, useAppDispatch, useAppSelector } from '@/app/store';
+
 import DataTable from '@/components/DataTable';
-import Flag from '@/components/Flag';
 import PageContainer from '@/components/PageContainer';
-import { useGetEnginesManufacturersQuery, useGetTyresManufacturersQuery } from '@/features/constructorsApi';
-import { setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
-import { ManufacturerProps } from '@/types/constructors';
-import { intlNumberFormat } from '@/utils/number';
+
+import {
+    useGetEnginesManufacturersQuery,
+    useGetEnginesQuery,
+    useGetTyresManufacturersQuery,
+} from '@/features/constructorsApi';
+
+import { setEngines, setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { setError, setLoading } from '@/slices/siteWideSlice';
+
+import { Engine } from '@/types';
+import Button from '@/components/Button';
+import Flag from '@/components/Flag';
+// import { ManufacturerProps } from '@/types/constructors';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { RootState, useAppDispatch, useAppSelector } from '@/app/store';
-import { setError } from '@/slices/siteWideSlice';
+import { useMemo } from 'react';
+import { intlNumberFormat } from 'utils/number';
+import { ManufacturerProps } from '@/types/constructors';
 
 const Extra: React.FC = () => {
     const dispatch = useAppDispatch();
-
-    const { data: enginesManufacturerData, isError: enginesManufacturerIsError } = useGetEnginesManufacturersQuery(
-        undefined,
-    ) as {
-        data: ManufacturerProps[];
-        isError: boolean;
-        isLoading: boolean;
-    };
-    const { data: tyreManufacturerData } = useGetTyresManufacturersQuery(undefined);
-
-    const enginesManufacturers = useAppSelector((state: RootState) => state.constructors.enginesManufacturers);
-    const tyreManufacturers = useAppSelector((state: RootState) => state.constructors.tyresManufacturers);
-
     const manufacturerColDefs = useMemo<ColumnDef<ManufacturerProps>[]>(
         () => [
             {
@@ -240,25 +239,83 @@ const Extra: React.FC = () => {
         [],
     );
 
-    const [whatTab, setWhatTab] = useState('enginesManufacturers');
+    const {
+        data: enginesManufacturerData,
+        isError: enginesManufacturerIsError,
+        isLoading: enginesManufacturerIsLoading,
+    } = useGetEnginesManufacturersQuery(undefined) as {
+        data: ManufacturerProps[];
+        isError: boolean;
+        isLoading: boolean;
+    };
+    const {
+        data: enginesData,
+        isError: enginesIsError,
+        isLoading: enginesIsLoading,
+    } = useGetEnginesQuery(undefined) as {
+        data: Engine[];
+        isError: boolean;
+        isLoading: boolean;
+    };
+    const {
+        data: tyreManufacturerData,
+        isError: tyreManufacturerIsError,
+        isLoading: tyreManufacturerIsLoading,
+    } = useGetTyresManufacturersQuery(undefined) as {
+        data: ManufacturerProps[];
+        isError: boolean;
+        isLoading: boolean;
+    };
+
+    const engines = useAppSelector((state: RootState) => state.constructors.engines);
+    const enginesManufacturers = useAppSelector((state: RootState) => state.constructors.enginesManufacturers);
+    const tyreManufacturers = useAppSelector((state: RootState) => state.constructors.tyresManufacturers);
+
+    const [whatTab, setWhatTab] = useState('engines');
 
     useEffect(() => {
-        if (enginesManufacturerIsError) dispatch(setError(true));
+        if (enginesIsError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (!enginesData) return;
+        if (enginesIsLoading) dispatch(setLoading(true));
+        dispatch(setEngines(enginesData));
+        dispatch(setLoading(false));
+    }, [enginesManufacturerIsError, enginesManufacturerData, enginesManufacturerIsLoading, dispatch]);
+
+    useEffect(() => {
+        if (enginesManufacturerIsError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (enginesManufacturerIsLoading) dispatch(setLoading(true));
         if (!enginesManufacturerData) return;
-
         dispatch(setEnginesManufacturers(enginesManufacturerData));
-    }, [enginesManufacturerIsError, enginesManufacturerData]);
+        dispatch(setLoading(false));
+    }, [enginesManufacturerIsError, enginesManufacturerData, enginesManufacturerIsLoading, dispatch]);
 
     useEffect(() => {
+        if (tyreManufacturerIsError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (tyreManufacturerIsLoading) dispatch(setLoading(true));
         if (!tyreManufacturerData) return;
         dispatch(setTyresManufacturers(tyreManufacturerData));
+        dispatch(setLoading(false));
     }, [tyreManufacturerData]);
 
     useEffect(() => {}, [whatTab]);
 
     const tabs = [
+        { value: 'seasons', label: 'Seasons' },
         { value: 'chassis', label: 'Chassis' },
-        { value: 'engines', label: 'Engines' },
+        {
+            value: 'engines',
+            label: 'Engines',
+            children: <DataTable className="w-fit" columns={engineColDefs} data={engines ?? []} />,
+        },
         {
             value: 'enginesManufacturers',
             label: 'Engine Manufacturers',
@@ -266,7 +323,7 @@ const Extra: React.FC = () => {
         },
         {
             value: 'tyreManufacturers',
-            label: 'Tyre Manufacturers',
+            label: 'Tyres',
             children: <DataTable className="w-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />,
         },
     ];
@@ -296,7 +353,7 @@ const Extra: React.FC = () => {
                 </TabsContent>
 
                 <TabsContent value="engines">
-                    <div className="w-full h-full flex items-center justify-center">Coming soon</div>
+                    <DataTable className="w-0-fit" columns={manufacturerColDefs} data={engines ?? []} />
                 </TabsContent>
 
                 <TabsContent value="enginesManufacturers">
@@ -310,4 +367,5 @@ const Extra: React.FC = () => {
         </PageContainer>
     );
 };
+
 export default Extra;

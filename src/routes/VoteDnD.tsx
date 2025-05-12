@@ -28,8 +28,8 @@ import { cn } from '@/lib/utils';
 import { type Driver } from 'types/drivers';
 import { type VoteValueProps } from 'types/vote';
 
-// export const FULL_ROW_HEIGHT = 'xl:h-[30vh] lg:h-[28vh] md:h-[25vh] h-[23vh] w-full';
-const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[30vh] min-h-[30vh]'; // Fixed typo from max-[30hx] to max-h-[30vh]
+// export const FULL_ROW_HEIGHT = 'xl:h-[32vh] lg:h-[28vh] md:h-[25vh] h-[23vh] w-full';
+const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]'; // Fixed typo from max-[30hx] to max-h-[32vh]
 
 // const DriverCheckbox = lazy(() => import('components/Driver/DriverCheckbox'));
 
@@ -190,10 +190,6 @@ const Vote = (): JSX.Element => {
             ...formData,
         };
 
-        // const userId = user?.id || 2;
-
-        // console.log('completeVoteData', completeVoteData);
-
         const response = await submitVote({
             userId: user?.id || formData.userId,
             raceId: raceNext?.id,
@@ -248,23 +244,14 @@ const Vote = (): JSX.Element => {
                     Voting closes 1 hours before lights out & opens on Tuesday after a race.
                 </p>
 
-                <div
-                    className="
-                    grid 
-                    md:grid-cols-2 
-                    grid-cols-1
-                    md:grid-rows-2 
-                    sm:grid-rows-3
-                    gap-0
-                "
-                >
+                <div className="grid grid-cols-2 grid-rows-2 gap-4 align-middle">
                     {/* LEFT COLUMN */}
-                    <div className="row-span-1 lg:row-span-2 row-start-1 lg:h-full w-full">
+                    <div className="row-span-2 h-[70vh]">
                         <Card
                             className={cn(
                                 columnHeights,
                                 'overflow-hidden',
-                                'dark:bg-zinc-800 bg-zinc-300 w-full h-fit',
+                                'dark:bg-zinc-800 bg-zinc-300 w-full h-full',
                             )}
                         >
                             <CardTitle className="pl-4 pt-0 m-0">Finish Order</CardTitle>
@@ -287,9 +274,10 @@ const Vote = (): JSX.Element => {
                             </ScrollArea>
                         </Card>
                     </div>
-                    {/* RIGHT COLUMNs */}
-                    <div className="md:h-[3/6] lg:h-[2/6] row-start-2 md:row-start-1 lg:row-start-1 p-0 border border-amber-300 mb-0 overflow-hidden h-fit">
-                        <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full')}>
+
+                    {/* RIGHT COLUMN */}
+                    <div className="h-[32vh]">
+                        <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full h-full')}>
                             <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
                             <div className="flex gap-4 flex-col-[1fr,*]">
                                 {/* FIRST LAP CRASH */}
@@ -394,8 +382,8 @@ const Vote = (): JSX.Element => {
                             </div>
                         </Card>
                     </div>
-                    <div className="col-start-1 md:col-start-2 row-start-3 md:row-start-2 h-fit border border-red-400 lg:h-[5/6] md:h-[2/5]">
-                        <Card className="p-4 dark:bg-zinc-800 bg-zinc-300">
+                    <div className="col-start-2 row-start-2 h-[32vh]">
+                        <Card className="p-4 dark:bg-zinc-800 bg-zinc-300 h-full">
                             <CardTitle className="mb-4">Submit Vote</CardTitle>
 
                             {submitStatus.isError && (
@@ -413,11 +401,6 @@ const Vote = (): JSX.Element => {
                                 </div>
                             ) : (
                                 <>
-                                    <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                                        <strong>NOTE:</strong> You are limited to a single vote per race. Any attempts
-                                        to vote more than once will just overwrite your previous vote.
-                                    </p>
-
                                     <LoginForm />
 
                                     <Button
@@ -429,7 +412,7 @@ const Vote = (): JSX.Element => {
                                         {isSubmittingVote ? 'Submitting...' : 'Submit Vote'}
                                     </Button>
 
-                                    <div className="mt-4 text-center">
+                                    <div className="mt-2 text-center">
                                         <Button
                                             type="button"
                                             variant="link"

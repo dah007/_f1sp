@@ -23,10 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-*.env
-f1Api/db/f1db-9-2.db
-f1Api/db/f1db.db
-f1Api/f1db.db
+*.env.local
+*.env.example
 *.db
 
 db/data/*
@@ -34,3 +32,5 @@ db/data/*
 f1db.sql
 f1predict.code-workspace
 dbServer/my.cnf
+
+*.yarn

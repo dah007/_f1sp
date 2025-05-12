@@ -9,7 +9,7 @@ import { useGetLastResultsAtCircuitQuery } from 'features/raceApi';
 
 import { RaceProps } from 'types/races';
 import { YEAR } from 'constants/constants';
-import { setError } from 'slices/siteWideSlice';
+import { setError, setLoading } from 'slices/siteWideSlice';
 
 /**
  * `LastRacesAtCircuit` is a React functional component that displays the last race results at a specific circuit.
@@ -55,18 +55,18 @@ const LastRacesAtCircuit: React.FC = (): JSX.Element => {
         | RaceProps[]
         | null;
 
-    const { data, isError } = useGetLastResultsAtCircuitQuery('');
-
-    if (isError) {
-        dispatch(setError(true));
-    }
+    const { data, isError, isLoading } = useGetLastResultsAtCircuitQuery('');
 
     useEffect(() => {
+        if (isError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (isLoading) dispatch(setLoading(true));
         if (!data) return;
-
-        console.log('Last results at circuit:', data);
         dispatch(setPreviousResultsAtCircuit(data));
-    }, [dispatch, data]);
+        dispatch(setLoading(false));
+    }, [dispatch, data, isError, isLoading]);
 
     if (!previousResultsAtCircuit || previousResultsAtCircuit.length === 0) {
         return <div>No results available</div>;

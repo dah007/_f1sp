@@ -3,9 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface SiteWideProps {
-    error: boolean
+    error: boolean;
     lastCrumb?: string;
     lastSeason?: number;
+    loading?: boolean;
     raceMaxYear?: number;
     selectedYear: number;
 }
@@ -14,6 +15,7 @@ const initialState: SiteWideProps = {
     error: false,
     lastCrumb: '',
     lastSeason: new Date().getFullYear() - 1,
+    loading: false,
     raceMaxYear: new Date().getFullYear(),
     selectedYear: new Date().getFullYear(),
 };
@@ -40,6 +42,12 @@ export const siteWideSlice = createSlice({
 
             state.lastSeason = payload;
         },
+        setLoading: (state, action: PayloadAction<boolean>) => {
+            const payload = action.payload;
+            if (!payload) return;
+
+            state.loading = payload;
+        },
         setSelectedYear: (state, action: PayloadAction<number>) => {
             const payload = action.payload;
             if (!payload) return;
@@ -55,6 +63,7 @@ export const siteWideSlice = createSlice({
     },
 });
 
-export const { setError, setLastCrumb, setLastSeasonYear, setSelectedYear, setRaceMaxYear } = siteWideSlice.actions;
+export const { setError, setLastCrumb, setLastSeasonYear, setLoading, setSelectedYear, setRaceMaxYear } =
+    siteWideSlice.actions;
 
 export default siteWideSlice.reducer;

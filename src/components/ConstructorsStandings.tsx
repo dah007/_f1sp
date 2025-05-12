@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useGetConstructorStandingsQuery } from 'features/standingsApi';
 
 import { setConstructorStandings } from 'slices/standingsSlice';
-import { setError } from 'slices/siteWideSlice';
+import { setError, setLoading } from 'slices/siteWideSlice';
 
 import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 import { type ConstructorStanding } from 'types/standings';
@@ -14,11 +14,14 @@ import { cn } from '@/lib/utils';
 
 const ConstructorStandings = ({ className, year = YEAR }: { className?: string; year?: number }): JSX.Element => {
     const dispatch = useAppDispatch();
+
     const constructorStandings = useAppSelector((state: RootState) => state.standings.constructors);
 
-    const { data: constructorStandingsData, isError: constructorStandingsIsError } = useGetConstructorStandingsQuery(
-        year,
-    ) as {
+    const {
+        data: constructorStandingsData,
+        isLoading: constructorStandingsIsLoading,
+        isError: constructorStandingsIsError,
+    } = useGetConstructorStandingsQuery(year) as {
         data: ConstructorStanding[] | undefined;
         isLoading?: boolean;
         isError: boolean;
@@ -29,10 +32,11 @@ const ConstructorStandings = ({ className, year = YEAR }: { className?: string; 
             dispatch(setError(true));
             return;
         }
+        if (constructorStandingsIsLoading) dispatch(setLoading(true));
         if (!constructorStandingsData) return;
-        console.log('constructorStandingsData', constructorStandingsData);
         dispatch(setConstructorStandings(constructorStandingsData));
-    }, [constructorStandingsData, dispatch]);
+        dispatch(setLoading(false));
+    }, [constructorStandingsData, constructorStandingsIsLoading, constructorStandingsIsError, dispatch]);
 
     if (!constructorStandings) {
         return <div className="text-center italic">No constructors standings available.</div>;

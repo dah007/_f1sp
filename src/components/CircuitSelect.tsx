@@ -34,6 +34,7 @@ const CircuitSelect = ({
     setContinent,
     gotoCircuit,
 }: CircuitSelectProps): JSX.Element => {
+    if (!circuitsData || !map) return <></>;
     return (
         <Select
             onValueChange={(circuit) => {

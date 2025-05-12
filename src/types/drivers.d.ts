@@ -65,6 +65,7 @@ export type DriverOfTheDayProps = {
     driver_number: string;
     engine_manufacturer_id: string;
     full_name: string;
+    name: string;
     percentage: number;
     permanent_number: string;
     position_display_order: number;
