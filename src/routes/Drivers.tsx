@@ -116,19 +116,21 @@ const Drivers: React.FC = (): JSX.Element => {
         data: driverData,
         isLoading: driverDataIsLoading,
         isError: driverDataIsError,
+        error: driverDataError,
     } = useGetDriversQuery(selectedYear) as {
         data: Driver[] | undefined;
         isLoading: boolean;
         isError: boolean;
+        error: Error | unknown;
     };
 
     useEffect(() => {
-        if (driverDataIsLoading) return;
         if (driverDataIsError) {
+            console.error('Error fetching driver data', driverDataError);
             dispatch(setError(true));
-            console.error('Error fetching driver data');
             return;
         }
+        if (driverDataIsLoading) return;
         if (!driverData) return;
         dispatch(setDrivers(driverData));
     }, [dispatch, driverData, driverDataIsError, driverDataIsLoading]);

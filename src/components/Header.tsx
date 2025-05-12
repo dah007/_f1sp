@@ -16,6 +16,7 @@ import {
 
 const MenuButton = ({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) => (
     <Button
+        rel="noopener noreferrer"
         variant="ghost"
         className={cn('dark:text-zinc-300 text-zinc-800 hover:underline cursor-pointer font-bold', className)}
         onClick={onClick}

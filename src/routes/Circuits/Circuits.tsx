@@ -126,6 +126,7 @@ const Circuits: React.FC = (): JSX.Element => {
         } catch (error) {
             dispatch(setError(true));
             console.error('Error creating map:', error);
+            return;
         }
     }, [mapContainer]);
 

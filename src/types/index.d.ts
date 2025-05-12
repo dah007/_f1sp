@@ -1,3 +1,15 @@
+export interface Engine {
+    alpha2_code: string;
+    aspiration: string;
+    capacity: number;
+    configuration: string;
+    engine_manufacturer_id: string;
+    full_name: string;
+    id: string;
+    manufacturer: string;
+    name: string;
+}
+
 export type Location = {
     country: string;
     lat: number;
@@ -14,7 +26,6 @@ interface RouteType extends SimpleRouteType {
     element: JSX.Element;
     hideInMenu?: boolean;
 }
-
 
 export interface AdditionalFiltersYearProps {
     selectedYear: string;
@@ -39,7 +50,7 @@ export interface RouterType {
  * Represents a simple route type used in the application.
  *
  * @deprecated
- * 
+ *
  * @property {SimpleRouteType[]} [children] - An optional array of child routes.
  * @property {string} label - The label for the route.
  * @property {SimpleRouteType} [parent] - An optional parent route.

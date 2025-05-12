@@ -120,6 +120,19 @@
                 }
             ]
         },
+        "engineWCountry": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "engine_w_country"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
         "tyres": {
             "source": {
                 "type": "view",

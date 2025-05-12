@@ -6,7 +6,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { cn } from '@/lib/utils';
 import { useAppDispatch } from '@/app/store';
-import { setError } from '@/slices/siteWideSlice';
+import { setError, setLoading } from '@/slices/siteWideSlice';
 
 const TotalWinsPerYear: React.FC = ({ className }: { className?: string }): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -20,12 +20,16 @@ const TotalWinsPerYear: React.FC = ({ className }: { className?: string }): JSX.
     const [totalWinsByYear, setTotalWinsByYear] = useState<TotalWinsByYear[]>([]);
 
     useEffect(() => {
-        if (totalWinsError) dispatch(setError(true));
-
-        if (!totalWinsLoading && !totalWinsError && totalWinsData) {
-            console.log('Total wins by year:', totalWinsData);
-            setTotalWinsByYear(totalWinsData);
+        if (totalWinsError) {
+            dispatch(setError(true));
+            return;
         }
+        if (totalWinsLoading) dispatch(setLoading(true));
+        if (!totalWinsData) return;
+
+        setTotalWinsByYear(totalWinsData);
+        dispatch(setError(false));
+        dispatch(setLoading(false));
     }, [totalWinsData, totalWinsLoading, totalWinsError]);
 
     return (

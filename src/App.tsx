@@ -16,6 +16,7 @@ import Footer from './components/Footer';
 
 import Error404Image from './assets/images/404.png';
 import Leaderboard from './routes/Leaderboard';
+import { setError, setLoading } from './slices/siteWideSlice';
 
 const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
 const Constructors = lazy(() => import('./routes/Constructors'));
@@ -32,15 +33,26 @@ const AccountNew = lazy(() => import('./routes/AccountNew'));
 const App = () => {
     const dispatch = useAppDispatch();
 
+    const loading = useAppSelector((state: RootState) => state.siteWide.loading);
     // NEXT RACE
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
-    const { data: nextRaceData } = useGetNextRaceQuery(0) as {
+    const {
+        data: nextRaceData,
+        isLoading: nextRaceLoading,
+        isError: nextRaceError,
+    } = useGetNextRaceQuery(0) as {
         data: RaceResultProps | undefined;
+        isLoading: boolean;
         isError: boolean;
     };
     useEffect(() => {
+        if (nextRaceError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (nextRaceLoading) dispatch(setLoading(true));
         if (!nextRaceData) return;
-
+        dispatch(setLoading(false));
         dispatch(setRaceNext(nextRaceData as unknown as NextRaceProps));
 
         const lastRaceId = nextRaceData.id - 1 || 0;
@@ -49,7 +61,7 @@ const App = () => {
             console.error('Invalid lastRaceId:', lastRaceId);
             return;
         }
-    }, [nextRace, dispatch, useGetLastRaceResultsQuery, nextRaceData]);
+    }, [nextRace, dispatch, useGetLastRaceResultsQuery, nextRaceData, nextRaceLoading, nextRaceError]);
     // </nextRace>
 
     return (
@@ -71,6 +83,31 @@ const App = () => {
                 ></div>
 
                 <Header />
+
+                {/*
+                LOADERS ARE COMMENTED OUT BECAUSE THEY ARE BUSTED
+                TODO: REFACTOR
+                */}
+                {/* {loading && (
+                    <div className="loader bg-zinc-300 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300">
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                        <div className="circle">
+                            <div className="dot"></div>
+                            <div className="outline"></div>
+                        </div>
+                    </div>
+                )} */}
 
                 <main
                     className="

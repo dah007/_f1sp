@@ -1,20 +1,18 @@
-import { REST_URL, YEAR } from '@/constants/constants';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { YEAR } from '@/constants/constants';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { buildErrorObject } from 'utils/index';
 
 import type { Driver, DriverOfTheDayProps, TotalWinsByYear } from '@/types/drivers';
+import { baseQueryWithRetry } from '@/utils/query';
 
 export const driversApi = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
-    tagTypes: ['Drivers'], // TODO: figure this out
+    baseQuery: baseQueryWithRetry,
+    tagTypes: ['Drivers'],
     endpoints: (builder) => ({
         getDriverTotalPositions: builder.query({
             query: (id: string = 'lando-norris') => `/driverPositionTotals?id=${id}`,
-            providesTags: (result, error, id) => {
-                if (error) {
-                    return [{ type: 'Drivers', id }];
-                }
-                return result ? [{ type: 'Drivers', id: id }] : [{ type: 'Drivers', id: id }];
+            providesTags: (_result, _error, id) => {
+                return [{ type: 'Drivers' as const, id }];
             },
         }),
         getDriver: builder.query({
@@ -22,17 +20,9 @@ export const driversApi = createApi({
             transformResponse: (response: { value: Driver[] }) => response.value,
         }),
         getDriverOfTheDay: builder.query({
-            query: (race_id: number = 0) => {
-                console.log('grDriverOfTheDay');
-
-                return `/driverOfTheDay?$filter=race_id eq ${race_id}`;
-            },
-            transformResponse: (response: { value: DriverOfTheDayProps[] }) => {
-                return response.value;
-            },
-            transformErrorResponse: (response) => {
-                return buildErrorObject(response);
-            },
+            query: (race_id: number = 0) => `/driverOfTheDay?$filter=race_id eq ${race_id}`,
+            transformResponse: (response: { value: DriverOfTheDayProps[] }) => response.value,
+            transformErrorResponse: (response) => buildErrorObject(response),
         }),
         getDrivers: builder.query({
             query: (year: number = 2025) => `/drivers?$filter=year eq ${year}&$first=100`,
@@ -52,21 +42,6 @@ export const driversApi = createApi({
                 return buildErrorObject(response);
             },
         }),
-
-        /** @deprecated */
-        getDriverPodiums: builder.query({
-            query: (driverId: string = 'lando-norris') => `/driverPodiums?id=${driverId}`,
-        }),
-        // getDriverStats: builder.query({
-        //     queryFn: async (driverId: string = 'lando-norris') => {
-        //         try {
-        //             const data = await dbFetch(`/driverStats?id=${driverId}`);
-        //             return { data: data };
-        //         } catch (error) {
-        //             return buildErrorObject(error);
-        //         }
-        //     },
-        // }),
         getDriverStandings: builder.query({
             query: (year: number = YEAR) => `/driverStandings?year=${year}`,
         }),
@@ -90,7 +65,6 @@ export const driversApi = createApi({
 
 export const {
     useGetDriverOfTheDayQuery,
-    useGetDriverPodiumsQuery,
     useGetDriverQuery,
     useGetDriversQuery,
     useGetDriverTotalPositionsQuery,

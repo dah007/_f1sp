@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
 import { setDriversOfTheDay } from 'slices/driversSlice';
-import { setError } from 'slices/siteWideSlice';
+import { setError, setLoading } from 'slices/siteWideSlice';
 import { setRaceNext } from 'slices/racesSlice';
 import { useGetDriverOfTheDayQuery } from 'features/driversApi';
 import { useGetRaceNextQuery } from 'features/raceApi';
@@ -21,34 +21,39 @@ const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
     const driversOfTheDay = useAppSelector((state: RootState) => state.drivers?.driversOfTheDay || []);
     const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
 
-    const { data: raceNextData, isError: raceNextError } = useGetRaceNextQuery(YEAR);
+    const { data: raceNextData, isLoading: raceNextLoading, isError: raceNextError } = useGetRaceNextQuery(YEAR);
 
     useEffect(() => {
+        if (raceNextError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (raceNextLoading) dispatch(setLoading(true));
         if (!raceNextData) return;
-
-        console.log('? raceNextData', raceNextData);
         dispatch(setRaceNext(raceNextData as unknown as NextRaceProps));
-    }, [dispatch, raceNextData]);
+        dispatch(setError(false));
+    }, [dispatch, raceNextData, raceNextError, raceNextLoading]);
 
-    const { data: dataDriversOfTheDay, isError: driverOfTheDayError } = useGetDriverOfTheDayQuery(
-        parseInt(raceNext?.id as unknown as string, 10) - 1 || 0,
-    ) as {
+    const {
+        data: dataDriversOfTheDay,
+        isError: driverOfTheDayError,
+        isLoading: driverOfTheDayLoading,
+    } = useGetDriverOfTheDayQuery(parseInt(raceNext?.id as unknown as string, 10) - 1 || 0) as {
         data: DriverOfTheDayProps[];
         isError: boolean;
+        isLoading: boolean;
     };
 
     useEffect(() => {
-        if (driverOfTheDayError || raceNextError) {
-            dispatch(setError(true));
-        }
+        if (driverOfTheDayError) dispatch(setError(true));
+        if (driverOfTheDayLoading) dispatch(setLoading(true));
         if (!dataDriversOfTheDay) return;
-
-        console.log('dataDriversOfTheDay', dataDriversOfTheDay);
         dispatch(setDriversOfTheDay(dataDriversOfTheDay));
+        dispatch(setLoading(false));
     }, [dispatch, dataDriversOfTheDay, driverOfTheDayError, raceNextError]);
 
     return (
-        <ScrollArea className={cn(FULL_ROW_HEIGHT, className, 'overflow-hidden border-t', 'mb-40')}>
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-0', className)}>
             <Table className="w-full mb-10">
                 <TableHeader>
                     <TableRow>

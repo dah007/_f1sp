@@ -36,7 +36,6 @@ export const circuitsApi = createApi({
             }),
             transformResponse: (response: { value: CircuitProps[] }) => {
                 if (response?.value) {
-                    console.log(response);
                     return response.value.map((circuit) => ({
                         ...circuit,
                         lat: circuit.latitude,

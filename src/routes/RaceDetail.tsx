@@ -61,7 +61,9 @@ const RaceDetail: React.FC = (): JSX.Element => {
         isError: boolean;
     };
 
-    if (fastestLapError || fastestPitError || pollPositionError) dispatch(setError(true));
+    if (fastestLapError || fastestPitError || pollPositionError) {
+        dispatch(setError(true));
+    }
     useEffect(() => {
         if (driverOfTheDayError) {
             dispatch(setError(true));
