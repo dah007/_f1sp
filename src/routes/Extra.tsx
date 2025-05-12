@@ -1,32 +1,106 @@
-import { useEffect, useState } from 'react';
-import { RootState, useAppDispatch, useAppSelector } from '@/app/store';
+import { useEffect, useMemo, useState } from 'react';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import { ArrowUpDown } from 'lucide-react';
+import { ColumnDef } from '@tanstack/react-table';
 
+import Button from 'components/Button';
 import DataTable from '@/components/DataTable';
+import Flag from 'components/Flag';
 import PageContainer from '@/components/PageContainer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+import { setEngines, setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
+import { setError, setLoading } from '@/slices/siteWideSlice';
 import {
     useGetEnginesManufacturersQuery,
     useGetEnginesQuery,
     useGetTyresManufacturersQuery,
-} from '@/features/constructorsApi';
+} from 'features/constructorsApi';
 
-import { setEngines, setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { setError, setLoading } from '@/slices/siteWideSlice';
-
-import { Engine } from '@/types';
-import Button from '@/components/Button';
-import Flag from '@/components/Flag';
-// import { ManufacturerProps } from '@/types/constructors';
-import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
-import { useMemo } from 'react';
 import { intlNumberFormat } from 'utils/number';
-import { ManufacturerProps } from '@/types/constructors';
+
+import type { ManufacturerProps } from 'types/constructors';
+import type { Engine } from '@/types';
+
+import { ENGINE_TYPES } from 'constants/constants';
 
 const Extra: React.FC = () => {
     const dispatch = useAppDispatch();
+
+    const engines = useAppSelector((state: RootState) => state.constructors.engines);
+    const enginesManufacturers = useAppSelector((state: RootState) => state.constructors.enginesManufacturers);
+    const tyreManufacturers = useAppSelector((state: RootState) => state.constructors.tyresManufacturers);
+
+    const [whatTab, setWhatTab] = useState('engines');
+
+    const enginesColDefs = useMemo<ColumnDef<Engine>[]>(
+        () => [
+            {
+                accessorKey: 'alpha2_code',
+                cell: ({ row }) => {
+                    return (
+                        <div className="min-w-8 w-8 max-w-8">
+                            {Flag({ cCode: row.getValue('alpha2_code'), size: 24 })}
+                        </div>
+                    );
+                },
+                size: 8,
+                maxWidth: 8,
+                minWidth: 8,
+                header: () => <div></div>,
+            },
+            {
+                accessorKey: 'full_name',
+                cell: ({ row }) => <div>{row.getValue('full_name') || '-'}</div>,
+                header: ({ column }) => {
+                    return (
+                        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                            Name
+                            <ArrowUpDown className="w-4 h-4 ml-2" />
+                        </Button>
+                    );
+                },
+            },
+            {
+                accessorKey: 'capacity',
+                cell: ({ row }) => <div>{row.getValue('capacity') || '-'}</div>,
+                header: ({ column }) => {
+                    return (
+                        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                            Capacity
+                            <ArrowUpDown className="w-4 h-4 ml-2" />
+                        </Button>
+                    );
+                },
+            },
+            {
+                accessorKey: 'configuration',
+                cell: ({ row }) => <div>{row.getValue('configuration') || '-'}</div>,
+                header: ({ column }) => {
+                    return (
+                        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                            Configuration
+                            <ArrowUpDown className="w-4 h-4 ml-2" />
+                        </Button>
+                    );
+                },
+            },
+            {
+                accessorKey: 'aspiration',
+                cell: ({ row }) => <div>{ENGINE_TYPES[row.getValue('aspiration') as keyof typeof ENGINE_TYPES]}</div>,
+                header: ({ column }) => {
+                    return (
+                        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                            Aspiration
+                            <ArrowUpDown className="w-4 h-4 ml-2" />
+                        </Button>
+                    );
+                },
+            },
+        ],
+        [],
+    );
+
     const manufacturerColDefs = useMemo<ColumnDef<ManufacturerProps>[]>(
         () => [
             {
@@ -252,7 +326,7 @@ const Extra: React.FC = () => {
         data: enginesData,
         isError: enginesIsError,
         isLoading: enginesIsLoading,
-    } = useGetEnginesQuery(undefined) as {
+    } = useGetEnginesQuery([]) as {
         data: Engine[];
         isError: boolean;
         isLoading: boolean;
@@ -261,25 +335,20 @@ const Extra: React.FC = () => {
         data: tyreManufacturerData,
         isError: tyreManufacturerIsError,
         isLoading: tyreManufacturerIsLoading,
-    } = useGetTyresManufacturersQuery(undefined) as {
+    } = useGetTyresManufacturersQuery([]) as {
         data: ManufacturerProps[];
         isError: boolean;
         isLoading: boolean;
     };
-
-    const engines = useAppSelector((state: RootState) => state.constructors.engines);
-    const enginesManufacturers = useAppSelector((state: RootState) => state.constructors.enginesManufacturers);
-    const tyreManufacturers = useAppSelector((state: RootState) => state.constructors.tyresManufacturers);
-
-    const [whatTab, setWhatTab] = useState('engines');
 
     useEffect(() => {
         if (enginesIsError) {
             dispatch(setError(true));
             return;
         }
-        if (!enginesData) return;
         if (enginesIsLoading) dispatch(setLoading(true));
+        if (!enginesData) return;
+        console.log('enginesData', enginesData);
         dispatch(setEngines(enginesData));
         dispatch(setLoading(false));
     }, [enginesManufacturerIsError, enginesManufacturerData, enginesManufacturerIsLoading, dispatch]);
@@ -314,7 +383,7 @@ const Extra: React.FC = () => {
         {
             value: 'engines',
             label: 'Engines',
-            children: <DataTable className="w-fit" columns={engineColDefs} data={engines ?? []} />,
+            children: <DataTable className="w-fit" columns={enginesColDefs} data={engines ?? []} />,
         },
         {
             value: 'enginesManufacturers',
@@ -353,7 +422,7 @@ const Extra: React.FC = () => {
                 </TabsContent>
 
                 <TabsContent value="engines">
-                    <DataTable className="w-0-fit" columns={manufacturerColDefs} data={engines ?? []} />
+                    <DataTable className="w-0-fit" columns={enginesColDefs} data={engines ?? []} />
                 </TabsContent>
 
                 <TabsContent value="enginesManufacturers">
