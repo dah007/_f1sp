@@ -16,3 +16,6 @@ public/large-assets/
 .vscode/
 .idea/
 *.log
+.editorconfig
+.markdownlint.jsonc
+.nvmrc
