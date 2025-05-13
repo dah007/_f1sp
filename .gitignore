@@ -34,3 +34,4 @@ f1predict.code-workspace
 dbServer/my.cnf
 
 *.yarn
+DigiCertGlobalRootCA.crt.pem

@@ -1,4 +1,4 @@
-import { JSX, useEffect, useCallback, useRef, useMemo, useState, Suspense, startTransition } from 'react';
+import { JSX, useEffect, useCallback, useRef, useMemo, useState, Suspense, startTransition, Fragment } from 'react';
 import { RootState, useAppDispatch } from 'app/store';
 import { useAppSelector } from 'hooks/reduxHooks';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
@@ -365,7 +365,7 @@ const Drivers: React.FC = (): JSX.Element => {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <>
+                                <Fragment key={row.id}>
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && 'selected'}
@@ -407,7 +407,7 @@ const Drivers: React.FC = (): JSX.Element => {
                                             </TableCell>
                                         </TableRow>
                                     )}
-                                </>
+                                </Fragment>
                             ))
                         ) : (
                             <TableRow>

@@ -75,6 +75,13 @@ const Header: React.FC = () => {
         }
     };
 
+    /**
+     * Navigates to the specified path and toggles the mobile menu state.
+     * This function is used for mobile navigation to ensure the menu
+     * closes after a navigation item is selected.
+     *
+     * @param path - The route path to navigate to
+     */
     const handleNavigationMobile = (path: string) => {
         navigate(path);
         toggleMenu();
@@ -92,7 +99,8 @@ const Header: React.FC = () => {
             w-full
             p-4 
             pb-0 mb-0
-bg-zinc-800 
+            dark:bg-zinc-800 
+            bg-zinc-300
             shadow-md"
         >
             {/* HAMBURGER MENU */}

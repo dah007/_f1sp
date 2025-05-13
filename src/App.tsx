@@ -7,10 +7,10 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import Home from './routes/Home';
 import { lazy, Suspense, useEffect } from 'react';
-import { NextRaceProps, RaceResultProps } from './types/races';
+import { NextRaceProps, RaceProps, RaceResultProps } from './types/races';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
-import { useGetLastRaceResultsQuery, useGetNextRaceQuery } from './features/raceApi';
-import { setRaceNext } from './slices/racesSlice';
+import { useGetLastRaceResultsQuery, useGetNextRaceQuery, useGetRaceWithGPQuery } from './features/raceApi';
+import { setRaceNext, setRaceWGP } from './slices/racesSlice';
 
 import Footer from './components/Footer';
 
@@ -65,6 +65,29 @@ const App = () => {
         }
     }, [nextRace, dispatch, useGetLastRaceResultsQuery, nextRaceData, nextRaceLoading, nextRaceError]);
     // </nextRace>
+
+    // LAST RACE RESULTS
+    const {
+        data: raceWGPData,
+        isLoading: raceWGPisLoading,
+        isError: raceWGPisError,
+    } = useGetRaceWithGPQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
+        data: Partial<RaceProps> | undefined;
+        isLoading: boolean;
+        isError: boolean;
+    };
+
+    useEffect(() => {
+        if (raceWGPisError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (raceWGPisLoading) dispatch(setLoading(true));
+        if (!raceWGPData) return;
+        console.log('raceWGPData:', raceWGPData);
+        dispatch(setRaceWGP(raceWGPData));
+        dispatch(setLoading(false));
+    }, [raceWGPData, raceWGPisError, raceWGPisLoading, dispatch]);
 
     return (
         <Router>

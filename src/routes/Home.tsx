@@ -15,6 +15,8 @@ import ConstructorStandings from '@/components/ConstructorsStandings';
 import DriverOfTheDay from '@/components/DriverOfTheDay';
 import TotalWinsPerYear from '@/components/TotalWinsPerYear';
 
+import { POD_BG, POD_WIDTHS } from '@/constants/constants';
+
 const Home: React.FC = () => {
     let raceWGP: Partial<RaceProps> | null = null;
     try {
@@ -22,10 +24,7 @@ const Home: React.FC = () => {
     } catch (error) {
         console.error('?????? Error fetching raceWGP:', error);
     }
-    // const raceWGP = useAppSelector((state: RootState) =>
     const systemError = useAppSelector((state) => state.siteWide.error);
-
-    const widthsNHeights = 'h-[25vh] max-h-[25vh]';
 
     return (
         <>
@@ -39,46 +38,38 @@ const Home: React.FC = () => {
                 lg:gzrid-cols-3
                 lg:grid-rows-3
 
-                md:flex
-                md:flex-col
-
-                sm:flex
-                sm:flex-col
                 gap-4
                 flex
                 flex-col
                 w-full"
                 >
-                    <div className={cn('col-start-1 row-start-1', widthsNHeights)}>
+                    <div className={cn('col-start-1 row-start-1', POD_WIDTHS)}>
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                            className={cn('overflow-hidden', POD_BG, POD_WIDTHS)}
                             title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
                         >
                             <LastRaceResultsPod />
                         </CardContainer>
                     </div>
 
-                    <div className={cn('col-start-1 row-start-2', widthsNHeights)}>
+                    <div className={cn('col-start-1 row-start-2', POD_WIDTHS)}>
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                            className={cn('overflow-hidden', POD_BG, POD_WIDTHS)}
                             title="Constructors Standings"
                         >
                             <ConstructorStandings />
                         </CardContainer>
                     </div>
 
-                    <div className={cn('col-start-1 md:col-start-2 row-start-3 md:row-start-2 ', widthsNHeights)}>
-                        <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
-                            title="Total Wins"
-                        >
+                    <div className={cn('col-start-1 md:col-start-2 row-start-3 md:row-start-2 ', POD_WIDTHS)}>
+                        <CardContainer className={cn('overflow-hidden', POD_BG, POD_WIDTHS)} title="Total Wins">
                             <TotalWinsPerYear />
                         </CardContainer>
                     </div>
 
-                    <div className={cn('col-start-2 row-start-1 col-span-2', widthsNHeights)}>
+                    <div className={cn('col-start-2 row-start-1 col-span-2', POD_WIDTHS)}>
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                            className={cn('overflow-hidden', POD_BG, POD_WIDTHS)}
                             title={`Driver Standings`}
                             childrenClassName="flex flex-col items-end h-full justify-end w-full"
                         >
@@ -94,9 +85,9 @@ const Home: React.FC = () => {
 
                             {/* 
                             TODO: MAKE THIS A POPOVER on the GRAPH ON CLICK */}
-                            {/* <div className={cn('col-start-2 row-start-2', widthsNHeights, 'bg-blue-400')}>
+                            {/* <div className={cn('col-start-2 row-start-2', POD_WIDTHS, 'bg-blue-400')}>
                                 <CardContainer
-                                    className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                                    className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', POD_WIDTHS)}
                                     childrenClassName="w-full m-0 p-0"
                                     title="Driver Standings"
                                 >
@@ -106,11 +97,8 @@ const Home: React.FC = () => {
                         </CardContainer>
                     </div>
 
-                    <div className={cn('col-start-3 row-start-2', widthsNHeights)}>
-                        <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
-                            title="Driver of the Day"
-                        >
+                    <div className={cn('col-start-3 row-start-2', POD_WIDTHS)}>
+                        <CardContainer className={cn('overflow-hidden', POD_BG, POD_WIDTHS)} title="Driver of the Day">
                             <DriverOfTheDay />
                         </CardContainer>
                     </div>

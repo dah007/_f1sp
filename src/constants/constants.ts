@@ -5,12 +5,6 @@ const graphql = 'graphql/';
 const rest = 'rest/';
 
 export const BASE_URL = base;
-export const GRAPHQL_URL = `${base}/data-api/${graphql}`;
-export const REST_URL = `${base}/data-api/${rest}`;
-
-/** @deprecated */
-export const F1SP_BASE_DB_URL = BASE_URL;
-
 export const BUTTON_CLASSES = 'cursor-pointer';
 // 'border-2 border-gray-300 bg-sky-950 hover:bg-sky-600 text-white hover:text-black cursor-pointer';
 
@@ -26,13 +20,17 @@ export const ENGINE_TYPES = {
     UNKNOWN: 'Unknown',
 };
 
+/** @deprecated */
+export const F1SP_BASE_DB_URL = BASE_URL;
 export const FONT_SIZE = {
     'text-sm': 'text-sm',
     'text-md': 'text-md',
     'text-lg': 'text-lg',
 };
-
+export type FontSizeKeys = keyof typeof FONT_SIZE;
 export const FULL_ROW_HEIGHT = 'xl:h-[30vh] lg:h-[28vh] md:h-[25vh] h-[23vh] w-full';
+
+export const GRAPHQL_URL = `${base}/data-api/${graphql}`;
 
 export const MENU: RouteProps[] = [
     {
@@ -96,8 +94,11 @@ export const MENU: RouteProps[] = [
     },
 ];
 
-export const SITE_NAME: string = import.meta.env.VITE_SITE_NAME;
+export const POD_BG = 'bg-zinc-300 dark:bg-zinc-800';
+export const POD_WIDTHS = 'h-[25vh] max-h-[25vh]';
 
-export type FontSizeKeys = keyof typeof FONT_SIZE;
+export const REST_URL = `${base}/data-api/${rest}`;
+
+export const SITE_NAME: string = import.meta.env.VITE_SITE_NAME;
 
 export const YEAR = new Date().getFullYear();
