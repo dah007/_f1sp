@@ -282,7 +282,8 @@ export const loadCircuitLayers = async ({ data, map }: LoadCircuitLayersProps) =
         uniqueArray?.map(async (circuit: CircuitProps) => {
             if (!map) return;
             try {
-                const response = await fetch(`/src/assets/tracks/${circuit.id}.geojson`);
+                console.log('Loading geojson for circuit:', `../../public/assets/tracks/${circuit.id}.geojson`);
+                const response = await fetch(`../../public/assets/tracks/${circuit.id}.geojson`);
                 const data = await response.json();
                 if (!data) return;
                 if (!map) return;

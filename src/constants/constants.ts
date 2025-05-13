@@ -17,6 +17,15 @@ export const BUTTON_CLASSES = 'cursor-pointer';
 export const DEBUG = import.meta.env.VITE_DEBUG;
 export const DESCRIPTION = import.meta.env.VITE_DESCRIPTION;
 
+export const ENGINE_TYPES = {
+    NATURALLY_ASPIRATED: 'Naturally Aspirated',
+    ELECTRIC: 'Electric',
+    HYBRID: 'Hybrid',
+    TURBOCHARGED: 'Turbocharged',
+    SUPERCHARGED: 'Supercharged',
+    UNKNOWN: 'Unknown',
+};
+
 export const FONT_SIZE = {
     'text-sm': 'text-sm',
     'text-md': 'text-md',

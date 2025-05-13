@@ -64,6 +64,7 @@
         "globals": "^15.14.0",
         "jest-environment-jsdom": "^29.7.0",
         "jsdom": "^26.0.0",
+        "react-intersection-observer": "^9.16.0",
         "rollup-plugin-visualizer": "^5.14.0",
         "tailwindcss": "^4.0.6",
         "terser": "^5.39.0",

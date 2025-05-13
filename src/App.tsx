@@ -33,7 +33,9 @@ const AccountNew = lazy(() => import('./routes/AccountNew'));
 const App = () => {
     const dispatch = useAppDispatch();
 
-    const loading = useAppSelector((state: RootState) => state.siteWide.loading);
+    // something is wrong with the loading state --
+    // TODO: REFACTOR with skeleton loaders at the component level
+    // const loading = useAppSelector((state: RootState) => state.siteWide.loading);
     // NEXT RACE
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
     const {

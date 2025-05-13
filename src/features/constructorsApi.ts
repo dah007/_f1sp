@@ -27,7 +27,7 @@ export const constructorsApi = createApi({
         }),
 
         getTyresManufacturers: builder.query({
-            query: (year) => (year ? `/tyres?$filter=year eq ${year}` : `/tyres`),
+            query: () => '/tyres',
             transformResponse: (response: { value: ManufacturerProps[] }) => response.value ?? null,
         }),
     }),
