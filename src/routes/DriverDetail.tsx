@@ -4,8 +4,8 @@ import { Driver } from '@/types/drivers';
 import { intlNumberFormat } from '@/utils/number';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 /**
+ *
  * Displays detailed information about a specific Formula 1 driver.
  *
  * Fetches driver data based on the ID parameter from the URL,
@@ -31,11 +31,19 @@ const DriverDetail: React.FC = () => {
         return <p className="text-lg text-gray-700">Loading...</p>;
     }
 
+    const imgUrl = new URL(`../../public/assets/drivers/${year}/${driver?.id}.png`, import.meta.url).href;
+
+    const driverImg = document.getElementById(`driver-img-${driver?.id}`) as HTMLImageElement;
+    if (driverImg) {
+        driverImg.src = imgUrl || '../../public/assets/images/404.png';
+    }
+
     return (
         <div className="flex items-start gap-10 max-h-[130px] overflow-hidden">
             <div className="flex items-start justify-start">
                 <img
-                    src={`/src/assets/drivers/${year}/${driver?.id}.png`}
+                    id={`driver-img-${driver?.id}`}
+                    src={imgUrl}
                     alt="Driver"
                     className="max-h-[175px] object-contain"
                     onError={(e) => {
