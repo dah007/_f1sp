@@ -5,6 +5,10 @@
         }
     ],
     "settings": {
+        "peacock.remoteColor": "#01132e",
+        "cSpell.words": [
+            "gzrid"
+        ],
         "workbench.colorCustomizations": {
             "activityBar.activeBackground": "#022860",
             "activityBar.background": "#022860",
@@ -23,8 +27,6 @@
             "titleBar.activeForeground": "#e7e7e7",
             "titleBar.inactiveBackground": "#01132e99",
             "titleBar.inactiveForeground": "#e7e7e799"
-        },
-        "peacock.remoteColor": "#01132e",
-        "cSpell.words": ["gzrid"]
+        }
     }
 }

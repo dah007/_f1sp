@@ -19,3 +19,8 @@ public/large-assets/
 .editorconfig
 .markdownlint.jsonc
 .nvmrc
+.prrettierignore
+.prettierrc
+.yarn*
+components.json
+*.pem
