@@ -1,5 +1,4 @@
 -- f1sp.vote definition
-
 CREATE TABLE `vote` (
   `id` int NOT NULL,
   `user_id` int DEFAULT NULL,
