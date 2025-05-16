@@ -1,6 +1,8 @@
 <!-- MD033 ignore -->
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 
+[![Azure Static Web Apps CI/CD](https://github.com/dah007/_f1sp/actions/workflows/azure-static-web-apps-lively-beach-053c1640f.yml/badge.svg)](https://github.com/dah007/_f1sp/actions/workflows/azure-static-web-apps-lively-beach-053c1640f.yml)
+
 # Formula 1 Statistics Portal (F1SP)
 
 <img src="public/f1sp.png" alt="F1//sp" height="200">
