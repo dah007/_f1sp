@@ -8,4 +8,8 @@ export interface VoteValueProps {
     rain: boolean;
     reds: number;
     yellows: number;
+    userId?: number;
+    email?: string;
+    passcode?: string;
+    raceId?: string;
 }
