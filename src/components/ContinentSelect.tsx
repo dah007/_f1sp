@@ -2,11 +2,11 @@ import { JSX } from 'react';
 
 import { CONTINENTS } from 'constants/circuitConstants';
 
+import { BUTTON_CLASSES } from 'constants/constants';
+import type { Map } from 'mapbox-gl';
 import { type GotoContinentProps } from 'routes/Circuits/CircuitFunctions';
 import type { CircuitProps } from 'types/circuits';
-import type { Map } from 'mapbox-gl';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { BUTTON_CLASSES } from 'constants/constants';
 
 interface ContinentSelectProps {
     continent: string | undefined;

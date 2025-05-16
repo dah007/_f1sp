@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import { useEffect } from 'react';
 
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 import { useGetDriverStandingsQuery } from 'features/standingsApi';
-import { setDriverStandings } from 'slices/standingsSlice';
 import { setError, setLoading } from 'slices/siteWideSlice';
+import { setDriverStandings } from 'slices/standingsSlice';
 
-import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 import { cn } from '@/lib/utils';
+import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 import { type DriverStanding } from 'types/standings';
 
 /**

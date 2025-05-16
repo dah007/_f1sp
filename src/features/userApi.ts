@@ -1,8 +1,8 @@
-import { REST_URL } from '@/constants/constants';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { VoteValueProps } from '@/types/vote';
-import { Driver } from '@/types/drivers';
 import { User } from '@/slices/userSlice';
+import { Driver } from '@/types/drivers';
+import { VoteValueProps } from '@/types/vote';
+import { baseQueryWithRetry } from '@/utils/query';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 export interface CreateUserRequest {
     name: string;
@@ -31,13 +31,7 @@ export interface Vote {
 }
 
 export const userApi = createApi({
-    baseQuery: fetchBaseQuery({
-        baseUrl: REST_URL,
-        prepareHeaders: (headers) => {
-            headers.set('Content-Type', 'application/json');
-            return headers;
-        },
-    }),
+    baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
         getUser: builder.query<User, number | undefined>({
             query: (id: number | undefined) => `user/${id}`,
@@ -49,6 +43,14 @@ export const userApi = createApi({
                 method: 'POST',
                 body: createUser,
             }),
+            transformResponse: (response: User) => {
+                console.log('User creation response:', response);
+                return response;
+            },
+            transformErrorResponse: (response) => {
+                console.error('User creation error:', response);
+                return response;
+            }
         }),
 
         createVote: builder.mutation<User, CreateUserRequest>({

@@ -1,7 +1,7 @@
-import { buildErrorObject } from '@/utils';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { REST_URL } from '../constants/constants';
 import { CircuitProps } from '@/types/circuits';
+import { buildErrorObject } from '@/utils';
+import { baseQueryWithRetry } from '@/utils/query';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 /**
  * API slice for fetching circuit data from the F1 database.
@@ -27,7 +27,7 @@ import { CircuitProps } from '@/types/circuits';
  */
 export const circuitsApi = createApi({
     reducerPath: 'circuitsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
+    baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
         getCircuits: builder.query({
             query: ({ startYear, endYear }) => ({

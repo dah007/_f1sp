@@ -322,15 +322,7 @@ const Extra: React.FC = () => {
         isError: boolean;
         isLoading: boolean;
     };
-    const {
-        data: enginesData,
-        isError: enginesIsError,
-        isLoading: enginesIsLoading,
-    } = useGetEnginesQuery([]) as {
-        data: Engine[];
-        isError: boolean;
-        isLoading: boolean;
-    };
+
     const {
         data: tyreManufacturerData,
         isError: tyreManufacturerIsError,
@@ -341,17 +333,6 @@ const Extra: React.FC = () => {
         isLoading: boolean;
     };
 
-    useEffect(() => {
-        if (enginesIsError) {
-            dispatch(setError(true));
-            return;
-        }
-        if (enginesIsLoading) dispatch(setLoading(true));
-        if (!enginesData) return;
-        console.log('enginesData', enginesData);
-        dispatch(setEngines(enginesData));
-        dispatch(setLoading(false));
-    }, [enginesManufacturerIsError, enginesManufacturerData, enginesManufacturerIsLoading, dispatch]);
 
     useEffect(() => {
         if (enginesManufacturerIsError) {
@@ -379,12 +360,7 @@ const Extra: React.FC = () => {
 
     const tabs = [
         { value: 'seasons', label: 'Seasons' },
-        { value: 'chassis', label: 'Chassis' },
-        {
-            value: 'engines',
-            label: 'Engines',
-            children: <DataTable className="w-fit" columns={enginesColDefs} data={engines ?? []} />,
-        },
+        // { value: 'chassis', label: 'Chassis' },
         {
             value: 'enginesManufacturers',
             label: 'Engine Manufacturers',
@@ -392,7 +368,7 @@ const Extra: React.FC = () => {
         },
         {
             value: 'tyreManufacturers',
-            label: 'Tyres',
+            label: 'Tyre Manufacturers',
             children: <DataTable className="w-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />,
         },
     ];
@@ -404,7 +380,7 @@ const Extra: React.FC = () => {
                 value={whatTab}
                 className="max-w-[85vw] w-[85vw] overflow-hidden pb-10"
             >
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="flexmd:grid w-full md:grid-cols-4">
                     {tabs.map((tab) => (
                         <TabsTrigger
                             key={tab.value}
@@ -419,10 +395,6 @@ const Extra: React.FC = () => {
 
                 <TabsContent value="chassis">
                     <div className="w-full h-full flex items-center justify-center">Coming soon</div>
-                </TabsContent>
-
-                <TabsContent value="engines">
-                    <DataTable className="w-0-fit" columns={enginesColDefs} data={engines ?? []} />
                 </TabsContent>
 
                 <TabsContent value="enginesManufacturers">
