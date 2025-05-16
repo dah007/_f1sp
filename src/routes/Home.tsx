@@ -6,14 +6,14 @@ import CardContainer from '@/components/CardContainer';
 import LastRaceResultsPod from '@/components/LastRaceResultsPod';
 import NextReactBanner from '@/components/NextRaceBanner';
 
-import { cn } from '@/lib/utils';
-import { RaceProps } from '@/types/races';
-import ErrorDialog from '@/components/ErrorDialog';
-import DriverStandingsChart from '@/components/DriverStandingsChart';
-import { CardFooter } from '@/components/ui/card';
 import ConstructorStandings from '@/components/ConstructorsStandings';
 import DriverOfTheDay from '@/components/DriverOfTheDay';
+import DriverStandingsChart from '@/components/DriverStandingsChart';
+import ErrorDialog from '@/components/ErrorDialog';
 import TotalWinsPerYear from '@/components/TotalWinsPerYear';
+import { CardFooter } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { RaceProps } from '@/types/races';
 
 const Home: React.FC = () => {
     let raceWGP: Partial<RaceProps> | null = null;
@@ -30,6 +30,7 @@ const Home: React.FC = () => {
     return (
         <>
             <NextReactBanner />
+            ???
             {systemError && <ErrorDialog />}
 
             <div className="flex flex-col justify-center items-center mr-2">
