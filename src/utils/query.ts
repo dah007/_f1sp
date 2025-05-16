@@ -8,7 +8,7 @@ export const baseQueryWithRetry = retry(
         timeout: 15000, // 15 seconds timeout
     }),
     {
-        maxRetries: 3,
+        maxRetries: 5,
     },
 );
 
