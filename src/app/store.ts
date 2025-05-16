@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
+import { raceApi } from '@/features/raceApi';
 import { circuitsApi } from 'features/circuitsApi';
 import { constructorsApi } from 'features/constructorsApi';
 import { driversApi } from 'features/driversApi';
-import { raceApi } from '@/features/raceApi';
-import { sessionsApi } from 'features/sessionsApi';
 import { standingsApi } from 'features/standingsApi';
 import { userApi } from 'features/userApi';
 
+import { seasonsApi } from 'features/seasonsApi';
 import constructorsReducer from 'slices/constructorsSlice';
 import driversReducer from 'slices/driversSlice';
 import racesReducer from 'slices/racesSlice';
@@ -19,14 +19,6 @@ import seasonApi from 'slices/seasonsSlice';
 import siteWideSlice from 'slices/siteWideSlice';
 import standingsReducer from 'slices/standingsSlice';
 import userReducer from 'slices/userSlice';
-
-// ? WHAT IS THIS CRACK!?
-/* The line `import { seasonsApi } from 'features/seasonsApi';` is importing the `seasonsApi` object
-from the file located at `'features/seasonsApi'`. This object likely contains configurations and
-functions related to making API calls or handling data related to seasons in the application. By
-importing it, you can access and utilize the functionalities provided by the `seasonsApi` object
-within your code. */
-import { seasonsApi } from 'features/seasonsApi';
 
 export type TAppDispatch = typeof store.dispatch;
 
@@ -37,7 +29,6 @@ export const store = configureStore({
         [driversApi.reducerPath]: driversApi.reducer,
         [raceApi.reducerPath]: raceApi.reducer,
         [seasonsApi.reducerPath]: seasonsApi.reducer,
-        [sessionsApi.reducerPath]: sessionsApi.reducer,
         [standingsApi.reducerPath]: standingsApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
 
@@ -59,7 +50,6 @@ export const store = configureStore({
             .concat(driversApi.middleware)
             .concat(raceApi.middleware)
             .concat(seasonsApi.middleware)
-            .concat(sessionsApi.middleware)
             .concat(standingsApi.middleware)
             .concat(userApi.middleware),
 });

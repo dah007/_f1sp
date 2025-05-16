@@ -1,11 +1,11 @@
-import { REST_URL } from 'constants/constants';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import type { ManufacturerProps, ConstructorProps } from 'types/constructors';
 import type { Engine } from '@/types';
+import { baseQueryWithRetry } from '@/utils/query';
+import type { ConstructorProps, ManufacturerProps } from 'types/constructors';
 
 export const constructorsApi = createApi({
-    baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
+    baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
         getConstructors: builder.query({
             query: () => `/constructors?$first=500`,

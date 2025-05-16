@@ -1,10 +1,11 @@
-import { REST_URL, YEAR } from '@/constants/constants';
+import { YEAR } from '@/constants/constants';
 import { NextLinkRaceProps } from '@/routes/Races';
 import { FastestLap, RaceProps, type NextRaceProps } from '@/types/races';
 import { buildErrorObject, dbFetch } from '@/utils';
+import { baseQueryWithRetry } from '@/utils/query';
 // import { buildErrorObject } from '@/utils';
 
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 /**
  * Light reading on how to use OData queries:
@@ -13,10 +14,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
  */
 
 export const raceApi = createApi({
-    baseQuery: fetchBaseQuery({
-        baseUrl: REST_URL,
-    }),
-
+    baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
         getFastestLap: builder.query({
             query: (raceId: number | string = '') => `/fastestLap?raceId=${raceId}`,

@@ -1,12 +1,12 @@
 import { DriverStanding } from '@/types/standings';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { REST_URL } from 'constants/constants';
+import { baseQueryWithRetry } from '@/utils/query';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { buildErrorObject } from 'utils/index';
 
 export const standingsApi = createApi({
     reducerPath: 'standingsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: REST_URL }),
+    baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
         getConstructorStandings: builder.query({
             query: (year: number = 2025) =>
