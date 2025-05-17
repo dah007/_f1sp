@@ -293,10 +293,11 @@
                 ]
             },
 
-            "createVote": {
+            "vote": {
                 "source": {
                     "type": "table",
-                    "object": "vote"
+                    "object": "vote",
+                    "key-fields": ["id"]
                 },
                 "permissions": [
                     {
@@ -305,15 +306,25 @@
                     }
                 ],
                 "rest": {
-                    "methods": ["post", "get"],
-                    "path": "/createVote"
+                    "methods": ["post"],
+                    "path": "/vote"
+                }
+            },
+            "voteCheck":{
+                "source": {
+                    "type": "table",
+                    "object": "vote",
+                    "key-fields": ["id"]
                 },
-                "graphql": {
-                    "enabled": true,
-                    "type": {
-                        "singular": "createVote",
-                        "plural": "createVote"
+                "permissions": [
+                    {
+                        "actions": ["*"],
+                        "role": "anonymous"
                     }
+                ],
+                "rest": {
+                    "methods": ["get"],
+                    "path": "/voteCheck"
                 }
             },
 
@@ -325,24 +336,13 @@
                 },
                 "permissions": [
                     {
-                        "actions": ["create", "read"],
+                        "actions": ["read", "create"],
                         "role": "anonymous"
-                    },
-                    {
-                        "actions": ["update", "delete"],
-                        "role": "authenticated"
                     }
                 ],
                 "rest": {
                     "methods": ["post", "get"],
                     "path": "/createUser"
-                },
-                "graphql": {
-                    "enabled": true,
-                    "type": {
-                        "singular": "User",
-                        "plural": "Users"
-                    }
                 }
             },
             "readUser": {

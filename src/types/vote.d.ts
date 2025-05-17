@@ -1,5 +1,6 @@
 export interface VoteValueProps {
     blueTires: boolean;
+    drivers?: string[]; // TODO: shouldn't be here, refactor out
     driversInCrash: { [key: string]: boolean };
     fastestLap: string;
     finishOrder: Driver[];
