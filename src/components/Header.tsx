@@ -1,9 +1,9 @@
-import F1SPlogo from 'assets/f1sp.svg';
 import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.svg';
+import F1SPlogo from 'assets/f1sp.svg';
 
-import Button from './Button';
-import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
+import Button from './Button';
 
 import {
     NavigationMenu,
@@ -90,9 +90,8 @@ const Header: React.FC = () => {
             gap-6 
             items-end 
             w-full
-            p-4 
-            pb-0 mb-0
-bg-zinc-800 
+            p-6 mb-0
+          bg-zinc-800 
             shadow-md"
         >
             {/* HAMBURGER MENU */}
@@ -120,7 +119,7 @@ bg-zinc-800
             <NavigationMenu className="hidden md:hidden lg:flex xl:flex justify-end grow w-[80vw]">
                 <NavigationMenuList>
                     <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-red-800 font-extrabold cursor-pointer text-md">
+                        <NavigationMenuTrigger className="text-red-800 font-extrabold cursor-pointer text-md"   onClick={() => handleNavigation('/vote')}>
                             Vote
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className="bg-zinc-300 dark:bg-zinc-800">

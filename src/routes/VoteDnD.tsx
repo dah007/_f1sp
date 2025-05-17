@@ -1,76 +1,36 @@
-import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-import { useNavigate } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import { DndContext, UniqueIdentifier } from '@dnd-kit/core';
 import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable';
-import { useEffect, useState } from 'react';
+import { Scrollbar } from '@radix-ui/react-scroll-area';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
-import Button from 'components/Button';
+import SortableItem from 'components/dnd-kit/SortableItem';
 import DriverCheckbox from 'components/Driver/DriverCheckbox';
 import LoadingToast from 'components/LoadingToast';
-import SortableItem from 'components/dnd-kit/SortableItem';
 import Toggle from 'components/Toggle';
 import { Card, CardTitle } from 'components/ui/card';
 import { Form } from 'components/ui/form';
 import { Input } from 'components/ui/input';
 import { Label } from 'components/ui/label';
-import LoginForm from 'components/LoginForm';
 import { ScrollArea } from 'components/ui/scroll-area';
-import { Scrollbar } from '@radix-ui/react-scroll-area';
-import { setDriversByYear } from 'slices/driversSlice';
-import { setError } from 'slices/siteWideSlice';
-import { useForm, FieldValues } from 'react-hook-form';
-
-import { useGetDriversByYearQuery } from 'features/driversApi';
-import { useSubmitVoteMutation } from 'features/userApi';
 
 import { YEAR } from 'constants/constants';
-import { cn } from '@/lib/utils';
+
+import { useGetDriversByYearQuery } from 'features/driversApi';
+import { SubmitVoteRequest, useCheckVoteQuery, useSubmitVoteMutation } from 'features/userApi';
+
+import { useEffect, useState } from 'react';
+import { FieldValues, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { setDriversByYear } from 'slices/driversSlice';
+import { setError, setLoading } from 'slices/siteWideSlice';
 import { type Driver } from 'types/drivers';
 import { type VoteValueProps } from 'types/vote';
+import LoginForm from './LoginForm';
 
-// export const FULL_ROW_HEIGHT = 'xl:h-[32vh] lg:h-[28vh] md:h-[25vh] h-[23vh] w-full';
-const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]'; // Fixed typo from max-[30hx] to max-h-[32vh]
+const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]';
 
-// const DriverCheckbox = lazy(() => import('components/Driver/DriverCheckbox'));
-
-/**
- * The `Vote` component is responsible for rendering the voting interface for a race event.
- * It fetches and displays the list of drivers and the next race details, and allows users to vote
- * on the order of drivers and specific race events.
- *
- * @returns {JSX.Element} The rendered voting interface.
- *
- * @component
- *
- * @example
- * // Usage example:
- * <Vote />
- *
- * @remarks
- * This component uses several hooks to manage state and side effects:
- * - `useAppSelector` to select state from the Redux store.
- * - `useAppDispatch` to dispatch actions to the Redux store.
- * - `useForm` to manage form state.
- * - `useGetDriversByYearQuery` and `useGetRaceNextQuery` to fetch data from the API.
- *
- * The component also handles drag-and-drop functionality for reordering drivers using the `DndContext` and `SortableContext` components.
- *
- * @hook
- * - `useEffect` to handle side effects when `raceNextData` and `driversByYearData` change.
- *
- * @param {Object} event - The drag end event.
- * @param {Object} event.active - The active draggable item.
- * @param {Object} event.over - The droppable area where the item was dropped.
- *
- * @function handleDragEnd
- * Handles the drag end event to update the order of drivers.
- *
- * @function onSubmit
- * Handles the form submission event.
- *
- * @returns {JSX.Element} The rendered voting interface.
- */
-const Vote = (): JSX.Element => {
+const Vote: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const form = useForm();
     const navigate = useNavigate();
@@ -86,6 +46,8 @@ const Vote = (): JSX.Element => {
         errorMessage: '',
     });
 
+    const [isClosed,] = useState(false);
+
     const [submitVote, { isLoading: isSubmittingVote }] = useSubmitVoteMutation();
 
     const [, setOriginalOrderDrivers] = useState<Driver[]>([]);
@@ -99,10 +61,6 @@ const Vote = (): JSX.Element => {
     } = useGetDriversByYearQuery(YEAR);
 
     useEffect(() => {
-        console.log('driversByYearData');
-        console.log('error', driversByYearError);
-        console.log('loading', driversByYearLoading);
-
         if (!driversByYearData) return;
         dispatch(setDriversByYear(driversByYearData?.value as Driver[]));
 
@@ -122,8 +80,43 @@ const Vote = (): JSX.Element => {
         yellows: 0,
     });
 
+    const [voteCheck, setVoteCheck] = useState(false);
+    const voteCheckResults = useAppSelector((state: RootState) => state.user.user.voteCheck);
+
+    const {
+        data: voteCheckData,
+        isLoading: voteCheckIsLoading,
+        isError: voteCheckIsError
+    } = useCheckVoteQuery({
+        user_id: user?.id || 0,
+        race_id: raceNext?.id || 0
+    }) as {
+        data: VoteValueProps | undefined;
+        isLoading: boolean;
+        isError: boolean;
+    };
+
+    useEffect(() => {
+        console.log('0-Vote check results:', voteCheckResults);
+        if (voteCheckIsError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (voteCheckIsLoading) dispatch(setLoading(true));
+        if (!voteCheckData) return;
+
+        console.log('Vote check results:', voteCheckResults);
+
+        if (voteCheckResults) {
+            setVoteCheck(true);
+        } else {
+            setVoteCheck(false);
+        }
+    }, [voteCheckResults]);
+
     const [toggleRain, setToggleRain] = useState(false);
     const [toggleCrash, setToggleCrash] = useState(false);
+
     const updateVoteValues = (value = {}) => {
         const newValues = { ...voteValues, ...value };
         setVoteValues(newValues);
@@ -156,7 +149,6 @@ const Vote = (): JSX.Element => {
 
     const onSubmit = async (formData: FieldValues) => {
         console.log('onSubmit');
-        console.log('formData', formData);
         // try {
         setSubmitStatus({
             isSubmitting: true,
@@ -180,7 +172,7 @@ const Vote = (): JSX.Element => {
         if (!raceNext?.id) {
             throw new Error('Race information is missing');
         }
-        const completeVoteData = {
+        const completeVoteData: SubmitVoteRequest = {
             ...baseVoteValues,
             finishOrder: voteOrderedDrivers.map((driver) => ({
                 position: driver.id,
@@ -188,15 +180,16 @@ const Vote = (): JSX.Element => {
                 id: driver.id,
             })),
             ...formData,
+            race_id: raceNext.id,
+            user_id: user?.id || formData.userId,
         };
 
-        const response = await submitVote({
-            userId: user?.id || formData.userId,
-            raceId: raceNext?.id,
-            voteData: completeVoteData,
-            email: user?.email || formData.email,
-            // passcode: user?.passcode || formData.passcode,
-        }).unwrap();
+        console.log('completeVoteData', completeVoteData);
+
+        // ? this should be cleaned up and removed. it's really just a safety dance move at this point.
+        if (completeVoteData.drivers) delete completeVoteData.drivers; // remove drivers if present
+
+        const response = await submitVote(completeVoteData).unwrap();
 
         console.log('Vote submitted successfully:', response);
 
@@ -229,8 +222,34 @@ const Vote = (): JSX.Element => {
         return <div>Error loading drivers</div>;
     }
 
+    if (!localStorage.getItem('user')) {
+        return (
+            <div className="flex h-fit w-full justify-center">
+                <LoginForm />
+            </div>
+        );
+    }
+
+    if (isClosed) {
+        return (
+            <div className="flex h-fit w-full justify-center">
+                <div className="text-center p-4">
+                    <div
+                    className="
+                    w-full dark:text-zinc-300 text-zinc-800 text-center p-4 text-2xl krona-one-regular"
+                >
+                    Voting Closed
+                </div>
+                <p>Next race: {raceNext?.date} - {raceNext?.short_name}</p>
+                <p>Voting opens on Wednesday of Race week</p>
+                <p>Voting closes 1 hour before lights out</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <Form {...form}>
+        <Form {...form}>            
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 {/* TITLE */}
                 <div
@@ -401,27 +420,15 @@ const Vote = (): JSX.Element => {
                                 </div>
                             ) : (
                                 <>
-                                    <LoginForm />
+                                    <p>Hello, welcome back!</p>
 
-                                    <Button
+                                    <button 
+                                        className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
                                         type="submit"
-                                        variant="default"
-                                        className="w-full border border-zinc-300 shadow-2xl"
                                         disabled={isSubmittingVote || submitStatus.isSubmitting}
                                     >
-                                        {isSubmittingVote ? 'Submitting...' : 'Submit Vote'}
-                                    </Button>
-
-                                    <div className="mt-2 text-center">
-                                        <Button
-                                            type="button"
-                                            variant="link"
-                                            className="text-blue-500 hover:text-blue-700"
-                                            onClick={() => navigate('/account/new')}
-                                        >
-                                            New Account
-                                        </Button>
-                                    </div>
+                                        {isSubmittingVote || submitStatus.isSubmitting ? 'Submitting...' : 'Submit Vote'}
+                                    </button>
                                 </>
                             )}
                         </Card>

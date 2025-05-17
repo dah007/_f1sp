@@ -1,11 +1,13 @@
 -- f1sp.vote definition
 
 CREATE TABLE `vote` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `race_id` int NOT NULL,
   `user_id` int DEFAULT NULL,
-  `fastestLap` varchar(100) DEFAULT NULL,
+  `driversInCrash` MEDIUMTEXT DEFAULT NULL,
+  `fastestLap` varchar(256) DEFAULT NULL,
   `firstLapCrash` tinyint(1) DEFAULT '0',
-  `finishOrder` varchar(100) DEFAULT NULL,
+  `finishOrder` varchar(256) DEFAULT NULL,
   `rain` tinyint(1) DEFAULT '0',
   `blueTires` tinyint(1) DEFAULT '0',
   `greenTires` tinyint(1) DEFAULT '0',

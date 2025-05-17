@@ -1,26 +1,26 @@
 'use client';
+
+import { cn } from '@/lib/utils';
 import { RootState, useAppSelector } from 'app/store';
 
-import CardContainer from '@/components/CardContainer';
+import CardContainer from 'components/CardContainer';
+import ConstructorStandings from 'components/ConstructorsStandings';
+import DriverOfTheDay from 'components/DriverOfTheDay';
+import DriverStandingsChart from 'components/DriverStandingsChart';
+import ErrorDialog from 'components/ErrorDialog';
+import LastRaceResultsPod from 'components/LastRaceResultsPod';
+import NextReactBanner from 'components/NextRaceBanner';
+import TotalWinsPerYear from 'components/TotalWinsPerYear';
+import { CardFooter } from 'components/ui/card';
 
-import LastRaceResultsPod from '@/components/LastRaceResultsPod';
-import NextReactBanner from '@/components/NextRaceBanner';
-
-import ConstructorStandings from '@/components/ConstructorsStandings';
-import DriverOfTheDay from '@/components/DriverOfTheDay';
-import DriverStandingsChart from '@/components/DriverStandingsChart';
-import ErrorDialog from '@/components/ErrorDialog';
-import TotalWinsPerYear from '@/components/TotalWinsPerYear';
-import { CardFooter } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { RaceProps } from '@/types/races';
+import type { RaceProps } from 'types/races';
 
 const Home: React.FC = () => {
     let raceWGP: Partial<RaceProps> | null = null;
     try {
         raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
     } catch (error) {
-        console.error('?????? Error fetching raceWGP:', error);
+        console.error('!!! Error fetching raceWGP !!!:', error);
     }
     // const raceWGP = useAppSelector((state: RootState) =>
     const systemError = useAppSelector((state) => state.siteWide.error);
@@ -30,7 +30,6 @@ const Home: React.FC = () => {
     return (
         <>
             <NextReactBanner />
-            ???
             {systemError && <ErrorDialog />}
 
             <div className="flex flex-col justify-center items-center mr-2">
@@ -86,7 +85,7 @@ const Home: React.FC = () => {
                             <DriverStandingsChart />
                             <CardFooter className="flex justify-between items-center w-full">
                                 <div className="text-sm text-blue-500 dark:text-blue-400 hover:text-blue-600 cursor-pointer">
-                                    <button rel="link">View Full Standings</button>
+                                    <button rel="link" onClick={() => location.href='/standings'}>View Full Standings</button>
                                 </div>
                                 <div className="text-sm text-zinc-500 dark:text-zinc-400">
                                     As of: {raceWGP ? raceWGP.official_name : 'N/A'}

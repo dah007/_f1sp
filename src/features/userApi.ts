@@ -1,5 +1,4 @@
 import { User } from '@/slices/userSlice';
-import { Driver } from '@/types/drivers';
 import { VoteValueProps } from '@/types/vote';
 import { baseQueryWithRetry } from '@/utils/query';
 import { createApi } from '@reduxjs/toolkit/query/react';
@@ -10,64 +9,56 @@ export interface CreateUserRequest {
     passcode: string;
 }
 
-export interface SubmitVoteRequest {
-    userId: number;
-    raceId: number;
-    voteData: VoteValueProps;
+export interface SubmitVoteRequest extends VoteValueProps {
+    user_id: number;
+    race_id: number;
     email?: string;
     passcode?: string;
-}
-
-export interface Vote {
-    blueTires: boolean;
-    driversInCrash: { [key: string]: string };
-    fastestLap: string;
-    finishOrder: Driver[];
-    firstLapCrash: boolean;
-    greenTires: boolean;
-    rain: boolean;
-    reds: number;
-    yellows: number;
 }
 
 export const userApi = createApi({
     baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
-        getUser: builder.query<User, number | undefined>({
-            query: (id: number | undefined) => `user/${id}`,
+        checkVote: builder.query<VoteValueProps, { user_id: number; race_id: number }>({
+            query: ({ user_id, race_id }) => `vote/check?$filter=user_id eq ${user_id} and race_id eq ${race_id}`,
+            transformResponse: (response: { value: VoteValueProps }) => {
+                console.log('-=-=-==- Vote check response:', response);
+                return response?.value ?? {};
+            },
+            transformErrorResponse: (response) => {
+                console.error('Vote check error:', response);
+                return response;
+            }
         }),
+        
 
         createUser: builder.mutation<User, CreateUserRequest>({
             query: (createUser) => ({
-                url: 'user_add',
+                url: 'createUser',
                 method: 'POST',
                 body: createUser,
             }),
             transformResponse: (response: User) => {
-                console.log('User creation response:', response);
+                console.log('????  User creation response:', response);
                 return response;
             },
             transformErrorResponse: (response) => {
-                console.error('User creation error:', response);
+                console.error('!!!! User creation error:', response);
                 return response;
             }
         }),
 
-        createVote: builder.mutation<User, CreateUserRequest>({
-            query: (userData) => ({
-                url: 'users',
-                method: 'POST',
-                body: userData,
-            }),
+        getUser: builder.query<User, number | undefined>({
+            query: (id: number | undefined) => `user/${id}`,
         }),
-
-        submitVote: builder.mutation<Vote, SubmitVoteRequest>({
+        
+        submitVote: builder.mutation<VoteValueProps, SubmitVoteRequest>({
             query: (voteRequest) => ({
-                url: 'createVote',
+                url: 'vote',
                 method: 'POST',
                 body: voteRequest,
             }),
-            transformResponse: (response: Vote) => {
+            transformResponse: (response: VoteValueProps) => {
                 console.log('Vote submission response:', response);
                 return response;
             },
@@ -80,4 +71,9 @@ export const userApi = createApi({
     reducerPath: 'userApi',
 });
 
-export const { useGetUserQuery, useCreateUserMutation, useCreateVoteMutation, useSubmitVoteMutation } = userApi;
+export const { 
+    useCheckVoteQuery,    
+    useGetUserQuery, 
+    useCreateUserMutation, 
+    useSubmitVoteMutation 
+} = userApi;
