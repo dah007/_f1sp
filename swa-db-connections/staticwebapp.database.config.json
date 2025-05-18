@@ -356,7 +356,7 @@
                 "source": {
                     "type": "table",
                     "object": "vote",
-                    "key-fields": ["race_id", "user_id"]
+                    "key-fields": ["email", "race_id"]
                 },
                 "permissions": [
                     {

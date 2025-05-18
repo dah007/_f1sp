@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { RootState, useAppSelector } from 'app/store';
 
@@ -12,8 +13,25 @@ import LastRaceResultsPod from 'components/LastRaceResultsPod';
 import NextReactBanner from 'components/NextRaceBanner';
 import TotalWinsPerYear from 'components/TotalWinsPerYear';
 import { CardFooter } from 'components/ui/card';
+import { InfoIcon } from 'lucide-react';
 
 import type { RaceProps } from 'types/races';
+
+interface MessageFromURLResult {
+    success: string | null;
+    error: string | null;
+    message: string | null;
+}
+
+const getMessageFromURL: () => MessageFromURLResult = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    return {
+        success: urlParams.get('success'),
+        error: urlParams.get('error'),
+        message: urlParams.get('message'),
+    };
+}
 
 const Home: React.FC = () => {
     let raceWGP: Partial<RaceProps> | null = null;
@@ -27,8 +45,45 @@ const Home: React.FC = () => {
 
     const widthsNHeights = 'h-[25vh] max-h-[25vh]';
 
+    const { success: voteSuccessful, message: voteMessage } = getMessageFromURL();
+
+    const MessageBox = ({
+        title,
+        description,
+        className,
+        children,
+    }: {
+        title: string;
+        description?: string;
+        className?: string;
+        children?: React.ReactNode;
+    }) => {
+        return (
+            <Alert className={cn('flex flex-col items-start justify-start', className)}>
+                <div className="flex w-full gap-4">
+                    <InfoIcon color='green' className="h-8 w-8" />
+                    <AlertTitle className="text-xl text-center font-bold krona-one-regular">{title}</AlertTitle>
+                </div>
+                
+                <AlertDescription>
+                    {description}
+                </AlertDescription>
+                {children}
+            </Alert>
+        );
+    };
+
     return (
         <>
+            {voteSuccessful && (
+            <MessageBox
+                title="Vote"
+            >
+                <p className="text-xl text-center ">{voteMessage}</p>
+            </MessageBox>
+            )}
+            
+
             <NextReactBanner />
             {systemError && <ErrorDialog />}
 
@@ -85,7 +140,7 @@ const Home: React.FC = () => {
                             <DriverStandingsChart />
                             <CardFooter className="flex justify-between items-center w-full">
                                 <div className="text-sm text-blue-500 dark:text-blue-400 hover:text-blue-600 cursor-pointer">
-                                    <button rel="link" onClick={() => location.href='/standings'}>View Full Standings</button>
+                                    <button rel="link" onClick={() => location.href = '/standings'}>View Full Standings</button>
                                 </div>
                                 <div className="text-sm text-zinc-500 dark:text-zinc-400">
                                     As of: {raceWGP ? raceWGP.official_name : 'N/A'}

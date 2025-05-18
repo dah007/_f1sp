@@ -30,6 +30,8 @@ import LoginForm from './LoginForm';
 
 const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]';
 
+
+// TODO: Refactor this component the data object side is a hawt mess.
 const Vote: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const form = useForm();
@@ -88,14 +90,14 @@ const Vote: React.FC = (): JSX.Element => {
         isLoading: voteCheckIsLoading,
         isError: voteCheckIsError
     } = useCheckVoteQuery({
-        user_id: user?.id || 0,
+        email: user?.email || '',
         race_id: raceNext?.id || 0
     }) as {
         data: VoteValueProps | undefined;
         isLoading: boolean;
         isError: boolean;
     };
-
+    
     useEffect(() => {
         console.log('0-Vote check results:', voteCheckResults);
         if (voteCheckIsError) {
@@ -148,7 +150,7 @@ const Vote: React.FC = (): JSX.Element => {
     };
 
     const onSubmit = async (formData: FieldValues) => {
-        console.log('onSubmit');
+        console.log('onSubmit', `currently: ${voteCheck}`, formData);
         // try {
         setSubmitStatus({
             isSubmitting: true,
@@ -181,8 +183,11 @@ const Vote: React.FC = (): JSX.Element => {
             })),
             ...formData,
             race_id: raceNext.id,
-            user_id: user?.id || formData.userId,
+            email: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).email : '',
         };
+
+        completeVoteData.driversInCrash = JSON.stringify(completeVoteData.driversInCrash);
+        completeVoteData.finishOrder = JSON.stringify(completeVoteData.finishOrder);
 
         console.log('completeVoteData', completeVoteData);
 
@@ -200,19 +205,7 @@ const Vote: React.FC = (): JSX.Element => {
             errorMessage: '',
         });
 
-        setTimeout(() => {
-            navigate('/vote/success');
-        }, 2000);
-        // } catch (error) {
-        //     console.error('Error submitting vote:', error);
-
-        //     setSubmitStatus({
-        //         isSubmitting: false,
-        //         isSuccess: false,
-        //         isError: true,
-        //         errorMessage: 'Error submitting vote. Please try again.',
-        //     });
-        // }
+        navigate('/?success=true&message=Vote submitted successfully!');
     };
 
     if (driversByYearLoading) return <LoadingToast isLoading={driversByYearLoading} />;

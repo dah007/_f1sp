@@ -4,25 +4,25 @@ import { baseQueryWithRetry } from '@/utils/query';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 export interface CreateUserRequest {
-    name: string;
     email: string;
+    name: string;
     passcode: string;
 }
 
 export interface SubmitVoteRequest extends VoteValueProps {
-    user_id: number;
-    race_id: number;
     email?: string;
     passcode?: string;
+    race_id: number;
+    user_id?: number;
 }
 
 export const userApi = createApi({
     baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
-        checkVote: builder.query<VoteValueProps, { user_id: number; race_id: number }>({
-            query: ({ user_id, race_id }) => `voteCheck?$filter=user_id eq ${user_id} and race_id eq ${race_id}`,
+        checkVote: builder.query<VoteValueProps, { email: string; race_id: number }>({
+            query: ({ email, race_id }) => `voteCheck?$filter=email eq '${email}' and race_id eq ${race_id}`,
             transformResponse: (response: { value: VoteValueProps }) => {
-                console.log('-=-=-==- Vote check response:', response);
+                console.info('-=-=-==- Vote check response:', response);
                 return response?.value ?? {};
             },
             transformErrorResponse: (response) => {
@@ -31,7 +31,6 @@ export const userApi = createApi({
             }
         }),
         
-
         createUser: builder.mutation<User, CreateUserRequest>({
             query: (createUser) => ({
                 url: 'createUser',
@@ -53,13 +52,16 @@ export const userApi = createApi({
         }),
         
         submitVote: builder.mutation<VoteValueProps, SubmitVoteRequest>({
-            query: (voteRequest) => ({
-                url: 'vote',
-                method: 'POST',
-                body: voteRequest,
-            }),
+            query: (voteRequest) => {
+                console.log('%cVote submission request:', 'color: blue; font-weight: bold; background:white; font-size:16px', voteRequest);
+                return {
+                    url: 'vote',
+                    method: 'POST',
+                    body: voteRequest,
+                };
+            },
             transformResponse: (response: VoteValueProps) => {
-                console.log('Vote submission response:', response);
+                console.log('%cVote submission response:', 'color: green; font-weight: bold; background:white; font-size:16px', response);
                 return response;
             },
             transformErrorResponse: (response) => {
