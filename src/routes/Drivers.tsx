@@ -23,9 +23,9 @@ import { JSX, Suspense, startTransition, useCallback, useEffect, useMemo, useRef
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { setDrivers } from 'slices/driversSlice';
 import { setError, setSelectedYear } from 'slices/siteWideSlice';
-import { type AdditionalFiltersYearProps } from 'types';
 import { type ExtendedColumnDef } from 'types/dataTable';
 import { type Driver } from 'types/drivers';
+import { type AdditionalFiltersYearProps } from 'types/index';
 import { intlNumberFormat } from 'utils/number';
 import Flag from '../components/Flag';
 
