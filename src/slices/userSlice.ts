@@ -1,22 +1,23 @@
-import { Vote } from '@/features/userApi';
+import { VoteValueProps } from '@/types/vote';
+import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import type { PayloadAction } from '@reduxjs/toolkit';
-
 export interface User {
-    id: number;
+    id?: number;
     name: string;
     email: string;
+    passcode: string;
+    voteCheck?: boolean;
 }
 
 interface IState {
     user: User;
-    vote: Vote;
+    vote: VoteValueProps;
 }
 
 const initialState: IState = {
-    user: {} as User,
-    vote: {} as Vote,
+    user: { voteCheck: false } as User,
+    vote: {} as VoteValueProps,
 };
 
 export const userSlice = createSlice({
@@ -26,18 +27,22 @@ export const userSlice = createSlice({
         setUser: (state, action: PayloadAction<User>) => {
             state.user = action.payload;
         },
-        setVote: (state, action: PayloadAction<Vote>) => {
+        setVote: (state, action: PayloadAction<VoteValueProps>) => {
             state.vote = action.payload;
         },
         clearUser: (state) => {
             state.user = {} as User;
         },
         clearVote: (state) => {
-            state.vote = {} as Vote;
+            state.vote = {} as VoteValueProps;
+        },
+
+        setVoteCheck: (state, action: PayloadAction<boolean>) => {
+            state.user.voteCheck = action.payload;
         },
     },
 });
 
-export const { setUser, setVote, clearUser, clearVote } = userSlice.actions;
+export const { setUser, setVote, clearUser, clearVote, setVoteCheck } = userSlice.actions;
 
 export default userSlice.reducer;

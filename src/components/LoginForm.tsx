@@ -1,24 +1,15 @@
-import { cn } from '@/lib/utils';
 import { VoteValueProps } from '@/types/vote';
 import React, { useState } from 'react';
-import { Card } from './ui/card';
 import { Input } from './ui/input';
 
 type LoginFormProps = {
     userId?: number;
-    email: string;
+    email?: string;
     passcode?: string;
     setVoteValues?: (values: Partial<VoteValueProps>) => void;
     // voteValues?: any;
     onLoginSuccess?: (user: { id: number; email: string; passcode: string }) => void;
 };
-
-// const formValuesUpdate = (key: string, value: Partial<VoteValueProps>) => {
-//     return (prevState: any) => ({
-//         ...prevState,
-//         [key]: value,
-//     });
-// };
 
 const LoginForm = ({
     userId,
@@ -56,10 +47,6 @@ const LoginForm = ({
     return (
         <form onSubmit={handleLogin} className="mb-4">
             {userId && <>User ID: {userId}</>}
-            <Card className={cn('overflow-hidden p-4 w-96', 'dark:bg-zinc-800 bg-zinc-300flex flex-col')}>
-                <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-                <p>At this point we are not collecting any data.</p>
-                <p>We are just using local storage to store the user data. The local storage user data will be used to submit the vote.</p>
             <div className="grid w-full max-w-sm items-center gap-1.5">
                 <Input
                     type="email"
@@ -83,7 +70,6 @@ const LoginForm = ({
             <button type="submit" className="mt-2 w-full bg-blue-500 text-white py-2 rounded">
                 Log In
             </button>
-            </Card>
         </form>
     );
 };

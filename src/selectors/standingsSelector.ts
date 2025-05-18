@@ -1,5 +1,8 @@
 import { RootState } from 'app/store';
+import { createSelector } from 'reselect';
 import { teamColors } from 'utils/teamColors';
+
+export const selectState = (state: RootState) => state;
 
 export const constructorsConfig = () => {
     const label = (team: string) => {
@@ -53,25 +56,30 @@ export const driversConfig = () => {
  * @param state - The root Redux state
  * @returns An array of constructor standings with added fill and color properties
  */
-export const selectConstructorStandings = (state: RootState) => {
-    const standings = state.standings.constructors;
+export const selectConstructorStandings = createSelector(
+    [selectState],
+    (state: RootState) => {
+        const standings = state.standings.constructors;
+        return standings.map((standing) => {
+            return {
+                ...standing,
+                fill: teamColors[standing?.constructor_id],
+                color: teamColors[standing?.constructor_id],
+            };
+        });
+    }
+);
 
-    return standings.map((standing) => {
-        return {
-            ...standing,
-            fill: teamColors[standing?.constructor_id],
-            color: teamColors[standing?.constructor_id],
-        };
-    });
-};
-
-export const selectDriverStandings = (state: RootState) => {
-    const standings = state.standings.drivers;
-    return standings.map((standing) => {
-        return {
-            ...standing,
-            fill: teamColors[standing?.team_name],
-            color: teamColors[standing?.team_name],
-        };
-    });
-};
+export const selectDriverStandings = createSelector(
+    [selectState],
+    (state: RootState) => {
+        const standings = state.standings.drivers;
+        return standings.map((standing) => {
+            return {
+                ...standing,
+                fill: teamColors[standing?.team_name],
+                color: teamColors[standing?.team_name],
+            };
+        });
+    }
+);

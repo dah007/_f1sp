@@ -1,9 +1,4 @@
-import { JSX, useEffect, useCallback, useRef, useMemo, useState, Suspense, startTransition } from 'react';
-import { RootState, useAppDispatch } from 'app/store';
-import { useAppSelector } from 'hooks/reduxHooks';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-
-import Button from '@/components/Button';
+import { Scrollbar } from '@radix-ui/react-scroll-area';
 import {
     ColumnDef,
     flexRender,
@@ -13,27 +8,26 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import DropdownYears from '@/components/YearsDropdown';
-import Flag from '../components/Flag';
-import PageContainer from '@/components/PageContainer';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Scrollbar } from '@radix-ui/react-scroll-area';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
-import { setDrivers } from 'slices/driversSlice';
-
-import { BUTTON_CLASSES } from '@/constants/constants';
+import { RootState, useAppDispatch } from 'app/store';
+import Button from 'components/Button';
+import PageContainer from 'components/PageContainer';
+import { Input } from 'components/ui/input';
+import { ScrollArea } from 'components/ui/scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'components/ui/table';
+import DropdownYears from 'components/YearsDropdown';
+import { BUTTON_CLASSES } from 'constants/constants';
+import { useGetDriversQuery } from 'features/driversApi';
+import { useAppSelector } from 'hooks/reduxHooks';
 import { ArrowUpDown } from 'lucide-react';
-
-import { useGetDriversQuery } from '@/features/driversApi';
-import { setError, setSelectedYear } from '@/slices/siteWideSlice';
-
-import { intlNumberFormat } from '@/utils/number';
-
-import { type AdditionalFiltersYearProps } from '@/types';
+import { JSX, Suspense, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { setDrivers } from 'slices/driversSlice';
+import { setError, setSelectedYear } from 'slices/siteWideSlice';
+import { type AdditionalFiltersYearProps } from 'types';
+import { type ExtendedColumnDef } from 'types/dataTable';
 import { type Driver } from 'types/drivers';
-import { type ExtendedColumnDef } from '@/types/dataTable';
+import { intlNumberFormat } from 'utils/number';
+import Flag from '../components/Flag';
 
 export type OptionProps = {
     label: string;

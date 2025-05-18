@@ -1,3 +1,4 @@
+
 export interface VoteValueProps {
     blueTires: boolean;
     driversInCrash: { [key: string]: boolean };

@@ -11,10 +11,7 @@ export const standingsApi = createApi({
         getConstructorStandings: builder.query({
             query: (year: number = 2025) =>
                 `/standingsWithConstructors?$filter=year eq ${year}&$orderby=position_display_order`,
-            transformResponse: (response: { value: DriverStanding }) => {
-                console.log('Constructor standings response:', response.value);
-                return response?.value ?? [];
-            },
+            transformResponse: (response: { value: DriverStanding }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching constructor standings:', error);
                 return buildErrorObject(error);
@@ -23,10 +20,7 @@ export const standingsApi = createApi({
         getDriverStandings: builder.query({
             query: (year: number = 2024) =>
                 `/standingsWithDrivers?$filter=year eq ${year}&$orderby=position_display_order`,
-            transformResponse: (response: { value: DriverStanding }) => {
-                console.log('Driver standings response:', response);
-                return response?.value ?? [];
-            },
+            transformResponse: (response: { value: DriverStanding }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching driver standings:', error);
                 return buildErrorObject(error);

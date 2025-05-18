@@ -1,26 +1,26 @@
-import React, { JSX, useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import React, { JSX, useEffect } from 'react';
 
 import DriverStandings from 'components/DriverStandings';
 import PageContainer from 'components/PageContainer';
 import { Card, CardContent, CardTitle } from 'components/ui/card';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from 'components/ui/chart';
 
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 import ConstructorsStanding from 'components/ConstructorsStandings';
+import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { FULL_ROW_HEIGHT } from '@/constants/constants';
+import { cn } from '@/lib/utils';
+import { ConstructorStanding, DriverStanding } from '@/types/standings';
+import { useGetConstructorStandingsQuery, useGetDriverStandingsQuery } from 'features/standingsApi';
 import {
     constructorsConfig,
     driversConfig,
     selectConstructorStandings,
     selectDriverStandings,
 } from 'selectors/standingsSelector';
-import { useGetConstructorStandingsQuery, useGetDriverStandingsQuery } from 'features/standingsApi';
 import { setConstructorStandings, setDriverStandings } from 'slices/standingsSlice';
-import { ConstructorStanding, DriverStanding } from '@/types/standings';
-import { cn } from '@/lib/utils';
-import { FULL_ROW_HEIGHT } from '@/constants/constants';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 export function DriverChart({ data, className }: { data: DriverStanding[]; className?: string }): JSX.Element {
     const driversChartConfig = driversConfig() satisfies ChartConfig;
@@ -140,17 +140,6 @@ const Standings: React.FC = (): JSX.Element => {
         selectDriverStandings(state),
     ) satisfies LocalDriverProps[];
 
-    // useEffect(() => {
-    //     if (!colorDrivers) return;
-    //     const drivers = colorDrivers.map((driver) => ({
-    //         ...driver,
-    //         fill: driver.fill,
-    //         points: driver.points,
-    //         position_number: driver.position_number,
-    //         year: driver.year,
-    //     }));
-    // }, [colorDrivers]);
-
     const { data: constructorsData } = useGetConstructorStandingsQuery(selectedYear) as {
         data: ConstructorStanding[] | undefined;
     };
@@ -168,8 +157,6 @@ const Standings: React.FC = (): JSX.Element => {
         dispatch(setDriverStandings(driversData));
     }, [dispatch, constructorsData, driversData]);
 
-    // const driverStandings = useAppSelector((state: RootState) => state.standings.drivers);
-
     return (
         <PageContainer
             title={`Standings ${selectedYear}`}
@@ -179,18 +166,9 @@ const Standings: React.FC = (): JSX.Element => {
         >
             <p>This is a bit of a hawt mess, it will get better.</p>
             {/* 
-
-                
-                        CONSTRUCTORS
-                */}
+                CONSTRUCTORS
+            */}
             <div className={cn(FULL_ROW_HEIGHT, 'flex flex-col lg:flex-row gap-4 m-0 mb-4 p-0')}>
-                {/* <Card
-                    className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-zinc-800 bg-zinc-300 w-full')}
-                >
-                    <CardContent className="w-full m-0 p-4 content-end">
-                        <ConstructorChart data={colorConstructors} constructorsChartConfig={constructorsChartConfig} />
-                    </CardContent>
-                </Card> */}
                 <div className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-1/2', 'dark:bg-zinc-800 bg-zinc-300 w-full')}>
                     <AspectRatio ratio={16 / 9}>
                         <ConstructorChart data={colorConstructors} />
@@ -204,10 +182,9 @@ const Standings: React.FC = (): JSX.Element => {
                     </CardContent>
                 </Card>
             </div>
-            {/* 
-                
-                        DRIVERS
-                */}
+            {/*     
+                DRIVERS
+            */}
             <div className={cn(FULL_ROW_HEIGHT, 'grid grid-cols-2 grid-rows-1 gap-4 m-0 p-0')}>
                 <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300')}>
                     <CardTitle className="pl-4 pt-0 m-0">Driver Standings</CardTitle>

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Button from '@/components/Button';
 import PageContainer from '@/components/PageContainer';
-import { useCreateVoteMutation } from '@/features/userApi';
+import { useCreateUserMutation } from '@/features/userApi';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // Define types for the API
 export interface User {
@@ -19,36 +19,38 @@ export interface CreateUserRequest {
 }
 
 const AccountNew: React.FC = (): JSX.Element => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [passcode, setPasscode] = useState('');
+    const [name, setName] = useState('Demian');
+    const [email, setEmail] = useState('dholmberg@gmail.com');
+    const [passcode, setPasscode] = useState('123456');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
 
     // Use the RTK Query mutation hook
-    const [createVote, { isLoading }] = useCreateVoteMutation();
+    const [createUser, { isLoading }] = useCreateUserMutation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
         try {
+            console.log('hello?', name, email, passcode);
             // Call the mutation with the form data
-            const result = await createVote({
+            const result = await createUser({
                 name,
                 email,
-                passcode, // Make sure your userApi type includes passcode
+                passcode,
             }).unwrap();
 
-            console.log('Account created successfully:', result);
-            setSuccess(true);
+            console.log('User created:', result);
 
             // Reset form fields
             setName('');
             setEmail('');
             setPasscode('');
+
+            localStorage.setItem('user', JSON.stringify(result));
 
             // Redirect after successful creation
             setTimeout(() => {
@@ -62,8 +64,8 @@ const AccountNew: React.FC = (): JSX.Element => {
     return (
         <PageContainer lastCrumb="Create Account" title="Create New Account" showTitle={true} showBreadcrumbs={true}>
             <p className="pb-4">
-                <strong>NOTE!!!</strong> This isn&apos;t really secure at the moment. The only purpose this account will
-                be used for is to track votes.
+                <strong>NOTE!!!</strong> This isn&apos;t really secure at the moment. 
+                The only purpose this account will be used for is to track votes.
             </p>
             <p>You will never get email from the site, since I don&apos;t have an email service set up. :P</p>
             <div className="max-w-md mx-auto mt-8 p-6 bg-zinc-100 dark:bg-zinc-800 rounded-lg shadow-md">
