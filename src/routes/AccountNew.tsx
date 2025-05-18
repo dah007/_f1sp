@@ -23,7 +23,7 @@ const AccountNew: React.FC = (): JSX.Element => {
     const [email, setEmail] = useState('dholmberg@gmail.com');
     const [passcode, setPasscode] = useState('123456');
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
+    const [success,] = useState(false);
 
     const navigate = useNavigate();
 
