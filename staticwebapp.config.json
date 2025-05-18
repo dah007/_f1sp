@@ -18,7 +18,7 @@
             "/assets/drivers/*.{png,jpg,gif}",
             "/src/assets/images/*.{png,jpg,gif}",
             "/src/assets/tracks/*.geojson",
-            "/assets/*.{png,jpg,gif}",
+            "/assets/*.{png,jpg,gif,css,js}",
             "/styles/*.{css}"
         ]
     },
