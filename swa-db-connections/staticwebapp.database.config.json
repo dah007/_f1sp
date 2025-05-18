@@ -293,6 +293,48 @@
                 ]
             },
 
+            "createUser": {
+                "source": {
+                    "type": "table",
+                    "object": "user",
+                    "key-fields": ["email"]
+                },
+                "permissions": [
+                    {
+                        "actions": ["read", "create"],
+                        "role": "anonymous"
+                    }
+                ],
+                "rest": {
+                    "methods": ["post", "get"],
+                    "path": "/createUser"
+                }
+            },
+            "readUser": {
+                "source": {
+                    "type": "table",
+                    "object": "user",
+                    "key-fields": ["email"]
+                },
+                "permissions": [
+                    {
+                        "actions": ["read"],
+                        "role": "anonymous"
+                    }
+                ],
+                "rest": {
+                    "methods": ["get"],
+                    "path": "/readUser"
+                },
+                "graphql": {
+                    "enabled": true,
+                    "type": {
+                        "singular": "User",
+                        "plural": "Users"
+                    }
+                }
+            },
+
             "vote": {
                 "source": {
                     "type": "table",
@@ -314,7 +356,7 @@
                 "source": {
                     "type": "table",
                     "object": "vote",
-                    "key-fields": ["id"]
+                    "key-fields": ["race_id", "user_id"]
                 },
                 "permissions": [
                     {
@@ -325,48 +367,6 @@
                 "rest": {
                     "methods": ["get"],
                     "path": "/voteCheck"
-                }
-            },
-
-            "createUser": {
-                "source": {
-                    "type": "table",
-                    "object": "user",
-                    "key-fields": ["id"]
-                },
-                "permissions": [
-                    {
-                        "actions": ["read", "create"],
-                        "role": "anonymous"
-                    }
-                ],
-                "rest": {
-                    "methods": ["post", "get"],
-                    "path": "/createUser"
-                }
-            },
-            "readUser": {
-                "source": {
-                    "type": "table",
-                    "object": "user",
-                    "key-fields": ["id"]
-                },
-                "permissions": [
-                    {
-                        "actions": ["read"],
-                        "role": "anonymous"
-                    }
-                ],
-                "rest": {
-                    "methods": ["get"],
-                    "path": "/readUser"
-                },
-                "graphql": {
-                    "enabled": true,
-                    "type": {
-                        "singular": "User",
-                        "plural": "Users"
-                    }
                 }
             }
         }

@@ -263,9 +263,9 @@ const Vote: React.FC = (): JSX.Element => {
                     Voting closes 1 hours before lights out & opens on Tuesday after a race.
                 </p>
 
-                <div className="grid grid-cols-2 grid-rows-2 gap-4 align-middle">
+                <div className="flex flex-col md:grid md:grid-cols-2 md:grid-rows-2 gap-4 align-middle">
                     {/* LEFT COLUMN */}
-                    <div className="row-span-2 h-[70vh]">
+                    <div className={cn("row-span-1 md:row-span-2", columnHeights)}>
                         <Card
                             className={cn(
                                 columnHeights,
@@ -298,7 +298,7 @@ const Vote: React.FC = (): JSX.Element => {
                     <div className="h-[32vh]">
                         <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full h-full')}>
                             <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
-                            <div className="flex gap-4 flex-col-[1fr,*]">
+                            <div className="grid grid-cols-2 gap-4 pr-4">
                                 {/* FIRST LAP CRASH */}
                                 <div className="overflow-hidden rounded-lg p-4 flex flex-col gap-3">
                                     <div className="flex items-center space-x-2">
