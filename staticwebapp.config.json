@@ -14,12 +14,14 @@
     "navigationFallback": {
         "rewrite": "/index.html",
         "exclude": [
-            "/src/assets/drivers/*.{png,jpg,gif}",
-            "/assets/drivers/*.{png,jpg,gif}",
-            "/src/assets/images/*.{png,jpg,gif}",
-            "/src/assets/tracks/*.geojson",
-            "/assets/*.{png,jpg,gif}",
-            "/styles/*.{css}"
+            "/assets/*",
+            "/assets/**/*",
+            "/public/assets/*",
+            "/public/assets/**/*",
+            "/src/assets/*",
+            "/src/assets/**/*",
+            "/styles/*",
+            "/styles/**/*"
         ]
     },
     "routes": [
