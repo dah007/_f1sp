@@ -234,14 +234,12 @@ export const loadCircuitLayers = async ({ data, map }: LoadCircuitLayersProps) =
             if (!map) return;
             try {
                 console.log('Loading geojson for circuit:', `../../public/assets/tracks/${circuit.id}.geojson`);
-                const response = await fetch(`../../public/assets/tracks/${circuit.id}.geojson`);
-                const data = await response.json();
-                if (!data) return;
+
                 if (!map) return;
 
                 map.addSource(circuit.id, {
                     type: 'geojson',
-                    data,
+                    data: `../../public/assets/tracks/${circuit.id}.geojson`,
                 });
 
                 map.addLayer({
