@@ -208,6 +208,25 @@ const Races: React.FC = (): JSX.Element => {
         setTotalPages(tPages);
     }, [raceTotalCountData]);
 
+    // Track the clicked driver ID
+    const [clickedRowId, setClickedRowId] = useState<string | null>(() => {
+        // Extract driverId from URL if viewing driver detail
+        const raceDetailMatch = location.pathname.match(/\/drivers\/\d+\/driver\/([^/]+)/);
+        const extractedId = raceDetailMatch ? raceDetailMatch[1] : null;
+
+        // Schedule scroll into view if we have an ID from the URL
+        if (extractedId) {
+            setTimeout(() => {
+                const rowElement = document.querySelector(`tr[data-race-id="${extractedId}"]`);
+                if (rowElement) {
+                    rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 500); // Longer timeout to ensure the table is fully rendered
+        }
+
+        return extractedId;
+    });
+
     const navigateRace = useCallback(
         (driverId: string) => {
             // Use React's startTransition to handle the potentially suspended state
@@ -229,7 +248,7 @@ const Races: React.FC = (): JSX.Element => {
                 }, 100);
             });
         },
-        [navigate, selectedYear, setClickedRowId],
+        [navigate, setClickedRowId],
     );
 
     const [colDefs] = useState<ColumnDef<RaceProps, unknown>[]>([
@@ -248,7 +267,7 @@ const Races: React.FC = (): JSX.Element => {
             cell: ({ row }) => {
                 return LinkRenderer({
                     gotoCB: () => {
-                        navigateRace(row.original?.race_id as unknown as number);
+                        navigateRace(row.original?.race_id as unknown as string);
                     },
                     label: row.getValue('official_name'),
                     value: row.original.race_id?.toString() ?? '',
@@ -327,25 +346,6 @@ const Races: React.FC = (): JSX.Element => {
         initialState: {
             columnVisibility: GetInVisibleColumn(),
         },
-    });
-
-    // Track the clicked driver ID
-    const [clickedRowId, setClickedRowId] = useState<string | null>(() => {
-        // Extract driverId from URL if viewing driver detail
-        const raceDetailMatch = location.pathname.match(/\/drivers\/\d+\/driver\/([^/]+)/);
-        const extractedId = raceDetailMatch ? raceDetailMatch[1] : null;
-
-        // Schedule scroll into view if we have an ID from the URL
-        if (extractedId) {
-            setTimeout(() => {
-                const rowElement = document.querySelector(`tr[data-race-id="${extractedId}"]`);
-                if (rowElement) {
-                    rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 500); // Longer timeout to ensure the table is fully rendered
-        }
-
-        return extractedId;
     });
 
     return (
