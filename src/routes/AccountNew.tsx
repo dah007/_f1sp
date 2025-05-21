@@ -23,7 +23,7 @@ const AccountNew: React.FC = (): JSX.Element => {
     const [email, setEmail] = useState('dholmberg@gmail.com');
     const [passcode, setPasscode] = useState('123456');
     const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState(false);
+    const [success] = useState(false);
 
     const navigate = useNavigate();
 
@@ -64,8 +64,8 @@ const AccountNew: React.FC = (): JSX.Element => {
     return (
         <PageContainer lastCrumb="Create Account" title="Create New Account" showTitle={true} showBreadcrumbs={true}>
             <p className="pb-4">
-                <strong>NOTE!!!</strong> This isn&apos;t really secure at the moment. 
-                The only purpose this account will be used for is to track votes.
+                <strong>NOTE!!!</strong> This isn&apos;t really secure at the moment. The only purpose this account will
+                be used for is to track votes.
             </p>
             <p>You will never get email from the site, since I don&apos;t have an email service set up. :P</p>
             <div className="max-w-md mx-auto mt-8 p-6 bg-zinc-100 dark:bg-zinc-800 rounded-lg shadow-md">
