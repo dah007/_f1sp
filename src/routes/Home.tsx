@@ -31,7 +31,7 @@ const getMessageFromURL: () => MessageFromURLResult = () => {
         error: urlParams.get('error'),
         message: urlParams.get('message'),
     };
-}
+};
 
 const Home: React.FC = () => {
     let raceWGP: Partial<RaceProps> | null = null;
@@ -61,13 +61,11 @@ const Home: React.FC = () => {
         return (
             <Alert className={cn('flex flex-col items-start justify-start', className)}>
                 <div className="flex w-full gap-4">
-                    <InfoIcon color='green' className="h-8 w-8" />
+                    <InfoIcon color="green" className="h-8 w-8" />
                     <AlertTitle className="text-xl text-center font-bold krona-one-regular">{title}</AlertTitle>
                 </div>
-                
-                <AlertDescription>
-                    {description}
-                </AlertDescription>
+
+                <AlertDescription>{description}</AlertDescription>
                 {children}
             </Alert>
         );
@@ -76,13 +74,10 @@ const Home: React.FC = () => {
     return (
         <>
             {voteSuccessful && (
-            <MessageBox
-                title="Vote"
-            >
-                <p className="text-xl text-center ">{voteMessage}</p>
-            </MessageBox>
+                <MessageBox title="Vote">
+                    <p className="text-xl text-center ">{voteMessage}</p>
+                </MessageBox>
             )}
-            
 
             <NextReactBanner />
             {systemError && <ErrorDialog />}
@@ -106,7 +101,7 @@ const Home: React.FC = () => {
                 >
                     <div className={cn('col-start-1 row-start-1', widthsNHeights)}>
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300 relative', widthsNHeights)}
                             title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
                         >
                             <LastRaceResultsPod />
@@ -138,9 +133,12 @@ const Home: React.FC = () => {
                             childrenClassName="flex flex-col items-end h-full justify-end w-full"
                         >
                             <DriverStandingsChart />
+
                             <CardFooter className="flex justify-between items-center w-full">
                                 <div className="text-sm text-blue-500 dark:text-blue-400 hover:text-blue-600 cursor-pointer">
-                                    <button rel="link" onClick={() => location.href = '/standings'}>View Full Standings</button>
+                                    <button rel="link" onClick={() => (location.href = '/standings')}>
+                                        View Full Standings
+                                    </button>
                                 </div>
                                 <div className="text-sm text-zinc-500 dark:text-zinc-400">
                                     As of: {raceWGP ? raceWGP.official_name : 'N/A'}

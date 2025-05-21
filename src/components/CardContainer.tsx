@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from './ui/skeleton';
 
 interface CardProps {
     children: React.ReactNode;
@@ -52,6 +53,7 @@ const CardContainer: React.FC<CardProps> = ({
     title,
     titleClassName,
 }: CardProps): JSX.Element => {
+    // const [notLoaded, setNotLoaded] = useState(true);
     return (
         <Card className={cn('dark:bg-zinc-900 bg-zinc-300 shadow-md ', className)}>
             {(title || description) && (
@@ -61,7 +63,10 @@ const CardContainer: React.FC<CardProps> = ({
                 </CardHeader>
             )}
 
-            <CardContent className={cn(childrenClassName)}>{children}</CardContent>
+            <CardContent className={cn(childrenClassName)}>
+                {!children && <Skeleton />}
+                {children}
+            </CardContent>
 
             {footer && <CardFooter className={cn('flex justify-between', footerClassName)}>{footer}</CardFooter>}
         </Card>

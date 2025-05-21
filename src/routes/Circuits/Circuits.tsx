@@ -1,22 +1,21 @@
-import { useAppDispatch } from 'hooks/reduxHooks';
-import { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
+import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
 import PageContainer from 'components/PageContainer';
+import { useAppDispatch } from 'hooks/reduxHooks';
+import mapboxgl from 'mapbox-gl';
+import { useEffect, useRef, useState } from 'react';
 import { setError } from 'slices/siteWideSlice';
 import {
-    loadCircuitLayers,
-    SHOW_PIN_ZOOM,
-    throttledMarkerVisibility,
-    hideAllMarkers,
-    preloadMarkerImages,
+    // preloadMarkerImages,
     gotoCircuit,
     gotoContinent,
+    loadCircuitLayers,
+    SHOW_PIN_ZOOM,
+    updateMarkerVisibility,
 } from './CircuitFunctions';
-import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
 
-import { CircuitProps } from 'types/circuits';
 import CircuitSelect from '@/components/CircuitSelect';
 import ContinentSelect from '@/components/ContinentSelect';
+import { CircuitProps } from 'types/circuits';
 
 const Circuits: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -31,9 +30,9 @@ const Circuits: React.FC = (): JSX.Element => {
     const map = useRef<mapboxgl.Map>();
 
     // Preload marker images as soon as component mounts
-    useEffect(() => {
-        preloadMarkerImages();
-    }, []);
+    // useEffect(() => {
+    //     preloadMarkerImages();
+    // }, []);
 
     useEffect(() => {
         try {
@@ -53,12 +52,8 @@ const Circuits: React.FC = (): JSX.Element => {
                     antialias: true, // Smoother rendering
                     maxPitch: 60, // Limit pitch for better performance
                     minZoom: 2, // Limit min zoom for better performance
-                    cooperativeGestures: true, // Improved touch handling
                     preserveDrawingBuffer: false, // Better performance
                 });
-
-                // Add zoom controls
-                // map.addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
                 map.current.on('load', () => {
                     if (!map) return;
@@ -73,33 +68,18 @@ const Circuits: React.FC = (): JSX.Element => {
                     });
                 });
 
-                // Hide markers at the start of any animation/movement for smoother performance
-                map.current?.on('movestart', () => {
-                    hideAllMarkers(true); // Force hide all markers during animation
-                });
-
-                // Show markers again when animation/movement ends
                 map.current.on('moveend', () => {
                     if (!mapContainer.current) return;
-
                     // Update UI coordinates
                     setLng(map.current?.getCenter().lng.toFixed(4) as unknown as number);
                     setLat(map.current?.getCenter().lat.toFixed(4) as unknown as number);
                     setZoom(map.current?.getZoom().toFixed(2) as unknown as number);
-
-                    // Show markers again if zoom level is appropriate, using the throttled version
-                    throttledMarkerVisibility(map.current?.getZoom() || SHOW_PIN_ZOOM);
                 });
-
-                // Additional handlers for specific animations
-                map.current.on('zoomstart', () => hideAllMarkers(true));
-                map.current.on('pitchstart', () => hideAllMarkers(true));
-                map.current.on('rotatestart', () => hideAllMarkers(true));
-                map.current.on('dragstart', () => hideAllMarkers(true));
 
                 // During movement, do nothing to avoid performance issues
                 const moveHandler = () => {
                     // Intentionally empty - we manage markers at the start/end of movements instead
+                    updateMarkerVisibility(map.current?.getZoom() || 14);
                 };
 
                 map.current.on('move', moveHandler);
@@ -107,16 +87,16 @@ const Circuits: React.FC = (): JSX.Element => {
                 // Clean up on unmount
                 return () => {
                     // Remove all event listeners to prevent memory leaks
-                    const hideMarkersHandler = () => hideAllMarkers(true);
-                    map.current?.off('movestart', hideMarkersHandler);
-                    map.current?.off('moveend', () => {
-                        if (!mapContainer.current) return;
-                        throttledMarkerVisibility(map.current?.getZoom() || SHOW_PIN_ZOOM);
-                    });
-                    map.current?.off('zoomstart', hideMarkersHandler);
-                    map.current?.off('pitchstart', hideMarkersHandler);
-                    map.current?.off('rotatestart', hideMarkersHandler);
-                    map.current?.off('dragstart', hideMarkersHandler);
+                    // const hideMarkersHandler = () => hideAllMarkers(true);
+                    // map.current?.off('movestart', hideMarkersHandler);
+                    // map.current?.off('moveend', () => {
+                    //     if (!mapContainer.current) return;
+                    //     throttledMarkerVisibility(map.current?.getZoom() || SHOW_PIN_ZOOM);
+                    // });
+                    // map.current?.off('zoomstart', hideMarkersHandler);
+                    // map.current?.off('pitchstart', hideMarkersHandler);
+                    // map.current?.off('rotatestart', hideMarkersHandler);
+                    // map.current?.off('dragstart', hideMarkersHandler);
                     map.current?.off('move', moveHandler);
 
                     // Remove the map instance completely

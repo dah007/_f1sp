@@ -1,13 +1,30 @@
+import { useAppDispatch } from '@/app/store';
 import { FULL_ROW_HEIGHT, YEAR } from '@/constants/constants';
 import { useGetTotalWinsByYearQuery } from '@/features/driversApi';
+import { cn } from '@/lib/utils';
+import { setError, setLoading } from '@/slices/siteWideSlice';
 import { TotalWinsByYear } from '@/types/drivers';
 import { useEffect, useState } from 'react';
+import CardSkeleton from './CardSkeleton';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { cn } from '@/lib/utils';
-import { useAppDispatch } from '@/app/store';
-import { setError, setLoading } from '@/slices/siteWideSlice';
 
+/**
+ * Displays a table of drivers' total wins for a specific year.
+ *
+ * The component fetches data using the useGetTotalWinsByYearQuery hook, displays a loading skeleton
+ * while data is being fetched, and presents the data in a scrollable table once available.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {string} [props.className] - Optional CSS class name for additional styling
+ * @returns {JSX.Element} A ScrollArea containing a Table of driver wins or a CardSkeleton while loading
+ *
+ * @example
+ * ```tsx
+ * <TotalWinsPerYear className="custom-class" />
+ * ```
+ */
 const TotalWinsPerYear: React.FC = ({ className }: { className?: string }): JSX.Element => {
     const dispatch = useAppDispatch();
 
@@ -31,6 +48,8 @@ const TotalWinsPerYear: React.FC = ({ className }: { className?: string }): JSX.
         dispatch(setError(false));
         dispatch(setLoading(false));
     }, [totalWinsData, totalWinsLoading, totalWinsError]);
+
+    if (totalWinsLoading || !totalWinsData) return <CardSkeleton />;
 
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', className)}>

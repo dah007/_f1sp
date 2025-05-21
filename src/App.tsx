@@ -2,15 +2,14 @@ import Header from 'components/Header';
 
 import './App.css';
 
-import { Route, Routes } from 'react-router-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
-import Home from './routes/Home';
 import { lazy, Suspense, useEffect } from 'react';
-import { NextRaceProps, RaceResultProps } from './types/races';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
 import { useGetLastRaceResultsQuery, useGetNextRaceQuery } from './features/raceApi';
+import Home from './routes/Home';
 import { setRaceNext } from './slices/racesSlice';
+import { NextRaceProps, RaceResultProps } from './types/races';
 
 import Footer from './components/Footer';
 
@@ -26,6 +25,7 @@ const Extra = lazy(() => import('./routes/Extra'));
 const LoginForm = lazy(() => import('./routes/LoginForm'));
 const Races = lazy(() => import('./routes/Races'));
 const Seasons = lazy(() => import('./routes/Seasons'));
+const SeasonCurrent = lazy(() => import('./routes/SeasonCurrent'));
 const Standings = lazy(() => import('./routes/Standings'));
 const VoteDnD = lazy(() => import('./routes/VoteDnD'));
 const AccountNew = lazy(() => import('./routes/AccountNew'));
@@ -140,6 +140,7 @@ const App = () => {
 
                             <Route path="races/:year?/*" element={<Races />} />
 
+                            <Route path="seasons/current" element={<SeasonCurrent />} />
                             <Route path="seasons/:year?" element={<Seasons />} />
 
                             <Route path="standings" element={<Standings />} />

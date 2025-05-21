@@ -1,7 +1,7 @@
 import { CIRCUIT_DETAILS, CONTINENTS } from 'constants/circuitConstants';
+import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike, Map } from 'mapbox-gl';
 import type { CircuitDetailsProps, CircuitProps } from 'types/circuits';
 import { isBoundingBoxOutside, isPointInsideBoundingBox } from 'utils/maps';
-import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike, Map } from 'mapbox-gl';
 
 export const SHOW_PIN_ZOOM = 16; // Zoom level at which the markers are hidden
 export const ORIGINAL_LABEL = '-- Select a circuit --';
@@ -61,21 +61,6 @@ interface CreateMarkerProps {
     map: Map | null;
     mapboxgl: typeof mapboxgl;
 }
-
-/**
- * Preloads the marker images to prevent jank when first displaying markers
- */
-export const preloadMarkerImages = () => {
-    // Images to preload
-    const imageUrls = [new URL('/src/assets/checkeredFlag.png', window.location.origin).href];
-
-    // Create hidden Image elements to preload the images
-    imageUrls.forEach((url) => {
-        const img = new Image();
-        img.src = url;
-    });
-};
-
 /**
  * Creates a map marker for a given circuit on a Mapbox map.
  *
@@ -87,40 +72,13 @@ export const preloadMarkerImages = () => {
  * @returns {void}
  */
 export const createMarker = ({ circuit, map, mapboxgl }: CreateMarkerProps): void => {
-    // Create a custom marker element
+    // if (!map) return;
     const el = document.createElement('div');
-    el.className = 'marker mapMarker hidden'; // Start hidden by default
 
-    // Ensure markers aren't visible during map animations
-    const isMapAnimating = document.querySelector('.map-animating') !== null;
-    if (isMapAnimating) {
-        el.classList.add('hidden');
-    }
-
-    // Use absolute path to ensure image loads correctly
-    const imageUrl = new URL('/src/assets/checkeredFlag.png', window.location.origin).href;
-
-    // Pre-load image but don't show it until needed
-    const img = new Image();
-    img.onload = () => {
-        // Only apply background after image is fully loaded to prevent jank
-        el.setAttribute('data-img-loaded', 'true');
-        // Don't set the style directly - will be set when the marker becomes visible
-        if (!isMapAnimating && map && !map.isMoving() && !map.isZooming()) {
-            requestAnimationFrame(() => {
-                el.style.backgroundImage = `url('${imageUrl}')`;
-                el.style.transition = 'transform 0.2s ease-in-out, opacity 0.25s ease-in-out';
-            });
-        }
-    };
-    img.src = imageUrl;
-
-    // Set initial styles directly via class instead of inline styles for better performance
+    el.className = 'marker mapMarker';
+    el.style.backgroundImage = `url('/public/assets/flag.svg')`;
     el.style.width = `25px`;
     el.style.height = `25px`;
-
-    // Initial state: hidden until map is ready and not animating
-    el.style.opacity = '0';
 
     // Create a single marker with the custom element and popup
     const marker = new mapboxgl.Marker({
@@ -137,18 +95,13 @@ export const createMarker = ({ circuit, map, mapboxgl }: CreateMarkerProps): voi
                 closeButton: false,
                 className: 'circuit-popup',
             }).setHTML(
-                `<p class="m-0 p-0 text-black text-left overflow-ellipsis w-44 text-md">${circuit.full_name}</p>`,
+                `<p class="m-2 p-2 text-black text-left overflow-ellipsis w-44 text-md">${circuit.full_name}</p>`,
             ),
         );
 
     // Add marker to map
     marker.addTo(map!);
-
-    // Store marker in a data attribute for easy access
-    // This allows for better performance when updating markers
-    el.dataset.markerId = circuit.id;
-
-    updateMarkerVisibility(map?.getZoom() || SHOW_PIN_ZOOM);
+    updateMarkerVisibility(map!.getZoom() || SHOW_PIN_ZOOM);
 };
 
 /**
@@ -163,8 +116,6 @@ export const createMarker = ({ circuit, map, mapboxgl }: CreateMarkerProps): voi
  */
 export const flyToContinent = ({ continent, map, setSelectedCircuit }: FlyToProps) => {
     setSelectedCircuit(undefined);
-
-    console.log('--------------- continent', continent);
 
     if (CONTINENTS[continent]) {
         zoomTo({
@@ -191,6 +142,7 @@ export const flyToContinent = ({ continent, map, setSelectedCircuit }: FlyToProp
  * @returns {void}
  */
 export const flyToPOI = ({ circuit, circuitsData, map, setDropdownLabel, setSelectedCircuit }: FlyToPOIProps): void => {
+    if (!map) return;
     // get the bbox for the _current_ map view
     const bbox = CIRCUIT_DETAILS[circuit.id]?.bbox;
     setSelectedCircuit(circuit);
@@ -204,11 +156,10 @@ export const flyToPOI = ({ circuit, circuitsData, map, setDropdownLabel, setSele
 
     setDropdownLabel('Flying...');
     // fly to the center view on the bbox
-    map?.fitBounds(bbox, {
+    map.fitBounds(bbox, {
         padding: { top: 25, bottom: 25, left: 15, right: 15 },
         ...zoomToDefaults,
     }).once('moveend', () => {
-        if (!map) return;
         if (!isPointInsideBoundingBox(new LngLat(map.getCenter().lng, map.getCenter().lat), bbox as LngLatBounds)) {
             console.warn('OUTSIDE');
         }
@@ -222,7 +173,7 @@ export const flyToPOI = ({ circuit, circuitsData, map, setDropdownLabel, setSele
             originalLabel: ORIGINAL_LABEL,
         });
 
-        updateMarkerVisibility(map?.getZoom() || SHOW_PIN_ZOOM);
+        updateMarkerVisibility(map.getZoom() || SHOW_PIN_ZOOM);
     });
 };
 
@@ -314,52 +265,60 @@ export const loadCircuitLayers = async ({ data, map }: LoadCircuitLayersProps) =
         mapContainer.classList.add('map-creating-markers');
     }
 
+    for (let i = 0; i < uniqueArray.length; i++) {
+        createMarker({
+            circuit: uniqueArray[i],
+            map,
+            mapboxgl,
+        });
+    }
+
     // Use batched marker creation with requestAnimationFrame for better performance
-    let index = 0;
-    const batchSize = 3; // Process 3 markers per frame for better performance
+    // let index = 0;
+    // const batchSize = 3; // Process 3 markers per frame for better performance
 
-    const createBatchedMarkers = () => {
-        // Check if map is currently animating - if so, delay marker creation
-        if (mapContainer?.classList.contains('map-animating')) {
-            // Try again in a moment when animation might be done
-            setTimeout(() => requestAnimationFrame(createBatchedMarkers), 100);
-            return;
-        }
+    // const createBatchedMarkers = () => {
+    //     // Check if map is currently animating - if so, delay marker creation
+    //     if (mapContainer?.classList.contains('map-animating')) {
+    //         // Try again in a moment when animation might be done
+    //         setTimeout(() => requestAnimationFrame(createBatchedMarkers), 100);
+    //         return;
+    //     }
 
-        const endIndex = Math.min(index + batchSize, uniqueArray.length);
+    //     const endIndex = Math.min(index + batchSize, uniqueArray.length);
 
-        // Process a batch of markers
-        for (let i = index; i < endIndex; i++) {
-            createMarker({
-                circuit: uniqueArray[i],
-                map,
-                mapboxgl,
-            });
-        }
+    //     // Process a batch of markers
+    //     for (let i = index; i < endIndex; i++) {
+    //         createMarker({
+    //             circuit: uniqueArray[i],
+    //             map,
+    //             mapboxgl,
+    //         });
+    //     }
 
-        index = endIndex;
+    //     index = endIndex;
 
-        // If there are more markers to create, schedule the next batch
-        if (index < uniqueArray.length) {
-            requestAnimationFrame(createBatchedMarkers);
-        } else {
-            // All markers created, remove the creation flag
-            mapContainer?.classList.remove('map-creating-markers');
+    //     // If there are more markers to create, schedule the next batch
+    //     if (index < uniqueArray.length) {
+    //         requestAnimationFrame(createBatchedMarkers);
+    //     } else {
+    //         // All markers created, remove the creation flag
+    //         mapContainer?.classList.remove('map-creating-markers');
 
-            // Make sure markers are properly hidden/shown based on current map state
-            if (map) {
-                const isAnimating = mapContainer?.classList.contains('map-animating');
-                if (isAnimating) {
-                    hideAllMarkers(true);
-                } else {
-                    throttledMarkerVisibility(map.getZoom() || SHOW_PIN_ZOOM);
-                }
-            }
-        }
-    };
+    //         // Make sure markers are properly hidden/shown based on current map state
+    //         if (map) {
+    //             const isAnimating = mapContainer?.classList.contains('map-animating');
+    //             if (isAnimating) {
+    //                 hideAllMarkers(true);
+    //             } else {
+    //                 throttledMarkerVisibility(map.getZoom() || SHOW_PIN_ZOOM);
+    //             }
+    //         }
+    //     }
+    // };
 
-    // Start the batched creation process
-    requestAnimationFrame(createBatchedMarkers);
+    // // Start the batched creation process
+    // requestAnimationFrame(createBatchedMarkers);
 };
 
 export const updateDropdownLabel = ({
@@ -388,32 +347,33 @@ export const updateDropdownLabel = ({
  * Hides all markers immediately (no animation) for better performance during map movements.
  * @param force - If true, forcibly hide all markers regardless of zoom level
  */
-export const hideAllMarkers = (force: boolean = false): void => {
-    // Get the container element that holds the Mapbox markers
-    const containers = document.getElementsByClassName('mapboxgl-marker');
+// export const hideAllMarkers = (force: boolean = false): void => {
+//     // Get the container element that holds the Mapbox markers
+//     const containers = document.getElementsByClassName('mapboxgl-marker');
 
-    // Hide the entire marker DOM elements rather than just changing opacity
-    for (let i = 0; i < containers.length; i++) {
-        const container = containers[i] as HTMLElement;
-        if (force) {
-            // Use visibility:hidden instead of opacity for more complete hiding
-            container.style.visibility = 'hidden';
-            // Use display:none to completely remove from rendering pipeline
-            container.style.display = 'none';
-            // Also set opacity to 0 as extra measure
-            container.style.opacity = '0';
-            // Disable transitions for immediate effect
-            container.style.transition = 'none';
-        }
-    }
+//     console.log('Hiding all markers:', containers);
+//     // Hide the entire marker DOM elements rather than just changing opacity
+//     for (let i = 0; i < containers.length; i++) {
+//         const container = containers[i] as HTMLElement;
+//         if (force) {
+//             // Use visibility:hidden instead of opacity for more complete hiding
+//             container.style.visibility = 'hidden';
+//             // Use display:none to completely remove from rendering pipeline
+//             container.style.display = 'none';
+//             // Also set opacity to 0 as extra measure
+//             container.style.opacity = '0';
+//             // Disable transitions for immediate effect
+//             container.style.transition = 'none';
+//         }
+//     }
 
-    // Also hide popups
-    const popups = document.getElementsByClassName('mapboxgl-popup');
-    for (let j = 0; j < popups.length; j++) {
-        const popup = popups[j] as HTMLElement;
-        popup.style.display = 'none';
-    }
-};
+//     // Also hide popups
+// const popups = document.getElementsByClassName('mapboxgl-popup');
+//     for (let j = 0; j < popups.length; j++) {
+//         const popup = popups[j] as HTMLElement;
+//         popup.style.display = 'none';
+//     }
+// };
 
 /**
  * Updates the visibility of map markers based on the provided zoom level.
@@ -424,89 +384,87 @@ export const hideAllMarkers = (force: boolean = false): void => {
  */
 export const updateMarkerVisibility = (zoomLevel: number) => {
     // Use requestAnimationFrame for smoother updates
-    requestAnimationFrame(() => {
-        const shouldHide = zoomLevel >= SHOW_PIN_ZOOM;
+    // requestAnimationFrame(() => {
+    const shouldHide = zoomLevel >= 12.5;
 
-        // Target the container elements directly for better control
-        const markerContainers = document.getElementsByClassName('mapboxgl-marker');
+    const markerContainers = document.getElementsByClassName('mapMarker');
+    
+    for (let i = 0; i < markerContainers.length; i++) {
+        const container = markerContainers[i] as HTMLElement;
+        const marker = container.querySelector('.marker') as HTMLElement;
+        
+        if (shouldHide) {
+            // Hide markers if we're zoomed in too far
+            container.style.visibility = 'hidden';
+            container.style.display = 'none';
+            container.style.opacity = '0';
+        } else {
+            // Reset styles to show markers when appropriate
+            container.style.visibility = 'visible';
+            container.style.display = 'block';
+            container.style.opacity = '1';
+            container.style.transition = 'opacity 0.25s ease-in';
 
-        for (let i = 0; i < markerContainers.length; i++) {
-            const container = markerContainers[i] as HTMLElement;
-            const marker = container.querySelector('.marker') as HTMLElement;
-
-            if (shouldHide) {
-                // Hide markers if we're zoomed in too far
-                container.style.visibility = 'hidden';
-                container.style.display = 'none';
-                container.style.opacity = '0';
-            } else {
-                // Reset styles to show markers when appropriate
-                container.style.visibility = 'visible';
-                container.style.display = 'block';
-                container.style.opacity = '1';
-                container.style.transition = 'opacity 0.25s ease-in';
-
-                // If there's a marker element inside, restore its styles too
-                if (marker) {
-                    marker.style.opacity = '1';
-                    marker.classList.remove('hidden');
-                }
+            // If there's a marker element inside, restore its styles too
+            if (marker) {
+                marker.style.opacity = '1';
+                marker.classList.remove('hidden');
             }
         }
+    }
 
-        // When hiding, also hide any open popups
-        const popups = document.getElementsByClassName('mapboxgl-popup');
-        for (let j = 0; j < popups.length; j++) {
-            const popup = popups[j] as HTMLElement;
-            if (shouldHide) {
-                popup.style.display = 'none';
-                popup.style.visibility = 'hidden';
-            } else {
-                // Only restore popup visibility on demand, not automatically
-                popup.style.display = 'none';
-            }
+    // When hiding, also hide any open popups
+    const popups = document.getElementsByClassName('mapboxgl-popup');
+    for (let j = 0; j < popups.length; j++) {
+        const popup = popups[j] as HTMLElement;
+        if (shouldHide) {
+            popup.style.display = 'none';
+            popup.style.visibility = 'hidden';
+        } else {
+            // Only restore popup visibility on demand, not automatically
+            popup.style.display = 'none';
         }
-    });
+    }
 };
 
 /**
  * Throttled version of updateMarkerVisibility for better performance
  * during rapid zoom changes or map movements
  */
-export const throttledMarkerVisibility = (() => {
-    let lastCall = 0;
-    let pendingCall: number | null = null;
-    const throttleTime = 100; // ms between calls
+// export const throttledMarkerVisibility = (() => {
+//     let lastCall = 0;
+//     let pendingCall: number | null = null;
+//     const throttleTime = 100; // ms between calls
 
-    return (zoomLevel: number) => {
-        // Clear any pending update
-        if (pendingCall !== null) {
-            window.cancelAnimationFrame(pendingCall);
-            pendingCall = null;
-        }
+//     return (zoomLevel: number) => {
+//         // Clear any pending update
+//         if (pendingCall !== null) {
+//             window.cancelAnimationFrame(pendingCall);
+//             pendingCall = null;
+//         }
 
-        const now = Date.now();
+//         const now = Date.now();
 
-        // If map is animating, don't show markers at all
-        if (document.querySelector('.map-animating')) {
-            hideAllMarkers(true);
-            return;
-        }
+//         // If map is animating, don't show markers at all
+//         if (document.querySelector('.map-animating')) {
+//             hideAllMarkers(true);
+//             return;
+//         }
 
-        if (now - lastCall >= throttleTime) {
-            // Immediate update if enough time has passed
-            lastCall = now;
-            updateMarkerVisibility(zoomLevel);
-        } else {
-            // Schedule update for later
-            pendingCall = window.requestAnimationFrame(() => {
-                lastCall = Date.now();
-                updateMarkerVisibility(zoomLevel);
-                pendingCall = null;
-            });
-        }
-    };
-})();
+//         if (now - lastCall >= throttleTime) {
+//             // Immediate update if enough time has passed
+//             lastCall = now;
+//             updateMarkerVisibility(zoomLevel);
+//         } else {
+//             // Schedule update for later
+//             pendingCall = window.requestAnimationFrame(() => {
+//                 lastCall = Date.now();
+//                 updateMarkerVisibility(zoomLevel);
+//                 pendingCall = null;
+//             });
+//         }
+//     };
+// })();
 
 /**
  * Zooms the map to a specified position and zoom level.
