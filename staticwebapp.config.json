@@ -16,10 +16,11 @@
     "navigationFallback": {
         "rewrite": "/index.html",
         "exclude": [
-            "/assets/*",
-            "/public/assets/*",
-            "/src/assets/*",
-            "/styles/*"
+            "/assets*",
+            "/styles*",
+            "/favicon.ico",
+            "/favicon.png",
+            "/manifest.json"
         ]
     },
     "routes": [

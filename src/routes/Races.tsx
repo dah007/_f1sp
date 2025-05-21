@@ -1,15 +1,11 @@
-import { JSX, useEffect, useState, useCallback, useRef, useMemo } from 'react';
-import { RootState, useAppDispatch } from 'app/store';
-import { useAppSelector } from 'hooks/reduxHooks';
+import Button from '@/components/Button';
+import PageContainer from '@/components/PageContainer';
+import { Input } from '@/components/ui/input';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { BUTTON_CLASSES } from '@/constants/constants';
+import { ExtendedColumnDef } from '@/types/dataTable';
 import { skipToken } from '@reduxjs/toolkit/query';
-
-import { useGetNextPageQuery, useGetRaceCountQuery, useGetRacesQuery } from '../features/raceApi';
-
-// import DataTable from 'components/DataTable';
-import TableSortHeader from 'components/TableSortHeader';
-import { DistanceCellRenderer, LinkRenderer } from 'utils/dataTableRenderers';
-import Flag from '../components/Flag';
-
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -22,8 +18,8 @@ import {
     SortingState,
     useReactTable,
 } from '@tanstack/react-table';
-import { type RaceProps } from 'types/races';
-import { setRaces } from 'slices/racesSlice';
+import { RootState, useAppDispatch } from 'app/store';
+import TableSortHeader from 'components/TableSortHeader';
 import {
     Pagination,
     PaginationContent,
@@ -32,13 +28,14 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from 'components/ui/pagination';
-
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ExtendedColumnDef } from '@/types/dataTable';
-import { Input } from '@/components/ui/input';
-import { BUTTON_CLASSES } from '@/constants/constants';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import PageContainer from '@/components/PageContainer';
+import { useAppSelector } from 'hooks/reduxHooks';
+import { JSX, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { setRaces } from 'slices/racesSlice';
+import type { RaceProps } from 'types/races';
+import { DistanceCellRenderer, LinkRenderer } from 'utils/dataTableRenderers';
+import Flag from '../components/Flag';
+import { useGetNextPageQuery, useGetRaceCountQuery, useGetRacesQuery } from '../features/raceApi';
 
 export type OptionProps = {
     label: string;
@@ -53,6 +50,8 @@ export type NextLinkRaceProps = {
 };
 
 const Races: React.FC = (): JSX.Element => {
+    const navigate = useNavigate();
+
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [currentNextLink, setCurrentNextLink] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(0);
@@ -209,6 +208,30 @@ const Races: React.FC = (): JSX.Element => {
         setTotalPages(tPages);
     }, [raceTotalCountData]);
 
+    const navigateRace = useCallback(
+        (driverId: string) => {
+            // Use React's startTransition to handle the potentially suspended state
+            // This prevents the UI from showing loading indicators for quick transitions
+            // which is what the error message was warning about
+            startTransition(() => {
+                // Update URL without full navigation, preserving the table position
+                navigate(`/race/${driverId}`, { replace: true });
+                // Set the clicked row ID to position the Outlet
+                setClickedRowId(driverId);
+
+                // Add slight delay to ensure the row is rendered before scrolling
+                setTimeout(() => {
+                    // Find the row element and scroll it into view
+                    const rowElement = document.querySelector(`tr[data-driver-id="${driverId}"]`);
+                    if (rowElement) {
+                        rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 100);
+            });
+        },
+        [navigate, selectedYear, setClickedRowId],
+    );
+
     const [colDefs] = useState<ColumnDef<RaceProps, unknown>[]>([
         {
             accessorKey: 'alpha2_code',
@@ -225,7 +248,7 @@ const Races: React.FC = (): JSX.Element => {
             cell: ({ row }) => {
                 return LinkRenderer({
                     gotoCB: () => {
-                        // navigateRace(row.original?.race_id as unknown as number);
+                        navigateRace(row.original?.race_id as unknown as number);
                     },
                     label: row.getValue('official_name'),
                     value: row.original.race_id?.toString() ?? '',
@@ -306,6 +329,25 @@ const Races: React.FC = (): JSX.Element => {
         },
     });
 
+    // Track the clicked driver ID
+    const [clickedRowId, setClickedRowId] = useState<string | null>(() => {
+        // Extract driverId from URL if viewing driver detail
+        const raceDetailMatch = location.pathname.match(/\/drivers\/\d+\/driver\/([^/]+)/);
+        const extractedId = raceDetailMatch ? raceDetailMatch[1] : null;
+
+        // Schedule scroll into view if we have an ID from the URL
+        if (extractedId) {
+            setTimeout(() => {
+                const rowElement = document.querySelector(`tr[data-race-id="${extractedId}"]`);
+                if (rowElement) {
+                    rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 500); // Longer timeout to ensure the table is fully rendered
+        }
+
+        return extractedId;
+    });
+
     return (
         <PageContainer className="h-full w-full" lastCrumb="Races" title="Races">
             <ScrollArea className="h-full w-full overflow-hidden">
@@ -367,13 +409,49 @@ const Races: React.FC = (): JSX.Element => {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
+                                <>
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        data-race-id={row.original.id}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                    {/* Render Outlet after the clicked row */}
+                                    {clickedRowId === row.original.id && (
+                                        <TableRow>
+                                            <TableCell colSpan={colDefs.length} className="p-0">
+                                                <div className="bg-slate-100 dark:bg-zinc-800 p-4 rounded-md shadow-md mt-2 mb-4">
+                                                    <Suspense
+                                                        fallback={
+                                                            <div className="p-4 text-center">
+                                                                Loading driver details...
+                                                            </div>
+                                                        }
+                                                    >
+                                                        <Outlet />
+                                                    </Suspense>
+                                                    <div className="flex mt-2">
+                                                        <Button
+                                                            variant="link"
+                                                            onClick={() => {
+                                                                setClickedRowId(null);
+                                                                navigate(`/races/`);
+                                                            }}
+                                                            className="px-2 py-1 text-sm text-blue-700 dark:text-blue-300 hover:text-blue-500 cursor-pointer"
+                                                        >
+                                                            Close
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </>
                             ))
                         ) : (
                             <TableRow>

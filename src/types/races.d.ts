@@ -125,7 +125,7 @@ export type RaceProps = {
     free_practice_4_date: string | null;
     free_practice_4_time: string | null;
     grand_prix_id: string;
-    id: number;
+    id: string;
     laps: number;
     official_name: string;
     permanent_number: number;
