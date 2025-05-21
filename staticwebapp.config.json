@@ -15,13 +15,9 @@
         "rewrite": "/index.html",
         "exclude": [
             "/assets/*",
-            "/assets/**/*",
             "/public/assets/*",
-            "/public/assets/**/*",
             "/src/assets/*",
-            "/src/assets/**/*",
-            "/styles/*",
-            "/styles/**/*"
+            "/styles/*"
         ]
     },
     "routes": [
