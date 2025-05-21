@@ -36,13 +36,13 @@ const Circuits: React.FC = (): JSX.Element => {
 
     useEffect(() => {
         try {
-            setLng(0);
-            setLat(0);
+            setLng(-1.02602);
+            setLat(52.09216);
             if (mapContainer.current) {
                 map.current = new mapboxgl.Map({
                     container: mapContainer.current,
                     style: 'mapbox://styles/mapbox/dark-v11',
-                    center: [-1.02602, 52.09216],
+                    center: [-1.02602, 52.09216], // Silverstone, UK
                     zoom,
                     maxZoom: 15,
                     renderWorldCopies: true, // Better handling of markers at map edges
@@ -86,20 +86,7 @@ const Circuits: React.FC = (): JSX.Element => {
 
                 // Clean up on unmount
                 return () => {
-                    // Remove all event listeners to prevent memory leaks
-                    // const hideMarkersHandler = () => hideAllMarkers(true);
-                    // map.current?.off('movestart', hideMarkersHandler);
-                    // map.current?.off('moveend', () => {
-                    //     if (!mapContainer.current) return;
-                    //     throttledMarkerVisibility(map.current?.getZoom() || SHOW_PIN_ZOOM);
-                    // });
-                    // map.current?.off('zoomstart', hideMarkersHandler);
-                    // map.current?.off('pitchstart', hideMarkersHandler);
-                    // map.current?.off('rotatestart', hideMarkersHandler);
-                    // map.current?.off('dragstart', hideMarkersHandler);
                     map.current?.off('move', moveHandler);
-
-                    // Remove the map instance completely
                     map.current?.remove();
                 };
             }
