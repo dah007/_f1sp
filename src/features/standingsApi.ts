@@ -4,6 +4,15 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { buildErrorObject } from 'utils/index';
 
+/**
+ * API service for fetching standings data.
+ * 
+ * Provides endpoints to retrieve constructor and driver standings
+ * 
+ * @remarks
+ * All endpoints return sorted data based on position_display_order.
+ * Default transforms handle JSON responses and error handling.
+ */
 export const standingsApi = createApi({
     reducerPath: 'standingsApi',
     baseQuery: baseQueryWithRetry,

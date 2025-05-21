@@ -61,6 +61,8 @@ const DriverStandings = ({ year = YEAR, className = '' }: { year?: number; class
     if (!driverStandings) {
         return <div className="text-center italic">No driver standings available.</div>;
     }
+
+    console.log('        className', className, cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', className));
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', className)}>
             <Table>

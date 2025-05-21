@@ -2,7 +2,7 @@ import { JSX } from 'react';
 
 import { CONTINENTS } from 'constants/circuitConstants';
 
-import { BUTTON_CLASSES } from 'constants/constants';
+import { BUTTON_CLASSES, SELECT_CLASSES } from 'constants/constants';
 import type { Map } from 'mapbox-gl';
 import { type GotoContinentProps } from 'routes/Circuits/CircuitFunctions';
 import type { CircuitProps } from 'types/circuits';
@@ -53,7 +53,7 @@ const ContinentSelect = ({
             <SelectTrigger role="button" className={BUTTON_CLASSES}>
                 <SelectValue placeholder={continent ?? `Continent`} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={SELECT_CLASSES}>
                 {Object.keys(CONTINENTS).map((continent, index) => (
                     <SelectItem key={index} value={continent} className="cursor-pointer">
                         {continent}

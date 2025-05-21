@@ -121,6 +121,7 @@ export interface LocalDriverProps {
  * <Standings />
  *
  * @remarks
+ *
  * This component uses the `useAppDispatch` and `useAppSelector` hooks to interact with
  * the Redux store. It also uses the `useGetConstructorStandingsQuery` and `useGetDriverStandingsQuery`
  * hooks to fetch the standings data from an API.

@@ -1,7 +1,14 @@
 import { LucideCoffee } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import dah007Logo from '../assets/dah007-icon-logo.svg';
+import { constructorMenuItems, driverMenuItems, MenuButton, raceMenuItems } from './Header';
 
 const Footer = () => {
+    const navigate = useNavigate();
+    const handleNavigationMobile = (path: string) => {
+        navigate(path);
+    };
+
     return (
         <footer className="bg-zinc-300 dark:bg-zinc-900 border-t-2 border-zinc-700 mt-16">
             <div className="mx-auto max-w-screen-xl space-y-8 px-4 py-16 pt-8 sm:px-6 lg:space-y-2 lg:px-8">
@@ -47,86 +54,78 @@ const Footer = () => {
                 </div>
 
                 <div className="grid grid-cols-1 mt-8 gap-8 border-t border-gray-100 pt-0 sm:grid-cols-2 lg:grid-cols-4 lg:pt-16 dark:border-zinc-300 pb-8">
-                    {/* LEFT */}
                     <div>
-                        <p className="font-medium text-gray-900 dark:text-white">Map</p>
-
-                        <ul className="mt-6 space-y-4 text-sm">
+                        {/* LEFT */}
+                        <p className="font-medium text-gray-900 dark:text-white">Menu</p>
+                        <ul>
                             <li>
-                                <a href="#" className="text-gray-700 transition hover:opacity-75 dark:text-gray-200">
-                                    Vote
-                                </a>
+                                <MenuButton
+                                    label="Vote"
+                                    onClick={() => handleNavigationMobile('/vote')}
+                                    className="border dark:border-red-700 border-red-900"
+                                />
                             </li>
-
-                            <li>
-                                <a href="#" className="text-gray-700 transition hover:opacity-75 dark:text-gray-200">
-                                    Leaderboard
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#" className="text-gray-700 transition hover:opacity-75 dark:text-gray-200">
-                                    More
-                                </a>
-                            </li>
+                            <ul className="ml-4 mt-4    ">
+                                <li>
+                                    <MenuButton
+                                        label="Leaderboard"
+                                        onClick={() => handleNavigationMobile('/leaderboard')}
+                                    />
+                                </li>
+                            </ul>
 
                             <li>
-                                <a href="#" className="text-gray-700 transition hover:opacity-75 dark:text-gray-200">
-                                    Stuff
-                                </a>
+                                <MenuButton label="Races" onClick={() => handleNavigationMobile('/races')} />
                             </li>
+
+                            <ul className="ml-4 mt-4">
+                                {raceMenuItems.map((component) => (
+                                    <li key={component.title}>
+                                        <MenuButton
+                                            label={component.title}
+                                            onClick={() => handleNavigationMobile(component.href)}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <li>
+                                <MenuButton label="Drivers" onClick={() => handleNavigationMobile('/drivers')} />
+                            </li>
+
+                            <ul className="ml-4 mt-4">
+                                {driverMenuItems.map((component) => (
+                                    <li key={component.title}>
+                                        <MenuButton
+                                            label={component.title}
+                                            onClick={() => handleNavigationMobile(component.href)}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
                         </ul>
                     </div>
 
                     {/* LEFT CENTER */}
                     <div>
-                        <p className="font-medium text-gray-900 dark:text-white">Map</p>
-
-                        <ul className="mt-6 space-y-4 text-sm">
+                        <ul>
                             <li>
-                                <a
-                                    href="/circuits"
-                                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                                >
-                                    Circuits
-                                </a>
+                                <MenuButton
+                                    label="Constructors"
+                                    onClick={() => handleNavigationMobile('/constructors')}
+                                />
                             </li>
 
-                            <li>
-                                <a
-                                    href="/constructors"
-                                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                                >
-                                    Constructors
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="/drivers"
-                                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                                >
-                                    Drivers
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="/races"
-                                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                                >
-                                    Races
-                                </a>
-                            </li>
-
-                            <li>
-                                <a
-                                    href="/stagings"
-                                    className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
-                                >
-                                    Standings
-                                </a>
-                            </li>
+                            <ul className="ml-4 mt-4">
+                                {constructorMenuItems.map((component) => (
+                                    <li key={component.title}>
+                                        <MenuButton
+                                            label={component.title}
+                                            onClick={() => handleNavigationMobile(component.href)}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
                         </ul>
                     </div>
 
@@ -198,15 +197,6 @@ const Footer = () => {
                             </li>
                         </ul>
                     </div>
-
-                    {/* RIGHT CENTER */}
-                    {/* <div>
-                        <p className="font-medium text-gray-900 dark:text-white">...</p>
-
-                        <ul className="mt-6 space-y-4 text-sm">
-                            <li>..</li>
-                        </ul>
-                    </div> */}
                 </div>
 
                 <div className="flex flex-col items-end justify-end gap-4">

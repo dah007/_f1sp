@@ -1,17 +1,32 @@
-import { useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import { useEffect } from 'react';
 
+import { useGetConstructorStandingsQuery } from 'features/standingsApi';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
-import { useGetConstructorStandingsQuery } from 'features/standingsApi';
 
-import { setConstructorStandings } from 'slices/standingsSlice';
 import { setError, setLoading } from 'slices/siteWideSlice';
+import { setConstructorStandings } from 'slices/standingsSlice';
 
+import { cn } from '@/lib/utils';
 import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 import { type ConstructorStanding } from 'types/standings';
-import { cn } from '@/lib/utils';
+import CardSkeleton from './CardSkeleton';
 
+/**
+ * Standings of constructors in a table format.
+ *
+ * Fetches constructor standings data using the useGetConstructorStandingsQuery hook
+ * for a specified year (defaults to the current year). It displays a loading skeleton while
+ * fetching data and an error message if no data is available.
+ *
+ * @component
+ * @param {object} props - Component props
+ * @param {string} [props.className] - Additional CSS class names for the component
+ * @param {number} [props.year] - The year for which to fetch constructor standings (defaults to current year)
+ * @returns {JSX.Element} A scrollable table displaying constructor standings ordered by position,
+ *                        showing position number, constructor name, and points
+ */
 const ConstructorStandings = ({ className, year = YEAR }: { className?: string; year?: number }): JSX.Element => {
     const dispatch = useAppDispatch();
 
@@ -28,19 +43,25 @@ const ConstructorStandings = ({ className, year = YEAR }: { className?: string; 
     };
 
     useEffect(() => {
-        if (constructorStandingsIsError) {
-            dispatch(setError(true));
-            return;
-        }
-        if (constructorStandingsIsLoading) dispatch(setLoading(true));
-        if (!constructorStandingsData) return;
-        dispatch(setConstructorStandings(constructorStandingsData));
-        dispatch(setLoading(false));
+        window.setTimeout(() => {
+            if (constructorStandingsIsError) {
+                dispatch(setError(true));
+                return;
+            }
+            if (constructorStandingsIsLoading) dispatch(setLoading(true));
+            if (!constructorStandingsData) return;
+
+            dispatch(setConstructorStandings(constructorStandingsData));
+            dispatch(setLoading(false));
+        }, 2000);
     }, [constructorStandingsData, constructorStandingsIsLoading, constructorStandingsIsError, dispatch]);
 
     if (!constructorStandings) {
         return <div className="text-center italic">No constructors standings available.</div>;
     }
+
+    if (constructorStandingsIsLoading || !constructorStandings) return <CardSkeleton />;
+
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, className, 'overflow-hidden border-t', 'mb-40')}>
             <Table className="w-full mb-10">

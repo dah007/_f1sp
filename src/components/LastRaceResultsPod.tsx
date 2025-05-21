@@ -1,16 +1,27 @@
-import { JSX, useEffect } from 'react';
-
-import { useGetLastRaceResultsQuery, useGetRaceWithGPQuery } from 'features/raceApi';
-
 import { FULL_ROW_HEIGHT } from '@/constants/constants';
 import { cn } from '@/lib/utils';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import { useGetLastRaceResultsQuery, useGetRaceWithGPQuery } from 'features/raceApi';
+import { JSX, useEffect } from 'react';
 import { setLastRaceResults, setRaceWGP } from 'slices/racesSlice';
 import { setError, setLoading } from 'slices/siteWideSlice';
 import type { RaceProps, RaceResultProps } from 'types/races';
+import CardSkeleton from './CardSkeleton';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
+/**
+ * Displays the results of the last race in a table format.
+ *
+ * Uses Redux state for race results and next race data, and fetches additional race details
+ * using RTK Query hooks (useGetRaceWithGPQuery and useGetLastRaceResultsQuery).
+ *
+ * The component handles loading states with a CardSkeleton placeholder and dispatches
+ * loading/error states to the Redux store.
+ *
+ * @returns A scrollable table showing last race results with position, driver name,
+ *          time gap, and points information.
+ */
 const LastRaceResultsPod: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
 
@@ -83,8 +94,11 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
         });
     };
 
+    if (dataIsLoading || !dataResults) return <CardSkeleton />;
+
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-40')}>
+            {raceWGPisLoading && <CardSkeleton />}
             <Table>
                 <TableHeader>
                     <TableRow>

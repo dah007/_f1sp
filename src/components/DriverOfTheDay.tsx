@@ -1,20 +1,40 @@
-import React, { useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import React, { useEffect } from 'react';
 
-import { setDriversOfTheDay } from 'slices/driversSlice';
-import { setError, setLoading } from 'slices/siteWideSlice';
-import { setRaceNext } from 'slices/racesSlice';
 import { useGetDriverOfTheDayQuery } from 'features/driversApi';
 import { useGetRaceNextQuery } from 'features/raceApi';
+import { setDriversOfTheDay } from 'slices/driversSlice';
+import { setRaceNext } from 'slices/racesSlice';
+import { setError, setLoading } from 'slices/siteWideSlice';
 
 import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 
-import type { NextRaceProps } from 'types/races';
-import { ScrollArea } from './ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { DriverOfTheDayProps } from '@/types/drivers';
+import type { NextRaceProps } from 'types/races';
+import CardSkeleton from './CardSkeleton';
+import { ScrollArea } from './ui/scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
+/**
+ * DriverOfTheDay component displays a table of drivers and their voting percentages for the "Driver of the Day" award.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <DriverOfTheDay className="custom-class" />
+ * ```
+ *
+ * The component:
+ * 1. Fetches data about the next race and the Driver of the Day from the API
+ * 2. Dispatches actions to update the Redux store with fetched data
+ * 3. Displays loading skeleton while data is being fetched
+ * 4. Renders a scrollable table showing drivers and their percentage votes
+ *
+ * @param {Object} props - Component props
+ * @param {string} [props.className] - Optional CSS class name for custom styling
+ * @returns {JSX.Element} A table displaying Driver of the Day results or a loading skeleton
+ */
 const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
     const dispatch = useAppDispatch();
 
@@ -51,6 +71,8 @@ const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
         dispatch(setDriversOfTheDay(dataDriversOfTheDay));
         dispatch(setLoading(false));
     }, [dispatch, dataDriversOfTheDay, driverOfTheDayError, raceNextError]);
+
+    if (driverOfTheDayLoading || raceNextLoading || !dataDriversOfTheDay) return <CardSkeleton />;
 
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-0', className)}>

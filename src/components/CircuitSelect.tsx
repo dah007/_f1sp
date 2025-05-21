@@ -1,8 +1,8 @@
-import type { CircuitDetailsProps, CircuitProps } from 'types/circuits';
-import type { GotoCircuitProps } from 'routes/Circuits/CircuitFunctions';
+import { BUTTON_CLASSES, SELECT_CLASSES } from '@/constants/constants';
 import type { Map } from 'mapbox-gl';
+import type { GotoCircuitProps } from 'routes/Circuits/CircuitFunctions';
+import type { CircuitDetailsProps, CircuitProps } from 'types/circuits';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { BUTTON_CLASSES } from '@/constants/constants';
 
 interface CircuitSelectProps {
     circuitsData: CircuitDetailsProps; // CircuitProps[];
@@ -51,7 +51,7 @@ const CircuitSelect = ({
             <SelectTrigger role="button" className={BUTTON_CLASSES}>
                 <SelectValue placeholder={circuit?.full_name || 'Select Circuit'} />
             </SelectTrigger>
-            <SelectContent className="select">
+            <SelectContent className={SELECT_CLASSES}>
                 {Object.keys(circuitsData).map((key) => (
                     <SelectItem key={key} value={key}>
                         {circuitsData[key].full_name}

@@ -1,20 +1,109 @@
+import { YEAR } from '@/constants/constants';
+import { cn } from '@/lib/utils';
 import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.svg';
 import F1SPlogo from 'assets/f1sp.svg';
-
-import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
+import { DesktopNavigation } from './DesktopNavigation';
 
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from './ui/navigation-menu';
+export const constructorMenuItems: { title: string; href: string; description: string }[] = [
+    {
+        title: 'Standings',
+        href: `/standings`,
+        description: "View the current season's standings.",
+    },
+    {
+        title: 'All Constructors',
+        href: `/constructors/${YEAR}`,
+        description: "View the current season's constructors.",
+    },
+    {
+        title: 'Constructor Records',
+        href: '/constructors/records',
+        description: 'View constructor records and statistics (coming soon).',
+    },
+    {
+        title: 'Engine Manufacturers',
+        href: '/extra',
+        description: 'View engine records and statistics (coming soon).',
+    },
+    {
+        title: 'Tire Suppliers',
+        href: '/extra',
+        description: 'View tire records and statistics (coming soon).',
+    },
+    {
+        title: 'Chassis Manufacturers',
+        href: '/extra',
+        description: 'View chassis records and statistics (coming soon).',
+    },
+];
+export const driverMenuItems: { title: string; href: string; description: string }[] = [
+    {
+        title: 'Standings',
+        href: `/standings`,
+        description: "View the current season's standings.",
+    },
+    {
+        title: 'Current Drivers',
+        href: `/drivers/${YEAR}`,
+        description: "View the current season's drivers.",
+    },
+    {
+        title: 'Previous Drivers',
+        href: '/drivers',
+        description: "View the previous season's drivers.",
+    },
+    {
+        title: 'Driver Records',
+        href: '/drivers/records',
+        description: 'View driver records and statistics (coming soon).',
+    },
+];
+export const raceMenuItems: { title: string; href: string; description: string }[] = [
+    {
+        title: 'Current Season',
+        href: `/races/${YEAR}`,
+        description: "View the current season's races. New current season interface coming some.",
+    },
+    {
+        title: 'Circuits',
+        href: `/circuits`,
+        description: "View the current season's circuits.",
+    },
+    {
+        title: 'Previous Season',
+        href: '/races',
+        description:
+            "View the previous season's races. Table of results, single table view for a given season with filtering.",
+    },
+    {
+        title: 'Records',
+        href: '/races/records',
+        description: 'View race records and statistics. (coming soon)',
+    },
+];
 
-const MenuButton = ({ label, onClick, className }: { label: string; onClick: () => void; className?: string }) => (
+// const menuItemClassName = 'menu-item font-extrabold text-zinc-800 dark:text-zinc-300 cursor-pointer text-md hover:underline';
+
+/**
+ * Renders a customizable menu button component.
+ *
+ * @param label - The text label displayed on the button.
+ * @param onClick - Callback function invoked when the button is clicked.
+ * @param className - Optional additional CSS class names for styling the button.
+ *
+ * @returns A styled button element suitable for use in menus or navigation bars.
+ */
+export const MenuButton = ({
+    label,
+    onClick,
+    className,
+}: {
+    label: string;
+    onClick: () => void;
+    className?: string;
+}) => (
     <Button
         rel="noopener noreferrer"
         variant="ghost"
@@ -80,9 +169,6 @@ const Header: React.FC = () => {
         toggleMenu();
     };
 
-    const menuItemClassName =
-        'menu-item font-extrabold text-zinc-800 dark:text-zinc-300 cursor-pointer text-md hover:underline';
-
     return (
         <header
             className="
@@ -116,63 +202,11 @@ const Header: React.FC = () => {
                 </a>
             </div>
 
-            <NavigationMenu className="hidden md:hidden lg:flex xl:flex justify-end grow w-[80vw]">
-                <NavigationMenuList>
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger className="text-red-800 font-extrabold cursor-pointer text-md"   onClick={() => handleNavigation('/vote')}>
-                            Vote
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent className="bg-zinc-300 dark:bg-zinc-800">
-                            <NavigationMenuLink className={menuItemClassName} onClick={() => handleNavigation('/vote')}>
-                                Vote
-                            </NavigationMenuLink>
-                            <NavigationMenuLink
-                                className={menuItemClassName}
-                                onClick={() => handleNavigation('/leaderboard')}
-                            >
-                                Leaderboard
-                            </NavigationMenuLink>
-                        </NavigationMenuContent>
-                    </NavigationMenuItem>
-                    <NavigationMenuLink
-                        className={`standings ${menuItemClassName}`}
-                        onClick={() => handleNavigation('/standings', 'standings')}
-                    >
-                        Standings
-                    </NavigationMenuLink>
-                    <NavigationMenuLink
-                        className={`drivers ${menuItemClassName}`}
-                        onClick={() => handleNavigation('/drivers', 'drivers')}
-                    >
-                        Drivers
-                    </NavigationMenuLink>
-                    <NavigationMenuLink
-                        className={` ${menuItemClassName}`}
-                        onClick={() => handleNavigation('/races', 'races')}
-                    >
-                        Races
-                    </NavigationMenuLink>
-                    <NavigationMenuLink
-                        className={` ${menuItemClassName}`}
-                        onClick={() => handleNavigation('/circuits', 'circuits')}
-                    >
-                        Circuits
-                    </NavigationMenuLink>
-                    <NavigationMenuLink
-                        className={`constructors ${menuItemClassName}`}
-                        onClick={() => handleNavigation('/constructors', 'constructors')}
-                    >
-                        Constructors
-                    </NavigationMenuLink>
-                    <NavigationMenuLink
-                        className={`extras ${menuItemClassName}`}
-                        onClick={() => handleNavigation('/extra', 'extras')}
-                    >
-                        Extras
-                    </NavigationMenuLink>
-                </NavigationMenuList>
-            </NavigationMenu>
+            <div className="hidden lg:block">
+                <DesktopNavigation />
+            </div>
 
+            {/* MOBILE MENU */}
             <ul id="menu" className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50">
                 <li className="md:hidden z-90 fixed top-4 right-6">
                     <a href="javascript:void(0)" className="text-right text-white text-4xl" onClick={toggleMenu}>
@@ -186,27 +220,56 @@ const Header: React.FC = () => {
                         className="border dark:border-red-700 border-red-900"
                     />
                 </li>
-                <li>
-                    <MenuButton label="Leaderboard" onClick={() => handleNavigationMobile('/leaderboard')} />
-                </li>
-                <li>
-                    <MenuButton label="Standings" onClick={() => handleNavigationMobile('/standings')} />
-                </li>
-                <li>
-                    <MenuButton label="Drivers" onClick={() => handleNavigationMobile('/drivers')} />
-                </li>
+                <ul className="ml-4 mt-4    ">
+                    <li>
+                        <MenuButton label="Leaderboard" onClick={() => handleNavigationMobile('/leaderboard')} />
+                    </li>
+                </ul>
+
                 <li>
                     <MenuButton label="Races" onClick={() => handleNavigationMobile('/races')} />
                 </li>
+
+                <ul className="ml-4 mt-4">
+                    {raceMenuItems.map((component) => (
+                        <li key={component.title}>
+                            <MenuButton
+                                label={component.title}
+                                onClick={() => handleNavigationMobile(component.href)}
+                            />
+                        </li>
+                    ))}
+                </ul>
+
                 <li>
-                    <MenuButton label="Circuits" onClick={() => handleNavigationMobile('/circuits')} />
+                    <MenuButton label="Drivers" onClick={() => handleNavigationMobile('/drivers')} />
                 </li>
+
+                <ul className="ml-4 mt-4">
+                    {driverMenuItems.map((component) => (
+                        <li key={component.title}>
+                            <MenuButton
+                                label={component.title}
+                                onClick={() => handleNavigationMobile(component.href)}
+                            />
+                        </li>
+                    ))}
+                </ul>
+
                 <li>
                     <MenuButton label="Constructors" onClick={() => handleNavigationMobile('/constructors')} />
                 </li>
-                <li>
-                    <MenuButton label="Extra" onClick={() => handleNavigationMobile('/extra')} />
-                </li>
+
+                <ul className="ml-4 mt-4">
+                    {constructorMenuItems.map((component) => (
+                        <li key={component.title}>
+                            <MenuButton
+                                label={component.title}
+                                onClick={() => handleNavigationMobile(component.href)}
+                            />
+                        </li>
+                    ))}
+                </ul>
             </ul>
         </header>
     );
