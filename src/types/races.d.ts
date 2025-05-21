@@ -230,5 +230,5 @@ export type NextRaceProps = Partial<RaceProps> & {
     short_name?: string;
     date: string;
     grand_prix_id: string;
-    id: string;
+    id: number;
 };

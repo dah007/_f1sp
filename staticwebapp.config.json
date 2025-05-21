@@ -8,9 +8,6 @@
         ".js": "application/javascript",
         ".json": "application/json",
         ".mjs": "application/javascript",
-        ".jsx": "application/javascript",
-        ".tsx": "application/javascript",
-        ".ts": "application/javascript",
         ".css": "text/css"
     },
     "navigationFallback": {
