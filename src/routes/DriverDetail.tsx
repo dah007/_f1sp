@@ -31,11 +31,11 @@ const DriverDetail: React.FC = () => {
         return <p className="text-lg text-gray-700">Loading...</p>;
     }
 
-    const imgUrl = new URL(`../../public/assets/drivers/${year}/${driver?.id}.png`, import.meta.url).href;
+    const imgUrl = new URL(`/assets/drivers/${year}/${driver?.id}.png`, import.meta.url).href;
 
     const driverImg = document.getElementById(`driver-img-${driver?.id}`) as HTMLImageElement;
     if (driverImg) {
-        driverImg.src = imgUrl || '../../public/assets/images/404.png';
+        driverImg.src = imgUrl || '/assets/images/404.png';
     }
 
     return (

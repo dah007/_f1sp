@@ -4,7 +4,9 @@
         "Access-Control-Allow-Origin": "*"
     },
     "mimeTypes": {
+        ".geojson": "application/geo+json",
         ".js": "application/javascript",
+        ".json": "application/json",
         ".mjs": "application/javascript",
         ".jsx": "application/javascript",
         ".tsx": "application/javascript",
