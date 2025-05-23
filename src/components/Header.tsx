@@ -63,7 +63,7 @@ export const driverMenuItems: { title: string; href: string; description: string
 export const raceMenuItems: { title: string; href: string; description: string }[] = [
     {
         title: 'Current Season',
-        href: `/races/${YEAR}`,
+        href: `/races`,
         description: "View the current season's races. New current season interface coming some.",
     },
     {
