@@ -31,7 +31,8 @@ const DriverDetail: React.FC = () => {
         return <p className="text-lg text-gray-700">Loading...</p>;
     }
 
-    const imgUrl = new URL(`/assets/drivers/${year}/${driver?.id}.png`, import.meta.url).href;
+    // const imgUrl = new URL(`/assets/drivers/${year}/${driver?.id}.png`, import.meta.url).href;
+    const imgUrl = `/assets/drivers/${year}/${driver?.id}.png`;
 
     const driverImg = document.getElementById(`driver-img-${driver?.id}`) as HTMLImageElement;
     if (driverImg) {
