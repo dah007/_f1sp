@@ -40,7 +40,7 @@ const DriverDetail: React.FC = () => {
     }
 
     return (
-        <div className="flex items-start gap-10 max-h-[130px] overflow-hidden">
+        <div className="flex items-start gap-10 max-h-fit overflow-hidden">
             <div className="flex items-start justify-start">
                 <img
                     id={`driver-img-${driver?.id}`}

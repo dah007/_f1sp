@@ -155,7 +155,11 @@ const Drivers: React.FC = (): JSX.Element => {
             },
             {
                 accessorKey: 'abbreviation',
-                cell: ({ row }) => <div>{row.getValue('abbreviation')}</div>,
+                cell: ({ row }) => (
+                    <div onClick={() => navigateDriver(row.original.id)} className="cursor-pointer hover:text-blue-500">
+                        {row.getValue('abbreviation')}
+                    </div>
+                ),
                 header: () => <div className="text-right"></div>,
             },
             {
