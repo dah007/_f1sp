@@ -11,13 +11,7 @@
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": [
-            "/assets*",
-            "/styles*",
-            "/favicon.ico",
-            "/favicon.png",
-            "/manifest.json"
-        ]
+        "exclude": ["/assets*", "/styles*", "/favicon.ico", "/favicon.png", "/manifest.json"]
     },
     "routes": [
         {
@@ -30,9 +24,7 @@
         },
         {
             "route": "/assets/*",
-            "headers": {
-                "cache-control": "must-revalidate, max-age=15770000"
-            }
+            "allowedRoles": ["anonymous"]
         }
     ],
     "trailingSlash": "auto"
