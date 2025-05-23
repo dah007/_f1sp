@@ -2,6 +2,7 @@ import { YEAR } from '@/constants/constants';
 import { cn } from '@/lib/utils';
 import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.svg';
 import F1SPlogo from 'assets/f1sp.svg';
+import { Newspaper } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { DesktopNavigation } from './DesktopNavigation';
@@ -177,9 +178,23 @@ const Header: React.FC = () => {
             items-end 
             w-full
             p-6 mb-0
-          bg-zinc-800 
+            bg-zinc-300
+          dark:bg-zinc-800 
             shadow-md"
         >
+            <div
+                className=" absolute top-4 right-4 text-right"
+                title="What's New"
+                role="button"
+                onClick={() => handleNavigation('/whats-new')}
+            >
+                <Newspaper size={32} />
+                <div className="text-xs text-zinc-300">
+                    What's
+                    <br />
+                    New
+                </div>
+            </div>
             {/* HAMBURGER MENU */}
             <div className="flex lg:hidden xl:hidden justify-end grow">
                 <button

@@ -1,9 +1,7 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { RootState, useAppSelector } from 'app/store';
-
 import CardContainer from 'components/CardContainer';
 import ConstructorStandings from 'components/ConstructorsStandings';
 import DriverOfTheDay from 'components/DriverOfTheDay';
@@ -12,6 +10,7 @@ import ErrorDialog from 'components/ErrorDialog';
 import LastRaceResultsPod from 'components/LastRaceResultsPod';
 import NextReactBanner from 'components/NextRaceBanner';
 import TotalWinsPerYear from 'components/TotalWinsPerYear';
+import { Alert, AlertDescription, AlertTitle } from 'components/ui/alert';
 import { CardFooter } from 'components/ui/card';
 import { InfoIcon } from 'lucide-react';
 
