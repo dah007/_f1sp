@@ -1,10 +1,7 @@
-import { JSX } from 'react';
 import { RootState, useAppSelector } from 'app/store';
-
+// import { DateTime } from 'luxon';
+import { JSX } from 'react';
 // import CountdownClock from './CountdownClock';
-
-// // TODO: get clock countdown ready for next year (2026)
-// // import CountdownClock from './CountdownClock';
 
 /**
  * Component to display the next race banner.
@@ -16,29 +13,34 @@ const NextReactBanner: React.FC = (): JSX.Element => {
     const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
 
     const renderBanner = () => {
-        // ready for next year (2026)
-        // if (!raceNext) return <CountdownClock targetDate={'03/14/2026 00:00:00'} />;
-        if (!raceNext) return;
-        if (!raceNext.date) return;
+        if (!raceNext || !raceNext.date) return;
+
+        // // Calculate Friday midnight before the Sunday race
+        // let weekendStartISO = DateTime.fromISO(getWeekendStart(`${raceNext.date}T00:00:00Z`), { zone: 'UTC+4' }).toString();
+        // console.log('startISO:', startISO);
+
+        // weekendStartISO = DateTime.fromISO(weekendStartISO, { zone: 'UTC', zone: CIRCUIT_DETAILS['monoco'].timezone. })
+
+        // console.log('?d date/time??:', DateTime.fromISO(`${raceNext.date}`));
 
         return (
-            <div
-                className="
+            <>
+                {/* <CountdownClock targetDate={new Date().toString()} /> */}
+
+                <div
+                    className="
                 krona-one-regular 
                 flex 
                 flex-col 
                 sm:flex-col
-            
                 xl:text-xl 
                 lg:text-lg 
                 text-sm
             "
-            >
-                <span>{`Next Race: ${raceNext.date || ''} @ ${raceNext.official_name || 'N/A'}`}</span>
-
-                {/* TODO: fix this busted clock! */}
-                {/* <CountdownClock targetDate={`${raceNext.date} 15:00`} /> */}
-            </div>
+                >
+                    <span>{`Next Race: ${raceNext.date || ''} @ ${raceNext.official_name || 'N/A'}`}</span>
+                </div>
+            </>
         );
     };
 

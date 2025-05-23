@@ -1,15 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type CountdownClockProps = {
-    targetDate: string;
+    targetDate: string; // ISO string, e.g., "2025-05-23T18:00:00"
 };
 
 interface TimeLeft {
-    months?: number;
-    days?: number;
-    hours?: number;
-    minutes?: number;
-    seconds?: number;
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
 }
 
 /**
@@ -28,22 +27,18 @@ interface TimeLeft {
  * The `calculateTimeLeft` function computes the remaining time until the target date.
  */
 const CountdownClock: React.FC<CountdownClockProps> = ({ targetDate }: CountdownClockProps): JSX.Element => {
-    const calculateTimeLeft = () => {
-        const raceDay = new Date(targetDate);
-        const raceWeekend = new Date().setDate(raceDay.getDate() - 2);
+    const calculateTimeLeft = (): TimeLeft => {
+        const now = new Date();
+        const target = new Date(targetDate);
+        const difference = target.getTime() - now.getTime();
 
-        console.log('raceWeekend', raceWeekend);
-
-        const difference = +new Date(raceWeekend) - +new Date();
-
-        let timeLeft = {};
+        let timeLeft: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
         if (difference > 0) {
             timeLeft = {
-                months: Math.floor(difference / (1000 * 60 * 60 * 24 * 30)),
-                days: Math.floor((difference / (1000 * 60 * 60 * 24)) % 30),
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
                 hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
+                minutes: Math.floor((difference / (1000 * 60)) % 60),
                 seconds: Math.floor((difference / 1000) % 60),
             };
         }
@@ -51,21 +46,20 @@ const CountdownClock: React.FC<CountdownClockProps> = ({ targetDate }: Countdown
         return timeLeft;
     };
 
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+    const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
 
     useEffect(() => {
         const timer = setInterval(() => {
             setTimeLeft(calculateTimeLeft());
         }, 1000);
-
         return () => clearInterval(timer);
     }, [targetDate]);
 
-    const formatTime = (time: TimeLeft): string => {
-        return `${time.months} months, ${time.days} days, ${time.hours} hours, ${time.minutes} minutes, ${time.seconds} seconds`;
-    };
-
-    return <div>{formatTime(timeLeft)}</div>;
+    return (
+        <div>
+            {timeLeft.days} days, {timeLeft.hours} hours, {timeLeft.minutes} minutes, {timeLeft.seconds} seconds
+        </div>
+    );
 };
 
 export default CountdownClock;
