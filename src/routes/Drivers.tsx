@@ -1,3 +1,4 @@
+import { LinkRenderer } from '@/utils/dataTableRenderers';
 import { Scrollbar } from '@radix-ui/react-scroll-area';
 import {
     ColumnDef,
@@ -164,15 +165,13 @@ const Drivers: React.FC = (): JSX.Element => {
             },
             {
                 accessorKey: 'first_name',
-                cell: ({ row }) => (
-                    <div
-                        role="link"
-                        className="cursor-pointer hover:text-blue-500"
-                        onClick={() => navigateDriver(row.original.id)}
-                    >
-                        {row.getValue('first_name')}
-                    </div>
-                ),
+
+                cell: ({ row }) =>
+                    LinkRenderer({
+                        gotoCB: navigateDriver,
+                        label: row.getValue('first_name'),
+                        value: row.original.id,
+                    }),
                 header: ({ column }) => (
                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
                         First Name
@@ -182,15 +181,12 @@ const Drivers: React.FC = (): JSX.Element => {
             },
             {
                 accessorKey: 'last_name',
-                cell: ({ row }) => (
-                    <div
-                        role="link"
-                        className="cursor-pointer hover:text-blue-500"
-                        onClick={() => navigateDriver(row.original.id)}
-                    >
-                        {row.getValue('last_name')}
-                    </div>
-                ),
+                cell: ({ row }) =>
+                    LinkRenderer({
+                        gotoCB: navigateDriver,
+                        label: row.getValue('last_name'),
+                        value: row.original.id,
+                    }),
                 size: 40,
                 maxWidth: 40,
                 header: ({ column }) => (
