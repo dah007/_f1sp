@@ -47,7 +47,7 @@ export const driverMenuItems: { title: string; href: string; description: string
     {
         title: 'Current Drivers',
         href: `/drivers`,
-        description: "View the current season's drivers. This is currently the same page as Previous Drivers 😟.",
+        description: "This is currently the same page as Previous Drivers 😟.View the current season's drivers. ",
     },
     {
         title: 'Previous Drivers',
