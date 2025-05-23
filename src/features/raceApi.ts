@@ -87,17 +87,17 @@ export const raceApi = createApi({
         }),
         /*------------------------------------------------------------------ */
         /** @deprecated */
-        getDriverOfTheDay: builder.query({
-            queryFn: async () => {
-                try {
-                    const data = await dbFetch(`/driver-of-day`);
-                    console.log('we should NEVER SEE THIS data', data);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
+        // getDriverOfTheDay: builder.query({
+        //     queryFn: async () => {
+        //         try {
+        //             const data = await dbFetch(`/driver-of-day`);
+        //             console.log('we should NEVER SEE THIS data', data);
+        //             return { data: data };
+        //         } catch (error) {
+        //             return buildErrorObject(error);
+        //         }
+        //     },
+        // }),
         /** @deprecated */
         getFastestPitStop: builder.query({
             queryFn: async (raceId: number | string = '') => {
@@ -163,7 +163,17 @@ export const raceApi = createApi({
             },
         }),
         getRacesResultsWithQual: builder.query({
-            query: (id: number) => `/raceResultsWithQual?$filter=id eq ${id}`,
+            query: (id: number) => {
+                return `/races?$filter=id eq ${id}`;
+            },
+            transformResponse: (response: { value: RaceProps[] }) => {
+                console.log('Fetched races results with qualifying:', response);
+                return response?.value ?? [];
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching races results with qualifying:', error);
+                return error;
+            },
         }),
         getRaceResultsWithQual: builder.query({
             query: (year: number = YEAR) => `/race_result?$filter=year eq ${year}`,
@@ -187,7 +197,7 @@ export const raceApi = createApi({
 });
 
 export const {
-    useGetDriverOfTheDayQuery,
+    // useGetDriverOfTheDayQuery, -- @deprecated
     useGetFastestLapQuery,
     useGetFastestPitStopQuery,
     useGetLastRaceResultsQuery,

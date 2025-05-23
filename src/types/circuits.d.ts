@@ -4,6 +4,7 @@ export type CircuitProps = {
     altitude: number | null;
     bbox: BBoxType;
     circuitType: string | null;
+    continent?: string;
     country: string | null;
     date?: string | null;
     firstgp: number | null;
@@ -18,8 +19,22 @@ export type CircuitProps = {
     place_name: string | null;
     raceDate?: string | null;
     shortName: string | null;
+    timezone: {
+        dst: boolean
+        offset: number;
+        start: {
+            month: number;
+            day: number;
+            hour: number;
+        };
+        end: {
+            month: number;
+            day: number;
+            hour: number;
+        };
+        name: string | null;
+    },    // string | null;
     wiki?: string | null;
-    continent?: string;
 };
 
 export type CircuitDetailsProps = {

@@ -1,6 +1,5 @@
 {
     "globalHeaders": {
-        "Cache-Control": "no-cache",
         "Access-Control-Allow-Origin": "*"
     },
     "mimeTypes": {

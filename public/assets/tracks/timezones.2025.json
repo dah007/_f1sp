@@ -1,0 +1,386 @@
+{
+    "albert_park": {
+        "name": "Albert Park",
+        "timezone": "Australia/Melbourne",
+        "offset": 11,
+        "dst": true,
+        "start": {
+            "month": 10,
+            "day": 5,
+            "hour": 2
+        },
+        "end": {
+            "month": 4,
+            "day": 6,
+            "hour": 3
+        }
+    },
+    "bahrain": {
+        "name": "Bahrain",
+        "timezone": "Asia/Bahrain",
+        "offset": 3,
+        "dst": false,
+        "start": {
+            "month": 3,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 0
+        }
+    },
+    "baku": {
+        "name": "Baku",
+        "timezone": "Asia/Baku",
+        "offset": 4,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "catalunya": {
+        "name": "Catalunya",
+        "timezone": "Europe/Madrid",
+        "offset": 2,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "cota": {
+        "name": "Circuit of the Americas",
+        "timezone": "America/Chicago",
+        "offset": -5,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 8,
+            "hour": 2
+        },
+        "end": {
+            "month": 11,
+            "day": 1,
+            "hour": 2
+        }
+    },
+    "hungaroring": {
+        "name": "Hungaroring",
+        "timezone": "Europe/Budapest",
+        "offset": 2,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "imola": {
+        "name": "Imola",
+        "timezone": "Europe/Rome",
+        "offset": 2,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "jeddah": {
+        "name": "Jeddah",
+        "timezone": "Asia/Riyadh",
+        "offset": 3,
+        "dst": false,
+        "start": {
+            "month": 3,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 0
+        }
+    },
+    "las_vegas": {
+        "name": "Las Vegas",
+        "timezone": "America/Los_Angeles",
+        "offset": -8,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 8,
+            "hour": 2
+        },
+        "end": {
+            "month": 11,
+            "day": 1,
+            "hour": 2
+        }
+    },
+    "lusail": {
+        "name": "Lusail",
+        "timezone": "Asia/Qatar",
+        "offset": 3,
+        "dst": false,
+        "start": {
+            "month": 3,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 0
+        }
+    },
+    "mexico": {
+        "name": "Mexico",
+        "timezone": "America/Mexico_City",
+        "offset": -6,
+        "dst": true,
+        "start": {
+            "month": 4,
+            "day": 1,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 2
+        }
+    },
+    "miami": {
+        "name": "Miami",
+        "timezone": "America/New_York",
+        "offset": -5,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 8,
+            "hour": 2
+        },
+        "end": {
+            "month": 11,
+            "day": 1,
+            "hour": 2
+        }
+    },
+    "monaco": {
+        "name": "Monaco",
+        "timezone": "Europe/Monaco",
+        "offset": 1,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "montreal": {
+        "name": "Montreal",
+        "timezone": "America/New_York",
+        "offset": -5,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 8,
+            "hour": 2
+        },
+        "end": {
+            "month": 11,
+            "day": 1,
+            "hour": 2
+        }
+    },
+    "monza": {
+        "name": "Monza",
+        "timezone": "Europe/Rome",
+        "offset": 2,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "red_bull_ring": {
+        "name": "Red Bull Ring",
+        "timezone": "Europe/Vienna",
+        "offset": 2,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "sao_paulo": {
+        "name": "Sao Paulo",
+        "timezone": "America/Sao_Paulo",
+        "offset": -3,
+        "dst": true,
+        "start": {
+            "month": 10,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 2,
+            "day": 15,
+            "hour": 0
+        }
+    },
+    "silverstone": {
+        "name": "Silverstone",
+        "timezone": "Europe/London",
+        "offset": 1,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "singapore": {
+        "name": "Marina Bay",
+        "timezone": "Asia/Singapore",
+        "offset": 8,
+        "dst": false,
+        "start": {
+            "month": 3,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 0
+        }
+    },
+    "shanghai": {
+        "name": "Shanghai",
+        "timezone": "Asia/Shanghai",
+        "offset": 8,
+        "dst": false,
+        "start": {
+            "month": 3,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 0
+        }
+    },
+    "spa": {
+        "name": "Spa-Francorchamps",
+        "timezone": "Europe/Brussels",
+        "offset": 2,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    },
+    "suzuka": {
+        "name": "Suzuka",
+        "timezone": "Asia/Tokyo",
+        "offset": 9,
+        "dst": false,
+        "start": {
+            "month": 3,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 0
+        }
+    },
+    "yas_marina": {
+        "name": "Yas Marina",
+        "timezone": "Asia/Dubai",
+        "offset": 4,
+        "dst": false,
+        "start": {
+            "month": 3,
+            "day": 1,
+            "hour": 0
+        },
+        "end": {
+            "month": 10,
+            "day": 31,
+            "hour": 0
+        }
+    },
+    "zandvoort": {
+        "name": "Zandvoort",
+        "timezone": "Europe/Amsterdam",
+        "offset": 2,
+        "dst": true,
+        "start": {
+            "month": 3,
+            "day": 30,
+            "hour": 2
+        },
+        "end": {
+            "month": 10,
+            "day": 26,
+            "hour": 3
+        }
+    }
+}

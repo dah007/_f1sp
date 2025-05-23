@@ -25,6 +25,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2012,
         place_name: 'Austin, Texas, United States',
         shortName: 'Austin',
+        timezone: {
+            "name": "America/Chicago",
+            "offset": -5,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 8,
+                "hour": 2
+            },
+            "end": {
+                "month": 11,
+                "day": 1,
+                "hour": 2
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Circuit_of_the_Americas',
     },
     bahrain: {
@@ -43,6 +58,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2002,
         place_name: 'Sakhir, Bahrain',
         shortName: 'Bahrain',
+        timezone: {
+            "name": "Asia/Bahrain",
+            "offset": 3,
+            "dst": false,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Bahrain_International_Circuit',
     },
     baku: {
@@ -61,6 +91,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2016,
         place_name: 'Baku, Azerbaijan',
         shortName: 'Baku',
+        timezone: {
+            "name": "Asia/Baku",
+            "offset": 4,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Baku_City_Circuit',
     },
     catalunya: {
@@ -79,6 +124,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1991,
         place_name: 'Montmeló, Barcelona, Catalonia, Spain',
         shortName: 'Barcelona',
+        timezone: {
+            "name": "Europe/Madrid",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Circuit_de_Barcelona-Catalunya',
     },
     hungaroring: {
@@ -97,6 +157,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1986,
         place_name: 'Mogyoród, Hungary',
         shortName: 'Budapest',
+        timezone: {
+            "name": "Europe/Budapest",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Hungaroring',
     },
     imola: {
@@ -115,6 +190,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1953,
         place_name: 'Imola, Italy',
         shortName: 'Imola',
+        timezone: {
+            "name": "Europe/Rome",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Autodromo_Enzo_e_Dino_Ferrari',
     },
     interlagos: {
@@ -133,6 +223,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1940,
         place_name: 'São Paulo, Brazil',
         shortName: 'Sao Paulo',
+        timezone: {
+            "name": "America/Sao_Paulo",
+            "offset": -3,
+            "dst": true,
+            "start": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 2,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace',
     },
     jeddah: {
@@ -151,6 +256,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2021,
         place_name: 'Jeddah, Saudi Arabia',
         shortName: 'Jeddah',
+        timezone: {
+            "name": "Asia/Riyadh",
+            "offset": 3,
+            "dst": false,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Jeddah_Street_Circuit',
     },
     'las-vegas': {
@@ -169,6 +289,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2023,
         place_name: 'Las Vegas, Nevada, United States',
         shortName: 'Las Vegas',
+        timezone: {
+            "name": "America/Los_Angeles",
+            "offset": -8,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 11,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Las_Vegas_Street_Circuit',
     },
     losail: {
@@ -187,6 +322,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2012,
         place_name: 'Losail, Qatar',
         shortName: 'Losail',
+        timezone: {
+            "name": "Asia/Qatar",
+            "offset": 3,
+            "dst": false,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Losail_International_Circuit',
     },
     'marina-bay': {
@@ -205,6 +355,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2008,
         place_name: 'Marina Bay, Singapore',
         shortName: 'Singapore',
+        timezone: {
+            "name": "Asia/Singapore",
+            "offset": 8,
+            "dst": false,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Marina_Bay_Street_Circuit',
     },
     melbourne: {
@@ -223,6 +388,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1953,
         place_name: 'Melbourne, Australia',
         shortName: 'Melbourne',
+        timezone: {
+            "name": "Australia/Melbourne",
+            "offset": 11,
+            "dst": true,
+            "start": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 4,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Albert_Park_Circuit',
     },
     'mexico-city': {
@@ -241,6 +421,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1962,
         place_name: 'Mexico City, Mexico',
         shortName: 'Mexico City',
+        timezone: {
+            "name": "America/Mexico_City",
+            "offset": -6,
+            "dst": true,
+            "start": {
+                "month": 4,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez',
     },
     miami: {
@@ -259,6 +454,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2022,
         place_name: 'Miami, Florida, United States',
         shortName: 'Miami',
+        timezone: {
+            "name": "America/New_York",
+            "offset": -5,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 11,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Miami_International_Autodrome',
     },
     monaco: {
@@ -277,6 +487,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1929,
         place_name: 'Monte Carlo, Monaco',
         shortName: 'Monaco',
+        timezone: {
+            "name": "Europe/Monaco",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Circuit_de_Monaco',
     },
     montreal: {
@@ -295,6 +520,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1978,
         place_name: 'Montreal, Quebec, Canada',
         shortName: 'Montreal',
+        timezone: {
+            "name": "America/Toronto",
+            "offset": -5,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 11,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Circuit_Gilles_Villeneuve',
     },
     monza: {
@@ -313,6 +553,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1922,
         place_name: 'Monza, Italy',
         shortName: 'Monza',
+        timezone: {
+            "name": "Europe/Rome",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Autodromo_Nazionale_Monza',
     },
     shanghai: {
@@ -331,6 +586,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2004,
         place_name: 'Shanghai, China',
         shortName: 'Shanghai',
+        timezone: {
+            "name": "Asia/Shanghai",
+            "offset": 8,
+            "dst": false,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Shanghai_International_Circuit',
     },
     silverstone: {
@@ -349,6 +619,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1948,
         place_name: 'Silverstone, United Kingdom',
         shortName: 'Silverstone',
+        timezone: {
+            "name": "Europe/London",
+            "offset": 0,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Silverstone_Circuit',
     },
     'spa-francorchamps': {
@@ -367,6 +652,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1925,
         place_name: 'Stavelot, Belgium',
         shortName: 'Spa Francorchamps',
+        timezone: {
+            "name": "Europe/Brussels",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps',
     },
     spielberg: {
@@ -385,6 +685,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1969,
         place_name: 'Spielberg, Austria',
         shortName: 'Spielberg',
+        timezone: {
+            "name": "Europe/Vienna",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Red_Bull_Ring',
     },
     suzuka: {
@@ -403,6 +718,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1962,
         place_name: 'Suzuka, Japan',
         shortName: 'Suzuka',
+        timezone: {
+            "name": "Asia/Tokyo",
+            "offset": 9,
+            "dst": false,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Suzuka_International_Racing_Course',
     },
     'yas-marina': {
@@ -421,6 +751,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 2009,
         place_name: 'Yas Island, Abu Dhabi, United Arab Emirates',
         shortName: 'Abu Dhabi',
+        timezone: {
+            "name": "Asia/Dubai",
+            "offset": 4,
+            "dst": false,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Yas_Marina_Circuit',
     },
     zandvoort: {
@@ -439,6 +784,21 @@ export const CIRCUIT_DETAILS: CircuitDetailsProps = {
         opened: 1948,
         place_name: 'Zandvoort, Netherlands',
         shortName: 'Zandvoort',
+        timezone: {
+            "name": "Europe/Amsterdam",
+            "offset": 1,
+            "dst": true,
+            "start": {
+                "month": 3,
+                "day": 1,
+                "hour": 0
+            },
+            "end": {
+                "month": 10,
+                "day": 1,
+                "hour": 0
+            },
+        },
         wiki: 'https://en.wikipedia.org/wiki/Circuit_Zandvoort',
     },
 };

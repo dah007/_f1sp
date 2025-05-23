@@ -62,7 +62,7 @@ const Footer = () => {
                                 <MenuButton
                                     label="Vote"
                                     onClick={() => handleNavigationMobile('/vote')}
-                                    className="border dark:border-red-700 border-red-900"
+                                    className="dark:text-red-700 text-red-900"
                                 />
                             </li>
                             <ul className="ml-4 mt-4    ">

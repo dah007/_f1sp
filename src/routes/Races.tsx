@@ -210,8 +210,8 @@ const Races: React.FC = (): JSX.Element => {
 
     // Track the clicked driver ID
     const [clickedRowId, setClickedRowId] = useState<string | null>(() => {
-        // Extract driverId from URL if viewing driver detail
-        const raceDetailMatch = location.pathname.match(/\/drivers\/\d+\/driver\/([^/]+)/);
+        // Extract raceId from URL if viewing race detail
+        const raceDetailMatch = location.pathname.match(/\/race\/\d+\/race\/([^/]+)/);
         const extractedId = raceDetailMatch ? raceDetailMatch[1] : null;
 
         // Schedule scroll into view if we have an ID from the URL
@@ -228,20 +228,21 @@ const Races: React.FC = (): JSX.Element => {
     });
 
     const navigateRace = useCallback(
-        (driverId: string) => {
+        (id: string) => {
             // Use React's startTransition to handle the potentially suspended state
             // This prevents the UI from showing loading indicators for quick transitions
             // which is what the error message was warning about
             startTransition(() => {
+                console.log('Navigating to', id);
                 // Update URL without full navigation, preserving the table position
-                navigate(`/race/${driverId}`, { replace: true });
+                navigate(`race/${id}`, { replace: true });
                 // Set the clicked row ID to position the Outlet
-                setClickedRowId(driverId);
+                setClickedRowId(id);
 
                 // Add slight delay to ensure the row is rendered before scrolling
                 setTimeout(() => {
                     // Find the row element and scroll it into view
-                    const rowElement = document.querySelector(`tr[data-driver-id="${driverId}"]`);
+                    const rowElement = document.querySelector(`tr[data-driver-id="${id}"]`);
                     if (rowElement) {
                         rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
@@ -267,7 +268,8 @@ const Races: React.FC = (): JSX.Element => {
             cell: ({ row }) => {
                 return LinkRenderer({
                     gotoCB: () => {
-                        navigateRace(row.original?.race_id as unknown as string);
+                        // console.log('gotoCB', row.original);
+                        navigateRace(row.original?.id as unknown as string);
                     },
                     label: row.getValue('official_name'),
                     value: row.original.race_id?.toString() ?? '',

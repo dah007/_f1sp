@@ -43,6 +43,11 @@ export interface FastestLap {
     tyre_manufacturer_id: string;
 }
 
+export type PolePosition = {
+    permanent_number: number;
+    full_name: string;
+};
+
 /**
  * Represents the properties of a Formula 1 race.
  *

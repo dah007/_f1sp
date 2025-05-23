@@ -1,52 +1,37 @@
 import Header from 'components/Header';
-
-import './App.css';
-
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-
 import { lazy, Suspense, useEffect } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import './App.css';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
-import { useGetLastRaceResultsQuery, useGetNextRaceQuery } from './features/raceApi';
+import Error404Image from './assets/images/404.png';
+import Footer from './components/Footer';
+import { useGetNextRaceQuery } from './features/raceApi';
 import Home from './routes/Home';
+import Leaderboard from './routes/Leaderboard';
 import { setRaceNext } from './slices/racesSlice';
+import { setError, setLoading } from './slices/siteWideSlice';
 import { NextRaceProps, RaceResultProps } from './types/races';
 
-import Footer from './components/Footer';
-
-import Error404Image from './assets/images/404.png';
-import Leaderboard from './routes/Leaderboard';
-import { setError, setLoading } from './slices/siteWideSlice';
-
+const AccountNew = lazy(() => import('./routes/AccountNew'));
 const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
 const Constructors = lazy(() => import('./routes/Constructors'));
 const DriverDetail = lazy(() => import('./routes/DriverDetail'));
 const Drivers = lazy(() => import('./routes/Drivers'));
 const Extra = lazy(() => import('./routes/Extra'));
 const LoginForm = lazy(() => import('./routes/LoginForm'));
+const RaceDetail = lazy(() => import('./routes/RaceDetail'));
 const Races = lazy(() => import('./routes/Races'));
-const Seasons = lazy(() => import('./routes/Seasons'));
 const SeasonCurrent = lazy(() => import('./routes/SeasonCurrent'));
+const Seasons = lazy(() => import('./routes/Seasons'));
 const Standings = lazy(() => import('./routes/Standings'));
 const VoteDnD = lazy(() => import('./routes/VoteDnD'));
-const AccountNew = lazy(() => import('./routes/AccountNew'));
-
 const App = () => {
     const dispatch = useAppDispatch();
 
-    // something is wrong with the loading state --
-    // TODO: REFACTOR with skeleton loaders at the component level
-    // const loading = useAppSelector((state: RootState) => state.siteWide.loading);
     // NEXT RACE
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
-    const {
-        data: nextRaceData,
-        isLoading: nextRaceLoading,
-        isError: nextRaceError,
-    } = useGetNextRaceQuery(0) as {
-        data: RaceResultProps | undefined;
-        isLoading: boolean;
-        isError: boolean;
-    };
+    const { data: nextRaceData, isLoading: nextRaceLoading, isError: nextRaceError } = useGetNextRaceQuery(0);
+
     useEffect(() => {
         if (nextRaceError) {
             dispatch(setError(true));
@@ -55,15 +40,14 @@ const App = () => {
         if (nextRaceLoading) dispatch(setLoading(true));
         if (!nextRaceData) return;
         dispatch(setLoading(false));
-        dispatch(setRaceNext(nextRaceData as unknown as NextRaceProps));
+        dispatch(setRaceNext(nextRaceData as NextRaceProps));
 
-        const lastRaceId = nextRaceData.id - 1 || 0;
+        if (!nextRaceData) return;
+        dispatch(setLoading(false));
+        dispatch(setRaceNext(nextRaceData as NextRaceProps));
 
-        if (lastRaceId < 0) {
-            console.error('Invalid lastRaceId:', lastRaceId);
-            return;
-        }
-    }, [nextRace, dispatch, useGetLastRaceResultsQuery, nextRaceData, nextRaceLoading, nextRaceError]);
+        console.log('nextRaceData', nextRaceData);
+    }, [nextRace, dispatch, nextRaceData, nextRaceLoading, nextRaceError]);
     // </nextRace>
 
     return (
@@ -85,31 +69,6 @@ const App = () => {
                 ></div>
 
                 <Header />
-
-                {/*
-                LOADERS ARE COMMENTED OUT BECAUSE THEY ARE BUSTED
-                TODO: REFACTOR
-                */}
-                {/* {loading && (
-                    <div className="loader bg-zinc-300 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300">
-                        <div className="circle">
-                            <div className="dot"></div>
-                            <div className="outline"></div>
-                        </div>
-                        <div className="circle">
-                            <div className="dot"></div>
-                            <div className="outline"></div>
-                        </div>
-                        <div className="circle">
-                            <div className="dot"></div>
-                            <div className="outline"></div>
-                        </div>
-                        <div className="circle">
-                            <div className="dot"></div>
-                            <div className="outline"></div>
-                        </div>
-                    </div>
-                )} */}
 
                 <main
                     className="
@@ -138,7 +97,9 @@ const App = () => {
                             <Route path="account/new" element={<AccountNew />} />
                             <Route path="login" element={<LoginForm />} />
 
-                            <Route path="races/:year?/*" element={<Races />} />
+                            <Route path="races" element={<Races />}>
+                                <Route path="race/:id" element={<RaceDetail />} />
+                            </Route>
 
                             <Route path="seasons/current" element={<SeasonCurrent />} />
                             <Route path="seasons/:year?" element={<Seasons />} />
