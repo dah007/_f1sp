@@ -25,6 +25,7 @@ const SeasonCurrent = lazy(() => import('./routes/SeasonCurrent'));
 const Seasons = lazy(() => import('./routes/Seasons'));
 const Standings = lazy(() => import('./routes/Standings'));
 const VoteDnD = lazy(() => import('./routes/VoteDnD'));
+const WhatsNew = lazy(() => import('./routes/WhatsNew'));
 const App = () => {
     const dispatch = useAppDispatch();
 
@@ -80,7 +81,9 @@ const App = () => {
                 >
                     <Suspense fallback={<div className="flex justify-center items-center h-[50vh]">Loading...</div>}>
                         <Routes>
-                            <Route path="/" element={<Home />} />
+                            <Route path="/" element={<Home />}>
+                                <Route path="whats-new" element={<WhatsNew />} />
+                            </Route>
 
                             <Route path="circuits" element={<Circuits />} />
 

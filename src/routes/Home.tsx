@@ -13,6 +13,7 @@ import TotalWinsPerYear from 'components/TotalWinsPerYear';
 import { Alert, AlertDescription, AlertTitle } from 'components/ui/alert';
 import { CardFooter } from 'components/ui/card';
 import { InfoIcon } from 'lucide-react';
+import { Outlet } from 'react-router-dom';
 
 import type { RaceProps } from 'types/races';
 
@@ -72,6 +73,8 @@ const Home: React.FC = () => {
 
     return (
         <>
+            <Outlet />
+
             {voteSuccessful && (
                 <MessageBox title="Vote">
                     <p className="text-xl text-center ">{voteMessage}</p>

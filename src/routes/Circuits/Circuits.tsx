@@ -113,7 +113,7 @@ const Circuits: React.FC = (): JSX.Element => {
         return returnJSX;
     };
 
-    const toolClasses = 'absolute z-20 p-2 rounded-md top-2 bg-opacity-40';
+    const toolClasses = 'absolute z-20 p-2 rounded-md bg-opacity-40';
 
     return (
         <PageContainer title="Circuits" showBreadcrumbs showTitle>
@@ -128,7 +128,7 @@ const Circuits: React.FC = (): JSX.Element => {
             />
             {/* </newMap> */}
 
-            <div className={`${toolClasses} left-2 flex gap-4`}>
+            <div className={`${toolClasses} top-2 left-2 flex gap-4`}>
                 <CircuitSelect
                     circuitsData={CIRCUIT_DETAILS || []}
                     circuit={circuit || CIRCUIT_DETAILS['baku']}
@@ -146,7 +146,9 @@ const Circuits: React.FC = (): JSX.Element => {
                 />
             </div>
 
-            <div className={`${toolClasses} right-2 bg-zinc-800 border border-zinc-700`}>{mapInfo()}</div>
+            <div className={`${toolClasses} bottom-12 md:bottom-4 lg:top-2 right-2 bg-zinc-800 border border-zinc-700`}>
+                {mapInfo()}
+            </div>
         </PageContainer>
     );
 };
