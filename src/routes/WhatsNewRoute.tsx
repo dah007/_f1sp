@@ -10,7 +10,7 @@ const WhatsNew: React.FC = (): JSX.Element => {
                     </button>
                 </div>
                 <ul className="w-96 text-surface dark:text-white">
-                    <li className="w-full py-4">\ Fixed: Circuits map more mobile friendly</li>
+                    <li className="w-full py-4">Fixed: Circuits map more mobile friendly</li>
                     <li className="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
                         Fixed: Driver images not loading
                     </li>
@@ -18,7 +18,7 @@ const WhatsNew: React.FC = (): JSX.Element => {
                         Fixed: Driver detail being cut off
                     </li>
                     <li className="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
-                        Added: What's New route
+                        Added: What&apos;s New route
                     </li>
                     <li className="w-full border-b-2 border-neutral-100 py-4 dark:border-white/10">
                         Added: First step of SEO

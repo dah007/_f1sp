@@ -5,6 +5,7 @@ algorithm = UNDEFINED view `standings_w_constructors` as
 select
     `c`.`id` as `id`,
     `c`.`full_name` as `full_name`,
+    `c`.`name` as `short_name`,
     `scs`.`year` as `year`,
     `scs`.`position_display_order` as `position_display_order`,
     `scs`.`position_number` as `position_number`,

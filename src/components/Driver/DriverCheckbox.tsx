@@ -31,12 +31,13 @@ const DriverCheckbox = ({
                             checked={voteValues.driversInCrash[driver.id] || false}
                             disabled={disabled}
                             onCheckedChange={() => {
+                                console.log('voteValues.driversInCrash', voteValues.driversInCrash);
                                 const currentDriverStatus = voteValues.driversInCrash[driver.id] || false;
                                 const newDriverStatus = !currentDriverStatus;
                                 console.log('driver.id:', driver.id);
                                 console.log('newDriverStatus:', newDriverStatus);
                                 updateVoteValues({
-                                    driversInCrash: { [driver.id]: newDriverStatus, ...voteValues.driversInCrash },
+                                    driversInCrash: { ...voteValues.driversInCrash, [driver.id]: newDriverStatus },
                                 });
                             }}
                         />

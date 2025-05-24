@@ -6,26 +6,27 @@ import { RootState, useAppDispatch, useAppSelector } from './app/store';
 import Error404Image from './assets/images/404.png';
 import Footer from './components/Footer';
 import { useGetNextRaceQuery } from './features/raceApi';
-import Home from './routes/Home';
-import Leaderboard from './routes/Leaderboard';
+import Home from './routes/HomeRoute';
+import Leaderboard from './routes/LeaderboardRoute';
+import Static from './routes/Static';
 import { setRaceNext } from './slices/racesSlice';
 import { setError, setLoading } from './slices/siteWideSlice';
 import { NextRaceProps, RaceResultProps } from './types/races';
 
-const AccountNew = lazy(() => import('./routes/AccountNew'));
-const Circuits = lazy(() => import('./routes/Circuits/Circuits'));
-const Constructors = lazy(() => import('./routes/Constructors'));
-const DriverDetail = lazy(() => import('./routes/DriverDetail'));
-const Drivers = lazy(() => import('./routes/Drivers'));
-const Extra = lazy(() => import('./routes/Extra'));
-const LoginForm = lazy(() => import('./routes/LoginForm'));
-const RaceDetail = lazy(() => import('./routes/RaceDetail'));
-const Races = lazy(() => import('./routes/Races'));
-const SeasonCurrent = lazy(() => import('./routes/SeasonCurrent'));
-const Seasons = lazy(() => import('./routes/Seasons'));
-const Standings = lazy(() => import('./routes/Standings'));
-const VoteDnD = lazy(() => import('./routes/VoteDnD'));
-const WhatsNew = lazy(() => import('./routes/WhatsNew'));
+const AccountNew = lazy(() => import('./routes/AccountNewRoute'));
+const Circuits = lazy(() => import('./routes/Circuits/CircuitsRoute'));
+const Constructors = lazy(() => import('./routes/ConstructorsRoute'));
+const DriverDetail = lazy(() => import('./routes/DriverDetailRoute'));
+const Drivers = lazy(() => import('./routes/DriversRoute'));
+const Extra = lazy(() => import('./routes/ExtraRoute'));
+const LoginForm = lazy(() => import('./routes/LoginFormRoute'));
+const RaceDetail = lazy(() => import('./routes/RaceDetailRoute'));
+const Races = lazy(() => import('./routes/RacesRoute'));
+const SeasonCurrent = lazy(() => import('./routes/SeasonCurrentRoute'));
+const Seasons = lazy(() => import('./routes/SeasonsRoute'));
+const Standings = lazy(() => import('./routes/StandingsRoute'));
+const VoteDnD = lazy(() => import('./routes/VoteRoute'));
+const WhatsNew = lazy(() => import('./routes/WhatsNewRoute'));
 const App = () => {
     const dispatch = useAppDispatch();
 
@@ -96,6 +97,8 @@ const App = () => {
                             <Route path="extra" element={<Extra />} />
 
                             <Route path="leaderboard" element={<Leaderboard />} />
+
+                            <Route path="links" element={<Static page="links" />} />
 
                             <Route path="account/new" element={<AccountNew />} />
                             <Route path="login" element={<LoginForm />} />

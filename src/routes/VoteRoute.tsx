@@ -26,10 +26,9 @@ import { setDriversByYear } from 'slices/driversSlice';
 import { setError, setLoading } from 'slices/siteWideSlice';
 import { type Driver } from 'types/drivers';
 import { type VoteValueProps } from 'types/vote';
-import LoginForm from './LoginForm';
+import LoginForm from './LoginFormRoute';
 
 const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]';
-
 
 // TODO: Refactor this component the data object side is a hawt mess.
 const Vote: React.FC = (): JSX.Element => {
@@ -39,7 +38,7 @@ const Vote: React.FC = (): JSX.Element => {
 
     const driversByYear = useAppSelector((state: RootState) => state.drivers.driversByYear);
     const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
-    const user = useAppSelector((state: RootState) => state.user.user);
+    const user = JSON.parse(localStorage.getItem('user') ?? '{}'); // useAppSelector((state: RootState) => state.user.user);
 
     const [submitStatus, setSubmitStatus] = useState({
         isSubmitting: false,
@@ -48,7 +47,7 @@ const Vote: React.FC = (): JSX.Element => {
         errorMessage: '',
     });
 
-    const [isClosed,] = useState(false);
+    const [isClosed] = useState(false);
 
     const [submitVote, { isLoading: isSubmittingVote }] = useSubmitVoteMutation();
 
@@ -88,16 +87,16 @@ const Vote: React.FC = (): JSX.Element => {
     const {
         data: voteCheckData,
         isLoading: voteCheckIsLoading,
-        isError: voteCheckIsError
+        isError: voteCheckIsError,
     } = useCheckVoteQuery({
         email: user?.email || '',
-        race_id: raceNext?.id || 0
+        race_id: raceNext?.id || 0,
     }) as {
         data: VoteValueProps | undefined;
         isLoading: boolean;
         isError: boolean;
     };
-    
+
     useEffect(() => {
         console.log('0-Vote check results:', voteCheckResults);
         if (voteCheckIsError) {
@@ -228,21 +227,23 @@ const Vote: React.FC = (): JSX.Element => {
             <div className="flex h-fit w-full justify-center">
                 <div className="text-center p-4">
                     <div
-                    className="
+                        className="
                     w-full dark:text-zinc-300 text-zinc-800 text-center p-4 text-2xl krona-one-regular"
-                >
-                    Voting Closed
-                </div>
-                <p>Next race: {raceNext?.date} - {raceNext?.short_name}</p>
-                <p>Voting opens on Wednesday of Race week</p>
-                <p>Voting closes 1 hour before lights out</p>
+                    >
+                        Voting Closed
+                    </div>
+                    <p>
+                        Next race: {raceNext?.date} - {raceNext?.short_name}
+                    </p>
+                    <p>Voting opens on Wednesday of Race week</p>
+                    <p>Voting closes 1 hour before lights out</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <Form {...form}>            
+        <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 {/* TITLE */}
                 <div
@@ -258,7 +259,7 @@ const Vote: React.FC = (): JSX.Element => {
 
                 <div className="flex flex-col md:grid md:grid-cols-2 md:grid-rows-2 gap-4 align-middle">
                     {/* LEFT COLUMN */}
-                    <div className={cn("row-span-1 md:row-span-2", columnHeights)}>
+                    <div className={cn('row-span-1 md:row-span-2', columnHeights)}>
                         <Card
                             className={cn(
                                 columnHeights,
@@ -413,14 +414,33 @@ const Vote: React.FC = (): JSX.Element => {
                                 </div>
                             ) : (
                                 <>
-                                    <p>Hello, welcome back!</p>
+                                    <p>Let&apos;s do this! Place your votes!</p>
 
-                                    <button 
+                                    <p>
+                                        <strong className="font-extrabold">NOTE:</strong> Your votes are saved, however
+                                        due to a bug, they aren&apos;t currently displayed in the UI. There is an open
+                                        issue for{' '}
+                                        <a
+                                            href="https://github.com/dah007/_f1sp/issues/20"
+                                            className="text-blue-700 dark:text-blue-500 hover:text-blue-300"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            it
+                                        </a>
+                                        .
+                                    </p>
+
+                                    <button
                                         className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
                                         type="submit"
                                         disabled={isSubmittingVote || submitStatus.isSubmitting}
                                     >
-                                        {isSubmittingVote || submitStatus.isSubmitting ? 'Submitting...' : 'Submit Vote'}
+                                        {isSubmittingVote || submitStatus.isSubmitting
+                                            ? 'Submitting...'
+                                            : user?.email
+                                            ? 'Update Vote'
+                                            : 'Submit Vote'}
                                     </button>
                                 </>
                             )}

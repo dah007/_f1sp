@@ -1,5 +1,5 @@
 import { YEAR } from '@/constants/constants';
-import { NextLinkRaceProps } from '@/routes/Races';
+import { NextLinkRaceProps } from '@/routes/RacesRoute';
 import { FastestLap, RaceProps, type NextRaceProps } from '@/types/races';
 import { buildErrorObject, dbFetch } from '@/utils';
 import { baseQueryWithRetry } from '@/utils/query';

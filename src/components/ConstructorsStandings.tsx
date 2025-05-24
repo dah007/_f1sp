@@ -43,17 +43,15 @@ const ConstructorStandings = ({ className, year = YEAR }: { className?: string; 
     };
 
     useEffect(() => {
-        window.setTimeout(() => {
-            if (constructorStandingsIsError) {
-                dispatch(setError(true));
-                return;
-            }
-            if (constructorStandingsIsLoading) dispatch(setLoading(true));
-            if (!constructorStandingsData) return;
+        if (constructorStandingsIsError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (constructorStandingsIsLoading) dispatch(setLoading(true));
+        if (!constructorStandingsData) return;
 
-            dispatch(setConstructorStandings(constructorStandingsData));
-            dispatch(setLoading(false));
-        }, 2000);
+        dispatch(setConstructorStandings(constructorStandingsData));
+        dispatch(setLoading(false));
     }, [constructorStandingsData, constructorStandingsIsLoading, constructorStandingsIsError, dispatch]);
 
     if (!constructorStandings) {

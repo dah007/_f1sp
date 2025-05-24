@@ -1,8 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { expect, test, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import DriverDetail from '../DriverDetail';
+import { beforeEach, expect, test, vi } from 'vitest';
+import DriverDetail from '../DriverDetailRoute';
 // import { Driver } from '../../types';
 
 // Mock the API call

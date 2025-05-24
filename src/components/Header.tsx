@@ -190,7 +190,7 @@ const Header: React.FC = () => {
             >
                 <Newspaper size={32} />
                 <div className="text-xs text-zinc-300">
-                    What's
+                    What&apos;s
                     <br />
                     New
                 </div>
@@ -235,7 +235,7 @@ const Header: React.FC = () => {
                         className="border dark:border-red-700 border-red-900"
                     />
                 </li>
-                <ul className="ml-4 mt-4    ">
+                <ul className="ml-4 mt-4">
                     <li>
                         <MenuButton label="Leaderboard" onClick={() => handleNavigationMobile('/leaderboard')} />
                     </li>

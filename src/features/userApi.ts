@@ -20,7 +20,9 @@ export const userApi = createApi({
     baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
         checkVote: builder.query<VoteValueProps, { email: string; race_id: number }>({
-            query: ({ email, race_id }) => `voteCheck?$filter=email eq '${email}' and race_id eq ${race_id}`,
+            query: ({ email, race_id }) => {
+                return `voteCheck?$filter=email eq '${email}' and race_id eq ${race_id}`;
+            },
             transformResponse: (response: { value: VoteValueProps }) => {
                 console.info('-=-=-==- Vote check response:', response);
                 return response?.value ?? {};
