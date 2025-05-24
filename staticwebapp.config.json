@@ -26,10 +26,6 @@
         {
             "route": "/assets/*",
             "allowedRoles": ["anonymous"]
-        },
-        {
-            "route": "/assets/static/*.html",
-            "allowedRoles": ["anonymous"]
         }
     ],
     "trailingSlash": "auto"

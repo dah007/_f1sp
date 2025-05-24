@@ -35,3 +35,4 @@ dbServer/my.cnf
 
 *.yarn
 *:Zone.Identifier
+.env
