@@ -1,17 +1,12 @@
-import { cn } from '@/lib/utils';
 import { DndContext, UniqueIdentifier } from '@dnd-kit/core';
 import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable';
 import { Scrollbar } from '@radix-ui/react-scroll-area';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
 import SortableItem from 'components/dnd-kit/SortableItem';
-import DriverCheckbox from 'components/Driver/DriverCheckbox';
 import LoadingToast from 'components/LoadingToast';
-import Toggle from 'components/Toggle';
 import { Card, CardTitle } from 'components/ui/card';
 import { Form } from 'components/ui/form';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
 import { ScrollArea } from 'components/ui/scroll-area';
 
 import { YEAR } from 'constants/constants';
@@ -19,6 +14,11 @@ import { YEAR } from 'constants/constants';
 import { useGetDriversByYearQuery } from 'features/driversApi';
 import { SubmitVoteRequest, useCheckVoteQuery, useSubmitVoteMutation } from 'features/userApi';
 
+import DriverCheckbox from '@/components/Driver/DriverCheckbox';
+import Toggle from '@/components/Toggle';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -257,195 +257,181 @@ const Vote: React.FC = (): JSX.Element => {
                     Voting closes 1 hours before lights out & opens on Tuesday after a race.
                 </p>
 
-                <div className="flex flex-col md:grid md:grid-cols-2 md:grid-rows-2 gap-4 align-middle">
-                    {/* LEFT COLUMN */}
-                    <div className={cn('row-span-1 md:row-span-2', columnHeights)}>
-                        <Card
-                            className={cn(
-                                columnHeights,
-                                'overflow-hidden',
-                                'dark:bg-zinc-800 bg-zinc-300 w-full h-full',
-                            )}
-                        >
-                            <CardTitle className="pl-4 pt-0 m-0">Finish Order</CardTitle>
+                <div className="flex flex-col">
+                    <Card className="dark:bg-zinc-800 bg-zinc-300 w-[98%] h-[120vh]">
+                        <CardTitle className="pl-4 pt-0 m-0">Finish Order</CardTitle>
 
-                            <ScrollArea className={cn(columnHeights)}>
-                                <Scrollbar />
-                                <DndContext onDragEnd={handleDragEnd}>
-                                    <SortableContext items={voteOrderedDrivers} strategy={rectSortingStrategy}>
-                                        {voteOrderedDrivers?.map((driver, index) => (
-                                            <SortableItem
-                                                id={driver.id}
-                                                index={index + 1}
-                                                key={`${driver.id}-${index}`}
-                                                label={driver.name}
-                                                value={driver.id}
-                                            />
-                                        ))}
-                                    </SortableContext>
-                                </DndContext>
-                            </ScrollArea>
-                        </Card>
-                    </div>
-
-                    {/* RIGHT COLUMN */}
-                    <div className="h-[32vh]">
-                        <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full h-full')}>
-                            <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
-                            <div className="grid grid-cols-2 gap-4 pr-4">
-                                {/* FIRST LAP CRASH */}
-                                <div className="overflow-hidden rounded-lg p-4 flex flex-col gap-3">
-                                    <div className="flex items-center space-x-2">
-                                        <Toggle
-                                            className="border-zinc-500"
-                                            id="firstLapCrash"
-                                            onClick={() => {
-                                                setToggleCrash(!toggleCrash);
-                                                setDriversInCrashDisabled(!driversInCrashDisabled);
-                                            }}
+                        <ScrollArea className="h-[120vh] w-full">
+                            <Scrollbar />
+                            <DndContext onDragEnd={handleDragEnd}>
+                                <SortableContext items={voteOrderedDrivers} strategy={rectSortingStrategy}>
+                                    {voteOrderedDrivers?.map((driver, index) => (
+                                        <SortableItem
+                                            id={driver.id}
+                                            index={index + 1}
+                                            key={`${driver.id}-${index}`}
+                                            label={driver.name}
+                                            value={driver.id}
                                         />
-                                        <Label htmlFor="firstLapCrash">Crash on First Lap</Label>
-                                    </div>
+                                    ))}
+                                </SortableContext>
+                            </DndContext>
+                        </ScrollArea>
+                    </Card>
+                </div>
 
-                                    <div className={cn('border', 'border-zinc-400 p-4 rounded-lg')}>
-                                        <Label
-                                            htmlFor="driversInCrash"
-                                            className="w-full p-1 pl-0 pb-0 border-b-zinc-300 border-b text-lg"
-                                        >
-                                            Drivers in crash
-                                        </Label>
-                                        <ScrollArea className="w-full h-[10vh] m-3 p-0 scroll-pb-20">
-                                            <Scrollbar />
-                                            {driversByYear?.map((driver, index) => {
-                                                if (!driver.name || driver.name.trim() === '') return null;
-                                                return (
-                                                    <div className="p-0 pb-2" key={`${driver.id}-${index}`}>
-                                                        <DriverCheckbox
-                                                            disabled={driversInCrashDisabled}
-                                                            driver={driver}
-                                                            index={index}
-                                                            key={`${driver.id}-${index}`}
-                                                            updateVoteValues={updateVoteValues}
-                                                            voteValues={voteValues}
-                                                        />
-                                                    </div>
-                                                );
-                                            })}
-                                        </ScrollArea>
-                                    </div>
+                {/* RIGHT COLUMN */}
+                <div className="h-[32vh] mt-16 flex flex-col gap-4">
+                    <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full h-full')}>
+                        <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
+                        <div className="grid grid-cols-2 gap-4 pr-4">
+                            {/* FIRST LAP CRASH */}
+                            <div className="overflow-hidden rounded-lg p-4 flex flex-col gap-3">
+                                <div className="flex items-center space-x-2">
+                                    <Toggle
+                                        className="border-zinc-500"
+                                        id="firstLapCrash"
+                                        onClick={() => {
+                                            setToggleCrash(!toggleCrash);
+                                            setDriversInCrashDisabled(!driversInCrashDisabled);
+                                        }}
+                                    />
+                                    <Label htmlFor="firstLapCrash">Crash on First Lap</Label>
                                 </div>
 
-                                <div className="flex flex-col gap-4">
-                                    <Label htmlFor="yellows" className="mt-2">
-                                        Total Yellows
+                                <div className={cn('border', 'border-zinc-400 p-4 rounded-lg')}>
+                                    <Label
+                                        htmlFor="driversInCrash"
+                                        className="w-full p-1 pl-0 pb-0 border-b-zinc-300 border-b text-lg"
+                                    >
+                                        Drivers in crash
                                     </Label>
-                                    <Input
-                                        className="border-zinc-400"
-                                        id="yellows"
-                                        min={0}
-                                        onChange={(e) => updateVoteValues({ yellows: Number(e.target.value) })}
-                                        placeholder="0"
-                                        type="number"
-                                    />
-                                    <Label htmlFor="reds" className="mt-2">
-                                        Total Reds
-                                    </Label>
+                                    <ScrollArea className="w-full h-[10vh] m-3 p-0 scroll-pb-20">
+                                        <Scrollbar />
+                                        {driversByYear?.map((driver, index) => {
+                                            if (!driver.name || driver.name.trim() === '') return null;
+                                            return (
+                                                <div className="p-0 pb-2" key={`${driver.id}-${index}`}>
+                                                    <DriverCheckbox
+                                                        disabled={driversInCrashDisabled}
+                                                        driver={driver}
+                                                        index={index}
+                                                        key={`${driver.id}-${index}`}
+                                                        updateVoteValues={updateVoteValues}
+                                                        voteValues={voteValues}
+                                                    />
+                                                </div>
+                                            );
+                                        })}
+                                    </ScrollArea>
+                                </div>
+                            </div>
 
-                                    <Input
-                                        className="border-zinc-400"
-                                        id="reds"
-                                        min={0}
-                                        onChange={(e) => updateVoteValues({ reds: Number(e.target.value) })}
-                                        placeholder="0"
-                                        type="number"
+                            <div className="flex flex-col gap-4">
+                                <Label htmlFor="yellows" className="mt-2">
+                                    Total Yellows
+                                </Label>
+                                <Input
+                                    className="border-zinc-400"
+                                    id="yellows"
+                                    min={0}
+                                    onChange={(e) => updateVoteValues({ yellows: Number(e.target.value) })}
+                                    placeholder="0"
+                                    type="number"
+                                />
+                                <Label htmlFor="reds" className="mt-2">
+                                    Total Reds
+                                </Label>
+
+                                <Input
+                                    className="border-zinc-400"
+                                    id="reds"
+                                    min={0}
+                                    onChange={(e) => updateVoteValues({ reds: Number(e.target.value) })}
+                                    placeholder="0"
+                                    type="number"
+                                />
+                                <div className="flex items-center space-x-2 mb-4">
+                                    <Toggle
+                                        id="rain"
+                                        onClick={() => {
+                                            setToggleRain(!toggleRain);
+                                            updateVoteValues({ rain: !voteValues.rain });
+                                        }}
                                     />
-                                    <div className="flex items-center space-x-2 mb-4">
-                                        <Toggle
-                                            id="rain"
-                                            onClick={() => {
-                                                setToggleRain(!toggleRain);
-                                                updateVoteValues({ rain: !voteValues.rain });
-                                            }}
-                                        />
-                                        <Label htmlFor="rain">Rain</Label>
-                                    </div>
-                                    <div className={cn(toggleRain ? 'block' : 'hidden', 'p-4 pt-0')}>
-                                        <div className="flex flex-col gap-2">
-                                            <div className="flex items-center gap-2">
-                                                <Toggle
-                                                    id="intermediates"
-                                                    onClick={() =>
-                                                        updateVoteValues({ greenTires: !voteValues.greenTires })
-                                                    }
-                                                />
-                                                <Label htmlFor="intermediates">Intermediates</Label>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Toggle
-                                                    id="fullWetBlueTires"
-                                                    onClick={() =>
-                                                        updateVoteValues({ blueTires: !voteValues.blueTires })
-                                                    }
-                                                />
-                                                <Label htmlFor="fullWetBlueTires">Full Wet</Label>
-                                            </div>
+                                    <Label htmlFor="rain">Rain</Label>
+                                </div>
+                                <div className={cn(toggleRain ? 'block' : 'hidden', 'p-4 pt-0')}>
+                                    <div className="flex flex-col gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <Toggle
+                                                id="intermediates"
+                                                onClick={() => updateVoteValues({ greenTires: !voteValues.greenTires })}
+                                            />
+                                            <Label htmlFor="intermediates">Intermediates</Label>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Toggle
+                                                id="fullWetBlueTires"
+                                                onClick={() => updateVoteValues({ blueTires: !voteValues.blueTires })}
+                                            />
+                                            <Label htmlFor="fullWetBlueTires">Full Wet</Label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </Card>
-                    </div>
-                    <div className="col-start-2 row-start-2 h-[32vh]">
-                        <Card className="p-4 dark:bg-zinc-800 bg-zinc-300 h-full">
-                            <CardTitle className="mb-4">Submit Vote</CardTitle>
+                        </div>
+                    </Card>
+                </div>
+                <div className="col-start-2 row-start-2 h-[32vh]">
+                    <Card className="p-4 dark:bg-zinc-800 bg-zinc-300 h-full">
+                        <CardTitle className="mb-4">Submit Vote</CardTitle>
 
-                            {submitStatus.isError && (
-                                <div className="mb-4 p-3 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 rounded">
-                                    {submitStatus.errorMessage}
-                                </div>
-                            )}
+                        {submitStatus.isError && (
+                            <div className="mb-4 p-3 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 rounded">
+                                {submitStatus.errorMessage}
+                            </div>
+                        )}
 
-                            {submitStatus.isSuccess ? (
-                                <div className="text-center p-4">
-                                    <p className="text-green-600 dark:text-green-400 font-semibold">
-                                        Vote submitted successfully!
-                                    </p>
-                                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Redirecting...</p>
-                                </div>
-                            ) : (
-                                <>
-                                    <p>Let&apos;s do this! Place your votes!</p>
+                        {submitStatus.isSuccess ? (
+                            <div className="text-center p-4">
+                                <p className="text-green-600 dark:text-green-400 font-semibold">
+                                    Vote submitted successfully!
+                                </p>
+                                <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Redirecting...</p>
+                            </div>
+                        ) : (
+                            <>
+                                <p>Let&apos;s do this! Place your votes!</p>
 
-                                    <p>
-                                        <strong className="font-extrabold">NOTE:</strong> Your votes are saved, however
-                                        due to a bug, they aren&apos;t currently displayed in the UI. There is an open
-                                        issue for{' '}
-                                        <a
-                                            href="https://github.com/dah007/_f1sp/issues/20"
-                                            className="text-blue-700 dark:text-blue-500 hover:text-blue-300"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            it
-                                        </a>
-                                        .
-                                    </p>
-
-                                    <button
-                                        className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
-                                        type="submit"
-                                        disabled={isSubmittingVote || submitStatus.isSubmitting}
+                                <p>
+                                    <strong className="font-extrabold">NOTE:</strong> Your votes are saved, however due
+                                    to a bug, they aren&apos;t currently displayed in the UI. There is an open issue for{' '}
+                                    <a
+                                        href="https://github.com/dah007/_f1sp/issues/20"
+                                        className="text-blue-700 dark:text-blue-500 hover:text-blue-300"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                     >
-                                        {isSubmittingVote || submitStatus.isSubmitting
-                                            ? 'Submitting...'
-                                            : user?.email
-                                            ? 'Update Vote'
-                                            : 'Submit Vote'}
-                                    </button>
-                                </>
-                            )}
-                        </Card>
-                    </div>
+                                        it
+                                    </a>
+                                    .
+                                </p>
+
+                                <button
+                                    className="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
+                                    type="submit"
+                                    disabled={isSubmittingVote || submitStatus.isSubmitting}
+                                >
+                                    {isSubmittingVote || submitStatus.isSubmitting
+                                        ? 'Submitting...'
+                                        : user?.email
+                                        ? 'Update Vote'
+                                        : 'Submit Vote'}
+                                </button>
+                            </>
+                        )}
+                    </Card>
                 </div>
             </form>
         </Form>
