@@ -125,7 +125,7 @@ const toggleMenu = () => {
 };
 
 /**
- * Header component for the F1//SP application.
+ * Header component for the F1//sp application.
  *
  * Renders a responsive navigation header with:
  * - Logo that navigates to home page
@@ -174,26 +174,22 @@ const Header: React.FC = () => {
         <header
             className="
             flex 
-            gap-6 
-            items-end 
+            gap-4 
+            items-start 
             w-full
-            p-6 mb-0
+            p-2 pb-1 mb-0
             bg-zinc-300
           dark:bg-zinc-800 
             shadow-md"
         >
             <div
-                className="cursor-pointer absolute top-4 right-4 text-right"
+                className="cursor-pointer absolute top-4 right-4 flex flex-col items-center"
                 title="What's New"
                 role="button"
                 onClick={() => handleNavigation('/whats-new')}
             >
-                <Newspaper size={32} />
-                <div className="text-xs text-zinc-300">
-                    What&apos;s
-                    <br />
-                    New
-                </div>
+                <Newspaper size={16} />
+                <div className="text-xs text-zinc-300 text-nowrap">What&apos;s New</div>
             </div>
             {/* HAMBURGER MENU */}
             <div className="flex lg:hidden xl:hidden justify-end grow">
@@ -206,14 +202,14 @@ const Header: React.FC = () => {
             </div>
 
             {/* LOGOS */}
-            <div className="flex lg:hidden xl:hidden justify-start grow">
-                <a title="F1//SP home" onClick={() => handleNavigation('/')}>
-                    <img src={F1SPlogoHorizontal} alt="F1//SP Logo" className="w-36" />
+            <div className="flex lg:hidden xl:hidden justify-start grow pt-0 mt-0">
+                <a title="F1//sp home" onClick={() => handleNavigation('/')}>
+                    <img src={F1SPlogoHorizontal} alt="F1//sp Logo" className="w-36" />
                 </a>
             </div>
             <div className="hidden md:hidden lg:flex xl:flex justify-start cursor-pointer">
-                <a title="F1//SP home" onClick={() => handleNavigation('/')}>
-                    <img src={F1SPlogo} alt="F1//SP Logo" className="w-24" />
+                <a title="F1//sp home" onClick={() => handleNavigation('/')}>
+                    <img src={F1SPlogo} alt="F1//sp Logo" className="w-24" />
                 </a>
             </div>
 

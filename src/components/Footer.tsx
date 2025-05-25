@@ -204,7 +204,7 @@ const Footer = () => {
                         <img src={dah007Logo} alt="DAH007 Logo" className="w-32" />
                     </a>
 
-                    <p className="text-xs text-gray-500 dark:text-gray-400">&copy; 2025 F1//SP, DAH007.dev</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">&copy; 2025 F1//sp, DAH007.dev</p>
                 </div>
                 <p>
                     All content presented on this site, including statistics, predictions, and analyses, is provided for
