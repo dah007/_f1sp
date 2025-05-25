@@ -406,15 +406,14 @@ const Vote: React.FC = (): JSX.Element => {
                                 <p>
                                     <strong className="font-extrabold">NOTE:</strong> Your votes are saved, however due
                                     to a bug, they aren&apos;t currently displayed in the UI. There is an open issue for{' '}
-                                    <a
+                                    {/* <a
                                         href="https://github.com/dah007/_f1sp/issues/20"
                                         className="text-blue-700 dark:text-blue-500 hover:text-blue-300"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                    >
-                                        it
-                                    </a>
-                                    .
+                                    > */}
+                                    it
+                                    {/* </a> */}.
                                 </p>
 
                                 <button
