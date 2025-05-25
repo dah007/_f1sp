@@ -27,8 +27,7 @@ import { setError, setLoading } from 'slices/siteWideSlice';
 import { type Driver } from 'types/drivers';
 import { type VoteValueProps } from 'types/vote';
 import LoginForm from './LoginFormRoute';
-
-const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]';
+// const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]';
 
 // TODO: Refactor this component the data object side is a hawt mess.
 const Vote: React.FC = (): JSX.Element => {
