@@ -2,7 +2,7 @@ import { YEAR } from '@/constants/constants';
 import { cn } from '@/lib/utils';
 import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.svg';
 import F1SPlogo from 'assets/f1sp.svg';
-import { Newspaper } from 'lucide-react';
+import { LucideCoffee, Newspaper } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { DesktopNavigation } from './DesktopNavigation';
@@ -183,7 +183,7 @@ const Header: React.FC = () => {
             shadow-md"
         >
             <div
-                className=" absolute top-4 right-4 text-right"
+                className="cursor-pointer absolute top-4 right-4 text-right"
                 title="What's New"
                 role="button"
                 onClick={() => handleNavigation('/whats-new')}
@@ -223,6 +223,11 @@ const Header: React.FC = () => {
 
             {/* MOBILE MENU */}
             <ul id="menu" className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50">
+                <div className="absolute bottom-8 right-8">
+                    <a href="https://buymeacoffee.com/dah007" rel="noreferrer" target="_blank" title="Buy me a coffee">
+                        <LucideCoffee size="32" className="text-yellow-400 light:text-brown-500" />
+                    </a>
+                </div>
                 <li className="md:hidden z-90 fixed top-4 right-6">
                     <a href="javascript:void(0)" className="text-right text-white text-4xl" onClick={toggleMenu}>
                         &times;

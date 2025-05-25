@@ -1,109 +1,119 @@
-import CardContainer from '@/components/CardContainer';
 import { cn } from '@/lib/utils';
 import { ConstructorStanding, DriverStanding } from '@/types/standings';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-import ConstructorsStanding from 'components/ConstructorsStandings';
-import DriverStandings from 'components/DriverStandings';
 import PageContainer from 'components/PageContainer';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from 'components/ui/chart';
 import { useGetConstructorStandingsQuery, useGetDriverStandingsQuery } from 'features/standingsApi';
 import React, { JSX, useEffect } from 'react';
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from 'recharts';
-import { driversConfig, selectConstructorStandings, selectDriverStandings } from 'selectors/standingsSelector';
+import { Bar, BarChart, LabelList, XAxis, YAxis } from 'recharts';
+import { selectConstructorStandings, selectDriverStandings } from 'selectors/standingsSelector';
 import { setConstructorStandings, setDriverStandings } from 'slices/standingsSlice';
 
-export function DriverChart({ data, className }: { data: DriverStanding[]; className?: string }): JSX.Element {
-    const driversChartConfig = driversConfig() satisfies ChartConfig;
-    return (
-        <>
-            <ChartContainer config={driversChartConfig} className={className}>
-                <BarChart accessibilityLayer data={data}>
-                    <CartesianGrid vertical={false} />
-                    <XAxis
-                        dataKey="name"
-                        tickLine={false}
-                        tickMargin={10}
-                        axisLine={false}
-                        tickFormatter={(value) => value.slice(0, 3)}
-                    />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                    <Bar dataKey="points" radius={8} />
-                </BarChart>
-            </ChartContainer>
-        </>
-    );
-}
+// for recharts v2.1 and above
+import CardContainer from '@/components/CardContainer';
+import ConstructorStandings from '@/components/ConstructorsStandings';
+import DriverStandings from '@/components/DriverStandings';
+import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
 
-function ConstructorChart({ data }: { data: ConstructorStanding[]; className?: string }): JSX.Element {
-    const chartConfig = {
+export function ConstructorChart({
+    data,
+    className,
+}: {
+    data: ConstructorStanding[];
+    className?: string;
+}): JSX.Element {
+    const constructorsChartConfig = {
         points: {
             label: 'Points',
             color: 'hsl(var(--chart-1))',
         },
     } satisfies ChartConfig;
 
+    // Logarithmic transform for points (add 1 to avoid log(0))
+    const logData = data.map((item) => ({
+        ...item,
+        logPoints: Math.log10(item.points + 1),
+    }));
+
     return (
-        <ChartContainer config={chartConfig} className="mb-16 h-[28vh] w-[100%] overflow-hidden">
-            <BarChart accessibilityLayer data={data} layout="vertical">
-                <YAxis
-                    dataKey="name"
-                    type="category"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                    hide
-                />
-                <CartesianGrid vertical={false} />
+        <ChartContainer config={constructorsChartConfig} className={cn('w-[85vw]', className)}>
+            <BarChart accessibilityLayer data={logData} layout="vertical">
+                <YAxis dataKey="short_name" type="category" hide width={0} />
+                <XAxis type="number" hide />
 
                 <ChartTooltip
                     content={
                         <ChartTooltipContent
                             className="w-[150px] bg-zinc-800 dark:bg-zinc-600 text-lg"
-                            labelKey="full_name"
-                            nameKey="full_name"
+                            nameKey="name"
+                            formatter={(_value: ValueType, _name: NameType, { payload }) => [
+                                payload?.points,
+                                ' Points',
+                            ]}
                         />
                     }
                     cursor={true}
                     wrapperStyle={{ outline: 'none' }}
                 />
-
-                <XAxis dataKey="points" type="number" hide />
-
-                <Bar dataKey="points" radius={4} layout="vertical">
+                <Bar dataKey="logPoints" radius={4}>
                     <LabelList
-                        fill={`white`}
+                        fill="white"
                         className="font-bold"
                         dataKey="short_name"
                         position="insideLeft"
-                        offset={8}
+                        offset={0}
                         fontSize={12}
-                        // fill="fill-[--chart-1]"
-                        formatter={(
-                            value: string,
-                            entry: {
-                                payload: { fill?: string; name?: string; short_name?: string };
-                                fill?: string;
-                            },
-                        ): string => {
-                            console.log('entry', entry);
+                        style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                    />
+                </Bar>
+            </BarChart>
+        </ChartContainer>
+    );
+}
 
-                            // Use the entry's fill to determine contrast
-                            const fill = entry?.payload?.fill || entry?.fill;
+export function DriverChart({ data, className }: { data: DriverStanding[]; className?: string }): JSX.Element {
+    const driversChartConfig = {
+        points: {
+            label: 'Points',
+            color: 'hsl(var(--chart-1))',
+        },
+    } satisfies ChartConfig;
 
-                            // Convert fill color to luminance and return contrasting color
-                            // This assumes fill is a valid hex color
-                            if (!fill) return value;
+    // Logarithmic transform for points (add 1 to avoid log(0))
+    const logData = data.map((item) => ({
+        ...item,
+        logPoints: Math.log10(item.points + 1),
+    }));
 
-                            // Simple contrast calculation - for more accuracy you could use a color utility
-                            const hex = fill.replace('#', '');
-                            const r = parseInt(hex.substr(0, 2), 16);
-                            const g = parseInt(hex.substr(2, 2), 16);
-                            const b = parseInt(hex.substr(4, 2), 16);
-                            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return (
+        <ChartContainer config={driversChartConfig} className={cn('w-[85vw]', className)}>
+            <BarChart accessibilityLayer data={logData} layout="vertical" className="h-full">
+                <YAxis dataKey="name" type="category" hide width={0} />
+                <XAxis type="number" hide />
 
-                            return brightness > 128 ? '#000000' : '#ffffff';
-                        }}
+                <ChartTooltip
+                    content={
+                        <ChartTooltipContent
+                            className="w-[150px] bg-zinc-800 dark:bg-zinc-600 text-lg"
+                            nameKey="name"
+                            formatter={(_value: ValueType, _name: NameType, { payload }) => [
+                                payload?.points,
+                                ' Points',
+                            ]}
+                        />
+                    }
+                    cursor={true}
+                    wrapperStyle={{ outline: 'none' }}
+                />
+                <Bar dataKey="logPoints" radius={4}>
+                    <LabelList
+                        fill="white"
+                        className="font-bold"
+                        dataKey="name"
+                        position="insideLeft"
+                        offset={6}
+                        fontSize={12}
+                        style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
                     />
                 </Bar>
             </BarChart>
@@ -179,9 +189,6 @@ const Standings: React.FC = (): JSX.Element => {
         dispatch(setDriverStandings(driversData));
     }, [dispatch, constructorsData, driversData]);
 
-    // const localHeight = 'xl:h-[30vh] lg:h-[28vh] md:h-[25vh] h-[23vh]';
-    console.log('colorConstructors', colorConstructors);
-
     return (
         <PageContainer
             title={`Standings ${selectedYear}`}
@@ -189,53 +196,48 @@ const Standings: React.FC = (): JSX.Element => {
             showBreadcrumbs={true}
             lastCrumb="Standings"
         >
-            {/* 
-                CONSTRUCTORS
-            */}
-            <div className={cn('flex flex-col lg:flex-row gap-4 m-0 mb-4 p-0')}>
-                <CardContainer
-                    className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300 w-[58vw] h-[35vh]')}
-                    title="Constructors Standings"
-                >
-                    <ConstructorChart data={colorConstructors} className="mb-4 h-[35vh] overflow-hidden" />
-                </CardContainer>
+            <div className="flex flex-col md:flex-row gap-0 w-[99vw]">
+                {/* LEFT SIDE */}
 
-                <CardContainer
-                    className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300 h-[35vh] w-[33vw]')}
-                    title="Constructors Standings"
-                >
-                    <ConstructorsStanding year={selectedYear} />
-                </CardContainer>
-            </div>
-            {/*     
-                DRIVERS
-            */}
-            <div className={cn('grid grid-cols-2 grid-rows-1 gap-4 m-0 p-0')}>
-                <CardContainer className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300')} title="Drivers Standings">
-                    <DriverStandings year={selectedYear} />
-                </CardContainer>
+                <div className="p-4 w-[100%] md:w-[45%] h-[100vh] flex flex-col gap-4">
+                    <CardContainer
+                        className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300 h-[100vh] md:h-[150vh] w-full')}
+                        title="Drivers"
+                    >
+                        <DriverChart
+                            data={colorDrivers}
+                            className={cn('w-full h-[93.5vh] md:h-[85vh] mb-4 overflow-hidden')}
+                        />
+                    </CardContainer>
+                </div>
 
-                {/* <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300')}>
-                    <CardTitle className="pl-4 pt-0 m-0">Driver Standings</CardTitle>
-                    <DriverStandings className={FULL_ROW_HEIGHT} year={selectedYear} />
-                </Card> */}
+                {/* RIGHT SIDE */}
 
-                <CardContainer className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300')} title="Drivers">
-                    <DriverChart data={colorDrivers} className="max-h-[100vh]" />
-                </CardContainer>
-
-                {/* <Card className={cn(FULL_ROW_HEIGHT, 'overflow-hidden w-full', 'dark:bg-zinc-800 bg-zinc-300')}>
-                    <CardTitle className="pl-4 pt-0 m-0">Driver Chart</CardTitle>
-                    <DriverChart data={colorDrivers} className="max-h-[100vh]" />
-                </Card> */}
-
-                {/* <Card
-                    className={cn(FULL_ROW_HEIGHT, 'overflow-hidden relative', 'dark:bg-zinc-800 bg-zinc-300 w-full')}
-                >
-                    <CardContent className="w-full m-0 p-4 content-end">
-                        <DriverChart data={colorDrivers} driversChartConfig={driversChartConfig} />
-                    </CardContent>
-                </Card> */}
+                <div className="p-4 w-[100%] md:w-[45%] flex flex-col gap-4 h-[150vh]">
+                    <CardContainer
+                        className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300 w-full h-[40vh] md:h-[24vh]')}
+                        title="Drivers Standings"
+                    >
+                        <DriverStandings year={selectedYear} />
+                    </CardContainer>
+                    <CardContainer
+                        className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300 w-full pb-0 h-[120vh]')}
+                        title="Constructors"
+                    >
+                        <ConstructorChart
+                            data={colorConstructors}
+                            className={cn('w-full h-[180%] mb-4 overflow-hidden')}
+                        />
+                    </CardContainer>
+                    <CardContainer
+                        className={cn(
+                            'overflow-hidden dark:bg-zinc-800 bg-zinc-300 h-[60vh] md:h-[33vh] w-full mb:p-[60px]',
+                        )}
+                        title="Constructors Standings"
+                    >
+                        <ConstructorStandings year={selectedYear} />
+                    </CardContainer>
+                </div>
             </div>
         </PageContainer>
     );

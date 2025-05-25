@@ -52,8 +52,8 @@ const TotalWinsPerYear: React.FC = ({ className }: { className?: string }): JSX.
     if (totalWinsLoading || !totalWinsData) return <CardSkeleton />;
 
     return (
-        <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', className)}>
-            <Table>
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, className, 'overflow-hidden border-t', 'mb-40')}>
+            <Table className="w-full mb-10">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-4 text-right">Pos</TableHead>

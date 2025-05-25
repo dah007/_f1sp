@@ -38,7 +38,7 @@ export const FONT_SIZE = {
     'text-lg': 'text-lg',
 };
 
-export const FULL_ROW_HEIGHT = 'xl:h-[30vh] lg:h-[28vh] md:h-[25vh] h-[23vh]';
+export const FULL_ROW_HEIGHT = 'lg:h-[40vh] md:h-[25vh] h-[23vh]';
 
 export const MENU: RouteProps[] = [
     {

@@ -43,10 +43,21 @@ const Home: React.FC = () => {
     // const raceWGP = useAppSelector((state: RootState) =>
     const systemError = useAppSelector((state) => state.siteWide.error);
 
-    const widthsNHeights = 'h-[25vh] max-h-[25vh]';
+    const widthsNHeights = 'min-h-[250px] h-[35vh] md:h-[25vh] max-h-[25vh] md:max-h-[35vh]';
 
     const { success: voteSuccessful, message: voteMessage } = getMessageFromURL();
 
+    /**
+     * Alert message box with a title, optional description, and optional children.
+     *
+     * @component
+     * @param {Object} props - The properties that define the MessageBox.
+     * @param {string} props.title - The title of the message box.
+     * @param {string} [props.description] - Optional description text for the message box.
+     * @param {string} [props.className] - Optional CSS class name to apply additional styling.
+     * @param {React.ReactNode} [props.children] - Optional children elements to render inside the message box.
+     * @returns {JSX.Element} A styled alert component with the provided content.
+     */
     const MessageBox = ({
         title,
         description,
@@ -136,15 +147,14 @@ const Home: React.FC = () => {
                         >
                             <DriverStandingsChart />
 
-                            <CardFooter className="flex justify-between items-center w-full">
-                                <div className="text-sm text-blue-500 dark:text-blue-400 hover:text-blue-600 cursor-pointer">
-                                    <button rel="link" onClick={() => (location.href = '/standings')}>
-                                        View Full Standings
-                                    </button>
-                                </div>
-                                <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                                    As of: {raceWGP ? raceWGP.official_name : 'N/A'}
-                                </div>
+                            <CardFooter className="w-full text-left">
+                                <button
+                                    rel="link"
+                                    onClick={() => (location.href = '/standings')}
+                                    className="text-blue-500 hover:text-blue-700 cursor-pointer font-semibold text-sm"
+                                >
+                                    View Full Standings
+                                </button>
                             </CardFooter>
 
                             {/* 
