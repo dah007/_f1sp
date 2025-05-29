@@ -3,7 +3,6 @@ import { lazy, Suspense, useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
-import Error404Image from './assets/images/404.png';
 import Footer from './components/Footer';
 import { useGetNextRaceQuery } from './features/raceApi';
 import Home from './routes/HomeRoute';
@@ -12,9 +11,10 @@ import Static from './routes/Static';
 import { setRaceNext } from './slices/racesSlice';
 import { setError, setLoading } from './slices/siteWideSlice';
 import { NextRaceProps, RaceResultProps } from './types/races';
+import Error404Image from '/assets/images/404.png';
 
 const AccountNew = lazy(() => import('./routes/AccountNewRoute'));
-const Circuits = lazy(() => import('./routes/Circuits/CircuitsRoute'));
+const Circuits = lazy(() => import('./routes/CircuitsRoute'));
 const Constructors = lazy(() => import('./routes/ConstructorsRoute'));
 const DriverDetail = lazy(() => import('./routes/DriverDetailRoute'));
 const Drivers = lazy(() => import('./routes/DriversRoute'));
@@ -22,6 +22,8 @@ const Extra = lazy(() => import('./routes/ExtraRoute'));
 const LoginForm = lazy(() => import('./routes/LoginFormRoute'));
 const RaceDetail = lazy(() => import('./routes/RaceDetailRoute'));
 const Races = lazy(() => import('./routes/RacesRoute'));
+const RaceLast = lazy(() => import('./routes/RaceLastRoute'));
+const RaceNext = lazy(() => import('./routes/RaceNextRoute'));
 const SeasonCurrent = lazy(() => import('./routes/SeasonCurrentRoute'));
 const Seasons = lazy(() => import('./routes/SeasonsRoute'));
 const Standings = lazy(() => import('./routes/StandingsRoute'));
@@ -43,12 +45,6 @@ const App = () => {
         if (!nextRaceData) return;
         dispatch(setLoading(false));
         dispatch(setRaceNext(nextRaceData as NextRaceProps));
-
-        if (!nextRaceData) return;
-        dispatch(setLoading(false));
-        dispatch(setRaceNext(nextRaceData as NextRaceProps));
-
-        console.log('nextRaceData', nextRaceData);
     }, [nextRace, dispatch, nextRaceData, nextRaceLoading, nextRaceError]);
     // </nextRace>
 
@@ -106,6 +102,8 @@ const App = () => {
                             <Route path="races" element={<Races />}>
                                 <Route path="race/:id" element={<RaceDetail />} />
                             </Route>
+                            <Route path="races/last/:id?" element={<RaceLast />} />
+                            <Route path="races/next/:id?" element={<RaceNext />} />
 
                             <Route path="seasons/current" element={<SeasonCurrent />} />
                             <Route path="seasons/:year?" element={<Seasons />} />

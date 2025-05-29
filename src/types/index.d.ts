@@ -10,6 +10,18 @@ export interface Engine {
     name: string;
 }
 
+export interface GeoJsonData {
+    type: string;
+    features: Array<{
+        type: string;
+        properties: Record<string, any>;
+        geometry: {
+            type: string;
+            coordinates: Array<number[] | number[][]>;
+        };
+    }>;
+}
+
 export type Location = {
     country: string;
     lat: number;

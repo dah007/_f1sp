@@ -1,66 +1,11 @@
 import { CIRCUIT_DETAILS, CONTINENTS } from 'constants/circuitConstants';
 import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike, Map } from 'mapbox-gl';
-import type { CircuitDetailsProps, CircuitProps } from 'types/circuits';
+import type { CircuitProps, CreateMarkerProps, FlyToPOIProps, FlyToProps, GotoCircuitProps, GotoContinentProps, LoadCircuitLayersProps, ZoomToProps } from 'types/circuits';
 import { isBoundingBoxOutside, isPointInsideBoundingBox } from 'utils/maps';
 
 export const SHOW_PIN_ZOOM = 16; // Zoom level at which the markers are hidden
 export const ORIGINAL_LABEL = '-- Select a circuit --';
 
-type CircuitLabelProps = {
-    circuitsData: CircuitProps[] | undefined;
-    id: string;
-    map: Map | null;
-    newBBox: number[];
-    originalLabel: string;
-    setDropdownLabel: (label: string) => void;
-};
-
-interface FlyToPOIProps {
-    circuitsData: CircuitProps[] | undefined;
-    circuit: CircuitProps;
-    map: Map | null;
-    setDropdownLabel: (label: string) => void;
-    setSelectedCircuit: (circuit: CircuitProps | undefined) => void;
-}
-
-interface FlyToProps {
-    position: LngLatLike;
-    continent: string;
-    map: Map | null;
-    setSelectedCircuit: (circuit: CircuitProps | undefined) => void;
-}
-
-export interface GotoCircuitProps {
-    circuitId: string;
-    map: Map | null;
-    setCircuit: (circuit: CircuitProps) => void;
-    setContinent?: (continent: string) => void;
-}
-
-export interface GotoContinentProps {
-    c: string;
-    map: Map | null;
-    setC: (circuit: CircuitProps | undefined) => void;
-    setCon: (continent: string) => void;
-}
-
-interface LoadCircuitLayersProps {
-    data: CircuitDetailsProps;
-    map: Map | null;
-}
-
-interface ZoomToProps {
-    position: LngLatLike;
-    continent: string;
-    map: Map | null;
-    zoomLevel?: number;
-}
-
-interface CreateMarkerProps {
-    circuit: CircuitProps;
-    map: Map | null;
-    mapboxgl: typeof mapboxgl;
-}
 /**
  * Creates a map marker for a given circuit on a Mapbox map.
  *

@@ -1,11 +1,11 @@
 import { YEAR } from '@/constants/constants';
 import { cn } from '@/lib/utils';
-import F1SPlogoHorizontal from 'assets/f1sp-logo_horizontal.svg';
-import F1SPlogo from 'assets/f1sp.svg';
 import { LucideCoffee, Newspaper } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { DesktopNavigation } from './DesktopNavigation';
+import F1SPlogoHorizontal from '/assets/f1sp-logo_horizontal.svg';
+import F1SPlogo from '/assets/f1sp.svg';
 
 export const constructorMenuItems: { title: string; href: string; description: string }[] = [
     {
@@ -62,6 +62,16 @@ export const driverMenuItems: { title: string; href: string; description: string
     },
 ];
 export const raceMenuItems: { title: string; href: string; description: string }[] = [
+    {
+        title: 'Next Race',
+        href: `/races/next`,
+        description: 'View details about the next race.',
+    },
+    {
+        title: 'Last Race',
+        href: `/races/last`,
+        description: 'View details about the last race.',
+    },
     {
         title: 'Current Season',
         href: `/races`,

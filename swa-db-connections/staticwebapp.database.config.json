@@ -1,373 +1,400 @@
-    {
-        "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
-        "data-source": {
-            "database-type": "mysql",
-            "options": {},
-            "connection-string": "@env('DATABASE_CONNECTION_STRING')"
+{
+    "$schema": "https://github.com/Azure/data-api-builder/releases/latest/download/dab.draft.schema.json",
+    "data-source": {
+        "database-type": "mysql",
+        "options": {},
+        "connection-string": "@env('DATABASE_CONNECTION_STRING')"
+    },
+    "runtime": {
+        "rest": {
+            "enabled": true,
+            "path": "/rest"
         },
-        "runtime": {
+        "graphql": {
+            "allow-introspection": true,
+            "enabled": true,
+            "path": "/graphql"
+        },
+        "host": {
+            "mode": "production",
+            "cors": {
+                "origins": [
+                    "http://localhost:4280",
+                    "https://localhost:3000",
+                    "chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff"
+                ],
+                "allow-credentials": true
+            },
+            "authentication": {
+                "provider": "StaticWebApps"
+            }
+        }
+    },
+    "entities": {
+        "circuitWYear": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "circuit_w_race_year"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "constructors": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "constructors_with_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "driver": {
+            "source": "driver",
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "driverOfTheDay": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "dod_w_driver"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "drivers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "driver_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "driversStandings": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "driver_w_standings"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "engine_manufacturers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "engine_manufacturers_w_country"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "engines": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "engine_w_country"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "tyres": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "tyre_manufacturer_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "fastestLap": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "fastest_lap_w_driver"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "maxRaceIdByCircuit": {
+            "source": {
+                "type": "view",
+                "key-fields": ["circuit_id"],
+                "object": "max_race_id_by_circuit"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "pitStop": {
+            "source": {
+                "object": "pit_stop",
+                "key-fields": ["race_id"],
+                "type": "view"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "previousResultsByCircuit": {
+            "source": {
+                "type": "view",
+                "key-fields": ["circuit_id"],
+                "object": "previous_winners_circuit"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "races": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceCount": {
+            "source": {
+                "type": "view",
+                "key-fields": ["totalRaceCount"],
+                "object": "race_count"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceNext": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_next"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceResults": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "rr_w_driver"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceGP": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "race_w_gp"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "previousFirstPlaceResults": {
+            "source": {
+                "type": "view",
+                "key-fields": ["circuit_id"],
+                "object": "results_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "standingsWithConstructors": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "standings_w_constructors"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "standingsWithDrivers": {
+            "source": {
+                "type": "view",
+                "key-fields": ["id"],
+                "object": "standings_w_drivers"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "totalWinsByYear": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "total_wins_by_year"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
+        "createUser": {
+            "source": {
+                "type": "table",
+                "object": "user",
+                "key-fields": ["email"]
+            },
+            "permissions": [
+                {
+                    "actions": ["read", "create"],
+                    "role": "anonymous"
+                }
+            ],
             "rest": {
-                "enabled": true,
-                "path": "/rest"
+                "methods": ["post", "get"],
+                "path": "/createUser"
+            }
+        },
+        "readUser": {
+            "source": {
+                "type": "table",
+                "object": "user",
+                "key-fields": ["email"]
+            },
+            "permissions": [
+                {
+                    "actions": ["read"],
+                    "role": "anonymous"
+                }
+            ],
+            "rest": {
+                "methods": ["get"],
+                "path": "/readUser"
             },
             "graphql": {
-                "allow-introspection": true,
                 "enabled": true,
-                "path": "/graphql"
-            },
-            "host": {
-                "mode": "production",
-                "cors": {
-                    "origins": [
-                        "http://localhost:4280",
-                        "https://localhost:3000",
-                        "chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff"
-                    ],
-                    "allow-credentials": true
-                },
-                "authentication": {
-                    "provider": "StaticWebApps"
+                "type": {
+                    "singular": "User",
+                    "plural": "Users"
                 }
             }
         },
-        "entities": {
-            "circuitWYear": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["race_id"],
-                    "object": "circuit_w_race_year"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "constructors": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "constructors_with_data"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
 
-            "driver": {
-                "source": "driver",
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
+        "vote": {
+            "source": {
+                "type": "table",
+                "object": "vote",
+                "key-fields": ["id"]
             },
-            "driverOfTheDay": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["race_id"],
-                    "object": "dod_w_driver"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "drivers": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "driver_w_data"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "driversStandings": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "driver_w_standings"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-
-            "engine_manufacturers": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "engine_manufacturers_w_country"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "engines": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "engine_w_country"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "tyres": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "tyre_manufacturer_w_data"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-
-            "fastestLap": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["race_id"],
-                    "object": "fastest_lap_w_driver"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "pitStop": {
-                "source": {
-                    "object": "pit_stop",
-                    "key-fields": ["race_id"],
-                    "type": "view"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "previousResultsByCircuit": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["circuit_id"],
-                    "object": "previous_winners_circuit"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "races": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "race_w_data"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "raceCount": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["totalRaceCount"],
-                    "object": "race_count"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "raceNext": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "race_next"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "raceResults": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["race_id", "year"],
-                    "object": "rr_w_driver"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "raceGP": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "race_w_gp"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-
-            "standingsWithConstructors": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "standings_w_constructors"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-            "standingsWithDrivers": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["id"],
-                    "object": "standings_w_drivers"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-
-            "totalWinsByYear": {
-                "source": {
-                    "type": "view",
-                    "key-fields": ["year"],
-                    "object": "total_wins_by_year"
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ]
-            },
-
-            "createUser": {
-                "source": {
-                    "type": "table",
-                    "object": "user",
-                    "key-fields": ["email"]
-                },
-                "permissions": [
-                    {
-                        "actions": ["read", "create"],
-                        "role": "anonymous"
-                    }
-                ],
-                "rest": {
-                    "methods": ["post", "get"],
-                    "path": "/createUser"
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
                 }
+            ],
+            "rest": {
+                "methods": ["post"],
+                "path": "/vote"
+            }
+        },
+        "voteCheck": {
+            "source": {
+                "type": "table",
+                "object": "vote",
+                "key-fields": ["email", "race_id"]
             },
-            "readUser": {
-                "source": {
-                    "type": "table",
-                    "object": "user",
-                    "key-fields": ["email"]
-                },
-                "permissions": [
-                    {
-                        "actions": ["read"],
-                        "role": "anonymous"
-                    }
-                ],
-                "rest": {
-                    "methods": ["get"],
-                    "path": "/readUser"
-                },
-                "graphql": {
-                    "enabled": true,
-                    "type": {
-                        "singular": "User",
-                        "plural": "Users"
-                    }
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
                 }
-            },
-
-            "vote": {
-                "source": {
-                    "type": "table",
-                    "object": "vote",
-                    "key-fields": ["id"]
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ],
-                "rest": {
-                    "methods": ["post"],
-                    "path": "/vote"
-                }
-            },
-            "voteCheck":{
-                "source": {
-                    "type": "table",
-                    "object": "vote",
-                    "key-fields": ["email", "race_id"]
-                },
-                "permissions": [
-                    {
-                        "actions": ["*"],
-                        "role": "anonymous"
-                    }
-                ],
-                "rest": {
-                    "methods": ["get"],
-                    "path": "/voteCheck"
-                }
+            ],
+            "rest": {
+                "methods": ["get"],
+                "path": "/voteCheck"
             }
         }
     }
+}

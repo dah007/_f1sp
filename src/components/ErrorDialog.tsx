@@ -1,9 +1,9 @@
 import { RootState, useAppDispatch, useAppSelector } from '@/app/store';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 
-import errorImage500 from 'assets/images/500.png';
 import { setError } from '@/slices/siteWideSlice';
 import { useEffect } from 'react';
+import errorImage500 from '/assets/images/500.png';
 
 /**
  * ErrorDialog Component

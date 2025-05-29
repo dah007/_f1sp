@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import type { RaceResultProps, RaceProps, NextRaceProps } from 'types/races';
+import type { RaceProps, RaceResultProps } from 'types/races';
 
 export interface IState {
     lastRace: RaceProps | null;
     lastRaceId: number | null;
     lastRaceResults: RaceResultProps[] | null;
     previousResultsAtCircuit: RaceProps | null;
-    raceNext: NextRaceProps | null;
+    raceNext: Partial<RaceProps> | null;
     races: RaceProps[];
     raceWGP: Partial<RaceProps> | null;
     totalRaceCount: number | 0;
@@ -36,7 +36,7 @@ const racesSlice = createSlice({
         setLastRaceResults(state, action: PayloadAction<RaceResultProps[]>) {
             state.lastRaceResults = action.payload;
         },
-        setRaceNext(state, action: PayloadAction<NextRaceProps>) {
+        setRaceNext(state, action: PayloadAction<Partial<RaceProps> | null>) {
             state.raceNext = action.payload;
         },
         setPreviousResultsAtCircuit(state, action: PayloadAction<RaceProps | null>) {

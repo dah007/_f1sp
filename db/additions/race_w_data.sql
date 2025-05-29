@@ -1,77 +1,65 @@
+-- f1sp.race_w_data source
 
--- constructors_with_data
-    SELECT  c.*, c2.alpha2_code, c2.name as country
-            (select total()
-    FROM    constructor c
-    INNER JOIN country c2 
-        ON c.country_id = c2.id
-    INNER JOIN race_data rd 
-        ON c.id = rd.constructor_id
-    INNER JOIN race r
-        ON rd.race_id = r.id
-    WHERE 
-    rd.type = 'RACE_RESULT'
-    GROUP 
-    BY c.id
-    ORDER BY c.name;
-
-select *  from  race_result
-
-
+create or replace
+algorithm = UNDEFINED view `race_w_data` as
 select
-    `c`.`id` as `id`,
-    `c`.`name` as `name`,
-    `c`.`full_name` as `full_name`,
-    `c`.`country_id` as `country_id`,
-    `c`.`best_championship_position` as `best_championship_position`,
-    `c`.`best_starting_grid_position` as `best_starting_grid_position`,
-    `c`.`best_race_result` as `best_race_result`,
-    `c`.`total_championship_wins` as `total_championship_wins`,
-    `c`.`total_race_entries` as `total_race_entries`,
-    `c`.`total_race_starts` as `total_race_starts`,
-    `c`.`total_race_wins` as `total_race_wins`,
-    `c`.`total_1_and_2_finishes` as `total_1_and_2_finishes`,
-    `c`.`total_race_laps` as `total_race_laps`,
-    `c`.`total_podiums` as `total_podiums`,
-    `c`.`total_podium_races` as `total_podium_races`,
-    `c`.`total_points` as `total_points`,
-    `c`.`total_championship_points` as `total_championship_points`,
-    `c`.`total_pole_positions` as `total_pole_positions`,
-    `c`.`total_fastest_laps` as `total_fastest_laps`,
-    `c2`.`alpha2_code` as `alpha2_code`,
-    `c2`.`name` as `country`,
-    `r`.`year` as `year`
-from
-    (((`constructor` `c`
-join `country` `c2` on
-    ((`c`.`country_id` = `c2`.`id`)))
-join `race_data` `rd` on
-    ((`c`.`id` = `rd`.`constructor_id`)))
-join `race` `r` on
-    ((`rd`.`race_id` = `r`.`id`)))
-    
-where
-    (`rd`.`type` = 'RACE_RESULT')
-group by
-    `c`.`id`
+    (
+    select
+        `d2`.`name` as `sprint_winner`
+    from
+        (`race_data` `rd2`
+    join `driver` `d2` on
+        ((`rd2`.`driver_id` = `d2`.`id`)))
+    where
+        ((`rd2`.`type` = 'SPRINT_RACE_RESULT')
+            and (`rd2`.`race_id` = `r`.`id`)
+                and (`rd2`.`position_number` = 1))
+    limit 1) as `sprint_winner`,
+    (
+    select
+        `d3`.`name`
+    from
+        (`race_data` `rd`
+    join `driver` `d3` on
+        ((`rd`.`driver_id` = `d3`.`id`)))
+    where
+        ((`rd`.`type` = 'RACE_RESULT')
+            and (`rd`.`race_id` = `r`.`id`)
+                and (`rd`.`position_number` = 1))
+    limit 1) as `race_winner`,
+    `country`.`alpha2_code` as `alpha2_code`,
+    `country`.`name` as `country_name`,
+    `gp`.`full_name` as `full_name`,
+    `gp`.`total_races_held` as `total_races_held`,
+    `r`.`id` as `id`,
+    `r`.`year` as `year`,
+    `r`.`round` as `round`,
+    `r`.`date` as `date`,
+    `r`.`time` as `time`,
+    `r`.`grand_prix_id` as `grand_prix_id`,
+    `r`.`official_name` as `official_name`,
+    `r`.`qualifying_format` as `qualifying_format`,
+    `r`.`sprint_qualifying_format` as `sprint_qualifying_format`,
+    `r`.`circuit_id` as `circuit_id`,
+    `r`.`circuit_type` as `circuit_type`,
+    `r`.`direction` as `direction`,
+    `r`.`course_length` as `course_length`,
+    `r`.`turns` as `turns`,
+    `r`.`laps` as `laps`,
+    `r`.`distance` as `distance`,
+    `r`.`scheduled_laps` as `scheduled_laps`,
+    `r`.`scheduled_distance` as `scheduled_distance`,
+    `r`.`drivers_championship_decider` as `drivers_championship_decider`,
+    `r`.`constructors_championship_decider` as `constructors_championship_decider`,
+    c.longitude as longitude, c.latitude as latitude
+    from
+    ((`race` `r`
+join `grand_prix` `gp` on
+    ((`r`.`grand_prix_id` = `gp`.`id`)))
+join `country` on
+    ((`gp`.`country_id` = `country`.`id`)))
+join `circuit` `c` on
+	r.circuit_id = c.id
 order by
-    `c`.`name`;
-
-
-select
-    count(`rr`.`constructor_id`) as `total`,
-    c.name as constructor,
-    `r`.`year` as `year`
-from
-    `race_result` `rr`
-join `constructor` `c` on
-    `rr`.`constructor_id` = `c`.`id`
-join `race` `r` on
-    `rr`.`race_id` = `r`.`id`
-where
-    `rr`.`position_number` = 1
-group by
-    `rr`.`constructor_id`,
-    `r`.`year`
-order by
-    `year` desc,`total` desc
+    `r`.`year` desc,
+    `r`.`round` desc;

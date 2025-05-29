@@ -1,7 +1,7 @@
 import { LucideCoffee } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import dah007Logo from '../assets/dah007-icon-logo.svg';
 import { constructorMenuItems, driverMenuItems, MenuButton, raceMenuItems } from './Header';
+import dah007Logo from '/assets/dah007-icon-logo.svg';
 
 const Footer = () => {
     const navigate = useNavigate();

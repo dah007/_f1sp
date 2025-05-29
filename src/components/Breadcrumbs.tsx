@@ -1,8 +1,8 @@
+import { MENU } from 'constants/constants';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from './ui/breadcrumb';
-import { MENU } from 'constants/constants';
 import { RouteProps } from './CustomLink';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from './ui/breadcrumb';
 
 interface BreadcrumbProps {
     lastCrumb?: string;
@@ -21,35 +21,39 @@ const Breadcrumbs: React.FC<BreadcrumbProps> = ({ lastCrumb }): JSX.Element => {
         const pathnames = location.pathname.split('/').filter((x) => x);
 
         const generateCrumbs = () => {
-            const Breadcrumbs: JSX.Element[] = pathnames.map((value, index) => {
-                const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+            const Breadcrumbs = pathnames
+                .map((value, index) => {
+                    if (index === pathnames.length - 1) return;
 
-                const menuItem = getMenuItem(value);
+                    const to = `/${pathnames.slice(0, index + 1).join('/')}`;
 
-                let label = menuItem?.label ?? value;
+                    const menuItem = getMenuItem(value);
 
-                const hidden = menuItem?.hidden ?? false;
+                    let label = menuItem?.label ?? value;
 
-                if (value === year)
+                    const hidden = menuItem?.hidden ?? false;
+
+                    if (value === year)
+                        return (
+                            <div key={to} className="hidden w-0">
+                                year
+                            </div>
+                        );
+
+                    if (value === id) {
+                        label = lastCrumb ?? 'bob';
+                    } else if (hidden) return <div key={to} className="hidden w-0"></div>;
+
                     return (
-                        <div key={to} className="hidden w-0">
-                            year
+                        <div key={to} className="flex items-center">
+                            <BreadcrumbSeparator className="mr-2" />
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href={to}>{label}</BreadcrumbLink>
+                            </BreadcrumbItem>
                         </div>
                     );
-
-                if (value === id) {
-                    label = lastCrumb ?? 'bob';
-                } else if (hidden) return <div key={to} className="hidden w-0"></div>;
-
-                return (
-                    <div key={to} className="flex items-center">
-                        <BreadcrumbSeparator className="mr-2" />
-                        <BreadcrumbItem>
-                            <BreadcrumbLink href={to}>{label}</BreadcrumbLink>
-                        </BreadcrumbItem>
-                    </div>
-                );
-            });
+                })
+                .filter((element): element is JSX.Element => element !== undefined);
 
             return Breadcrumbs;
         };

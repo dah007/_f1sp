@@ -32,12 +32,37 @@ export const raceApi = createApi({
                 console.error('Error fetching last race results:', error);
             },
         }),
-
+        getMaxRaceIdByCircuit: builder.query({
+            query: (circuitId: string) => {
+                console.log('Fetching max race ID by circuit:', circuitId);
+                return `/maxRaceIdByCircuit?$filter=circuit_id eq '${circuitId}'`;
+            },
+            transformResponse: (response: { value: RaceProps[] }) => {
+                console.log('Max race ID by circuit response:', response?.value[0]);
+                return response?.value[0].max_race_id ?? '';
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching max race ID by circuit:', error);
+                return error;
+            },
+        }),
         getNextRace: builder.query({
             query: () => 'raceNext',
             transformResponse: (response: { value: NextRaceProps }) => response?.value?.[0] ?? {},
             transformErrorResponse: (error) => {
                 console.error('Error fetching next race results:', error);
+                return error;
+            },
+        }),
+        getPreviousFirstPlaceResults: builder.query({
+            query: (circuitId: string) => {
+                console.log(circuitId ? `/previousFirstPlaceResults?$filter=circuit_id eq '${circuitId}'` : `/previousFirstPlaceResults`)
+                return (circuitId ? `/previousFirstPlaceResults?$filter=circuit_id eq '${circuitId}'` : `/previousFirstPlaceResults`);
+            },
+
+            transformResponse: (response: { value: RaceProps[] }) => response?.value ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error fetching previous first place results:', error);
                 return error;
             },
         }),
@@ -164,6 +189,7 @@ export const raceApi = createApi({
         }),
         getRacesResultsWithQual: builder.query({
             query: (id: number) => {
+                console.log('getRacesResultsWithQual id:', id);
                 return `/races?$filter=id eq ${id}`;
             },
             transformResponse: (response: { value: RaceProps[] }) => {
@@ -202,10 +228,12 @@ export const {
     useGetFastestPitStopQuery,
     useGetLastRaceResultsQuery,
     useGetLastResultsAtCircuitQuery,
+    useGetMaxRaceIdByCircuitQuery,
     useGetNextPageQuery,
     useGetNextRaceQuery,
     useGetPointsByRaceQuery,
     useGetPollPositionQuery,
+    useGetPreviousFirstPlaceResultsQuery,
     useGetRaceCountQuery,
     useGetRaceMaxYearQuery,
     useGetRaceNextQuery,

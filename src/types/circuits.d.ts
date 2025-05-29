@@ -1,3 +1,4 @@
+
 export type BBoxType = LngLatBounds | [LngLatLike, LngLatLike] | [number, number, number, number];
 
 export type CircuitProps = {
@@ -42,10 +43,63 @@ export type CircuitDetailsProps = {
 };
 export type ContinentProps = {
     [key: string]: {
-        center: TLongLat;
+        center: [LngLatLike, LngLatLike]; // ? just remember kids! mapbox is [lng, lat] and not [lat, lng]
         zoom: number;
     };
 };
 
-// ? MAPBOX is LONG, LAT -- not LAT, LONG
-export type TLongLat = [longitude: number, latitude: number];
+export type CircuitLabelProps = {
+    circuitsData: CircuitProps[] | undefined;
+    id: string;
+    map: Map | null;
+    newBBox: number[];
+    originalLabel: string;
+    setDropdownLabel: (label: string) => void;
+};
+
+export interface FlyToPOIProps {
+    circuitsData: CircuitProps[] | undefined;
+    circuit: CircuitProps;
+    map: Map | null;
+    setDropdownLabel: (label: string) => void;
+    setSelectedCircuit: (circuit: CircuitProps | undefined) => void;
+}
+
+export interface FlyToProps {
+    position: LngLatLike;
+    continent: string;
+    map: Map | null;
+    setSelectedCircuit: (circuit: CircuitProps | undefined) => void;
+}
+
+export interface GotoCircuitProps {
+    circuitId: string;
+    map: Map | null;
+    setCircuit: (circuit: CircuitProps) => void;
+    setContinent?: (continent: string) => void;
+}
+
+export interface GotoContinentProps {
+    c: string;
+    map: Map | null;
+    setC: (circuit: CircuitProps | undefined) => void;
+    setCon: (continent: string) => void;
+}
+
+export interface LoadCircuitLayersProps {
+    data: CircuitDetailsProps;
+    map: Map | null;
+}
+
+export interface ZoomToProps {
+    position: LngLatLike;
+    continent: string;
+    map: Map | null;
+    zoomLevel?: number;
+}
+
+export interface CreateMarkerProps {
+    circuit: CircuitProps;
+    map: Map | null;
+    mapboxgl: typeof mapboxgl;
+}

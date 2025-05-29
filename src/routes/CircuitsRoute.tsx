@@ -5,13 +5,12 @@ import mapboxgl from 'mapbox-gl';
 import { useEffect, useRef, useState } from 'react';
 import { setError } from 'slices/siteWideSlice';
 import {
-    // preloadMarkerImages,
     gotoCircuit,
     gotoContinent,
     loadCircuitLayers,
     SHOW_PIN_ZOOM,
     updateMarkerVisibility,
-} from './CircuitFunctions';
+} from './Circuits/CircuitFunctions';
 
 import CircuitSelect from '@/components/CircuitSelect';
 import ContinentSelect from '@/components/ContinentSelect';
@@ -28,12 +27,6 @@ const Circuits: React.FC = (): JSX.Element => {
     const [continent, setContinent] = useState<string | undefined>('Europe');
 
     const map = useRef<mapboxgl.Map>();
-
-    // Preload marker images as soon as component mounts
-    // useEffect(() => {
-    //     preloadMarkerImages();
-    // }, []);
-
     useEffect(() => {
         try {
             setLng(-1.02602);
@@ -146,9 +139,7 @@ const Circuits: React.FC = (): JSX.Element => {
                 />
             </div>
 
-            <div className={`${toolClasses} bottom-12 md:bottom-4 lg:top-2 right-2 bg-zinc-800 border border-zinc-700`}>
-                {mapInfo()}
-            </div>
+            <div className={`${toolClasses} lg:top-2 right-2 bg-zinc-800 border border-zinc-700`}>{mapInfo()}</div>
         </PageContainer>
     );
 };

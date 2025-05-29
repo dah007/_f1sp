@@ -1,6 +1,6 @@
-import { getCounty2LetterCode } from '../utils/locations';
 import { getName } from 'country-list';
 import React from 'react';
+import { getCounty2LetterCode } from '../utils/locations';
 
 export interface IFlagCellRendererParams {
     nameAsId?: (params: string) => string;
