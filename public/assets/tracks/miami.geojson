@@ -6,6 +6,8 @@
         {
             "type": "Feature",
             "properties": {
+                "stroke": "#ffffff",
+                "stroke-width": 2,
                 "id": "us-2022",
                 "Location": "Miami",
                 "Name": "Miami International Autodrome",
