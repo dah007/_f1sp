@@ -3,12 +3,13 @@ import Button from '@/components/Button';
 import Flag from '@/components/Flag';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
-import { useGetPreviousFirstPlaceResultsQuery, useGetRacesResultsWithQualQuery } from '@/features/raceApi';
+import { useGetPreviousWinnersAtCircuitQuery, useGetRacesResultsWithQualQuery } from '@/features/raceApi';
 import { setError } from '@/slices/siteWideSlice';
 import type { GeoJsonData } from '@/types';
 import { ExtendedColumnDef } from '@/types/dataTable';
 import type { RaceProps, RaceResultProps } from '@/types/races';
 import { LinkRenderer } from '@/utils/dataTableRenderers';
+import { getGeoJsonData } from '@/utils/locations';
 import { intlNumberFormat } from '@/utils/number';
 import {
     ColumnDef,
@@ -106,7 +107,7 @@ const RaceViewRoute = () => {
 
                 cell: ({ row }) =>
                     LinkRenderer({
-                        gotoCB: () => `/drivers/${row.driver_id}`,
+                        gotoCB: () => `/drivers/${row.original.driver_id}`,
                         label: row.getValue('driver'),
                         value: row.original.id as unknown as string,
                     }),
@@ -282,7 +283,7 @@ const RaceViewRoute = () => {
         data: previousFirstPlaceResults,
         isLoading: previousFirstPlaceResultsLoading,
         isError: previousFirstPlaceResultsError,
-    } = useGetPreviousFirstPlaceResultsQuery(circuitId) as {
+    } = useGetPreviousWinnersAtCircuitQuery(circuitId) as {
         data: RaceResultProps[] | undefined;
         isLoading: boolean;
         isError: boolean;
@@ -411,7 +412,7 @@ const RaceViewRoute = () => {
                                                 CIRCUIT_DETAILS[race.circuit_id as keyof typeof CIRCUIT_DETAILS].wiki ??
                                                 ''
                                             }
-                                            referrerPolicy="no-referrer"
+                                            rel="noreferrer"
                                             target="_blank"
                                         >
                                             WiKi

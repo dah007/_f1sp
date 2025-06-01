@@ -9,3 +9,7 @@ select
 from	race_result rr
 inner join driver d on rr.driver_id = d.id 
 inner join race r on rr.race_id = r.id
+
+
+select * from results_w_data rwd 
+where id = 'baku'

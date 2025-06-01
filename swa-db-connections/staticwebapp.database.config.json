@@ -161,6 +161,20 @@
             ]
         },
 
+        "lastResultsByCircuit": {
+            "source": {
+                "type": "view",
+                "key-fields": ["circuit_id"],
+                "object": "last_race_circuit"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
         "maxRaceIdByCircuit": {
             "source": {
                 "type": "view",
@@ -187,7 +201,7 @@
                 }
             ]
         },
-        "previousResultsByCircuit": {
+        "previousWinnersAtCircuit": {
             "source": {
                 "type": "view",
                 "key-fields": ["circuit_id"],

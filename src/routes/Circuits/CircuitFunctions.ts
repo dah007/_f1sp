@@ -1,5 +1,5 @@
 import { CIRCUIT_DETAILS, CONTINENTS } from 'constants/circuitConstants';
-import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike, Map } from 'mapbox-gl';
+import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike } from 'mapbox-gl';
 import type { CircuitProps, CreateMarkerProps, FlyToPOIProps, FlyToProps, GotoCircuitProps, GotoContinentProps, LoadCircuitLayersProps, ZoomToProps } from 'types/circuits';
 import { isBoundingBoxOutside, isPointInsideBoundingBox } from 'utils/maps';
 
@@ -209,7 +209,7 @@ export const loadCircuitLayers = async ({ data, map }: LoadCircuitLayersProps) =
         createMarker({
             circuit: uniqueArray[i],
             map,
-            mapboxgl,
+            mapboxgl: mapboxgl,
         });
     }
 };

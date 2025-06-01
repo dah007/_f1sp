@@ -1,6 +1,6 @@
 import { useAppDispatch } from '@/app/store';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useGetPreviousFirstPlaceResultsQuery } from '@/features/raceApi';
+import { useGetLastResultsAtCircuitQuery } from '@/features/raceApi';
 import { setError } from '@/slices/siteWideSlice';
 import { ExtendedColumnDef } from '@/types/dataTable';
 import { RaceResultProps } from '@/types/races';
@@ -15,7 +15,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ChartSpline, FlagIcon, Medal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Button from '../Button';
 import Flag from '../Flag';
@@ -30,21 +30,68 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
 
     const colDefs = (): ColumnDef<RaceResultProps>[] => [
         {
-            accessorKey: 'date',
-            cell: ({ row }) => <div className="text-right">{row.getValue('date')}</div>,
-            header: ({ column }) => {
-                return (
-                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                        Date
-                        <ArrowUpDown className="w-4 h-4 ml-2" />
-                    </Button>
-                );
+            accessorKey: 'position_number',
+            cell: ({ row }) => {
+                return <div className="min-w-8 max-w-8 w-full text-center">{row.getValue('position_number')}</div>;
             },
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    className="cursor-pointer min-w-8 max-w-8 w-8"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    title="Finish Position"
+                >
+                    <FlagIcon size={24} />
+                    <ArrowUpDown className="w-4 h-4 ml-2" />
+                </Button>
+            ),
         },
         {
-            accessorKey: 'result_time',
+            accessorKey: 'countryId',
+            cell: ({ row }) => {
+                return (
+                    <div className="min-w-8 w-8 max-w-8">{Flag({ nameAsId: row.getValue('countryId'), size: 24 })}</div>
+                );
+            },
+            size: 8,
+            header: () => <div></div>,
+        },
+        {
+            accessorKey: 'driver_name',
+
+            cell: ({ row }) => (
+                <div className="min-w-12 w-12 max-w-12">
+                    {LinkRenderer({
+                        gotoCB: () => `/drivers/${row.getValue('driver_id')}`,
+                        label: row.getValue('driver_name'),
+                        value: row.original.id as unknown as string,
+                    })}
+                </div>
+            ),
             size: 40,
-            cell: ({ row }) => <div className="text-right">{row.getValue('result_time')}</div>,
+            header: ({ column }) => (
+                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                    Name
+                    <ArrowUpDown className="w-8 h-4 ml-2" />
+                </Button>
+            ),
+        },
+        // {
+        //     accessorKey: 'date',
+        //     cell: ({ row }) => <div className="text-right">{row.getValue('date')}</div>,
+        //     header: ({ column }) => {
+        //         return (
+        //             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        //                 Date
+        //                 <ArrowUpDown className="w-4 h-4 ml-2" />
+        //             </Button>
+        //         );
+        //     },
+        // },
+        {
+            accessorKey: 'time',
+            size: 15,
+            cell: ({ row }) => <div className="text-right w-full">{row.getValue('time')}</div>,
             header: ({ column }) => (
                 <Button
                     variant="ghost"
@@ -57,65 +104,113 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
             ),
         },
         {
-            accessorKey: 'year',
+            accessorKey: 'gap',
+            cell: ({ row }) => <div className="text-right">{row.getValue('gap') ? row.getValue('gap') : '-'}</div>,
+            header: ({ column }) => {
+                return (
+                    <>
+                        <Button
+                            variant="ghost"
+                            className="flex"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                        >
+                            Gap
+                            <ArrowUpDown className="w-4 h-4 ml-2" />
+                        </Button>
+                    </>
+                );
+            },
+            size: 10,
+        },
+        {
+            accessorKey: 'interval',
             cell: ({ row }) => (
-                <div
-                    // onClick={() => (location.href = `/drivers/${row.original.id}`)}
-                    className="cursor-pointer hover:text-blue-500"
-                >
-                    {row.getValue('year')}
-                </div>
+                <div className="text-right">{row.getValue('interval') ? row.getValue('interval') : '-'}</div>
             ),
+            header: ({ column }) => {
+                return (
+                    <>
+                        <Button
+                            variant="ghost"
+                            className="flex"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                        >
+                            Interval
+                            <ArrowUpDown className="w-4 h-4 ml-2" />
+                        </Button>
+                    </>
+                );
+            },
+            size: 10,
+        },
+        // {
+        //     accessorKey: 'year',
+        //     cell: ({ row }) => (
+        //         <div
+        //             // onClick={() => (location.href = `/drivers/${row.original.id}`)}
+        //             className="cursor-pointer hover:text-blue-500"
+        //         >
+        //             {row.getValue('year')}
+        //         </div>
+        //     ),
+        //     size: 40,
+        //     header: ({ column }) => (
+        //         <Button
+        //             variant="ghost"
+        //             className="cursor-pointer"
+        //             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        //         >
+        //             Year
+        //             <ArrowUpDown className="w-4 h-4 ml-2" />
+        //         </Button>
+        //     ),
+        // },
+
+        {
+            accessorKey: 'points',
+            cell: ({ row }) => {
+                return <div className="min-w-2 w-2 max-w-2">{row.getValue('points')}</div>;
+            },
             size: 40,
             header: ({ column }) => (
                 <Button
                     variant="ghost"
-                    className="cursor-pointer"
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className="cursor-pointer w-6 max-w-6 min-w-6"
+                    title="Points"
                 >
-                    Year
+                    <Medal size={24} />
                     <ArrowUpDown className="w-4 h-4 ml-2" />
                 </Button>
             ),
         },
         {
-            accessorKey: 'driverNationality',
+            accessorKey: 'positions_gained',
             cell: ({ row }) => {
-                return (
-                    <div className="min-w-8 w-8 max-w-8">
-                        {Flag({ cCode: row.getValue('driverNationality'), size: 24 })}
-                    </div>
-                );
+                return <div className="min-w-2 w-2 max-w-2">{row.getValue('positions_gained')}</div>;
             },
-            size: 8,
-            header: () => <div></div>,
-        },
-        {
-            accessorKey: 'driver',
-
-            cell: ({ row }) =>
-                LinkRenderer({
-                    gotoCB: () => `/drivers/${row.getValue('driver_id')}`,
-                    label: row.getValue('driver'),
-                    value: row.original.id as unknown as string,
-                }),
             size: 40,
             header: ({ column }) => (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Name
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                    className="cursor-pointer"
+                    title="Positions Gained"
+                >
+                    <ChartSpline size={24} />
                     <ArrowUpDown className="w-4 h-4 ml-2" />
                 </Button>
             ),
         },
         {
-            accessorKey: 'laps',
+            accessorKey: 'qualification_position_number',
             cell: ({ row }) => {
-                return <div className="min-w-8 w-8 max-w-8">{row.getValue('laps')}</div>;
+                return <div className="min-w-8 w-8 max-w-8">{row.getValue('qualification_position_number')}</div>;
             },
             size: 40,
             header: ({ column }) => (
                 <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Laps
+                    Qual Pos
                     <ArrowUpDown className="w-4 h-4 ml-2" />
                 </Button>
             ),
@@ -138,28 +233,6 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
             ),
         },
         {
-            accessorKey: 'sprint_qualifying_date',
-            cell: ({ row }) => (
-                <div className="text-right">
-                    {row.getValue('sprint_qualifying_date') ? row.getValue('sprint_qualifying_date') : '-'}
-                </div>
-            ),
-            header: ({ column }) => {
-                return (
-                    <>
-                        <Button
-                            variant="ghost"
-                            className="flex"
-                            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                        >
-                            Champ Pos
-                            <ArrowUpDown className="w-4 h-4 ml-2" />
-                        </Button>
-                    </>
-                );
-            },
-        },
-        {
             accessorKey: 'constructors_championship_decider',
             cell: ({ row }) => (
                 <div className="text-right">{row.getValue('constructors_championship_decider') ? 'Yes' : 'No'}</div>
@@ -173,13 +246,27 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
                 );
             },
         },
+        {
+            accessorKey: 'pit_stops',
+            cell: ({ row }) => (
+                <div className="text-right">{row.getValue('pit_stops') ? row.getValue('pit_stops') : '-'}</div>
+            ),
+            header: ({ column }) => {
+                return (
+                    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+                        Pit Stops
+                        <ArrowUpDown className="w-4 h-4 ml-2" />
+                    </Button>
+                );
+            },
+        },
     ];
 
     const {
         data: previousFirstPlaceResults,
         isLoading: previousFirstPlaceResultsLoading,
         isError: previousFirstPlaceResultsError,
-    } = useGetPreviousFirstPlaceResultsQuery(circuitId) as {
+    } = useGetLastResultsAtCircuitQuery({ circuitId }) as {
         data: RaceResultProps[] | undefined;
         isLoading: boolean;
         isError: boolean;
@@ -218,49 +305,46 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
     }, [previousFirstPlaceResults, previousFirstPlaceResultsError, previousFirstPlaceResultsLoading, dispatch]);
 
     return (
-        <div className="w-full">
-            <h2 className="text-xl font-bold mb-2 krona-one-regular">Previous Results</h2>
-            <Table className="w-full">
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
-                                    </TableHead>
-                                );
-                            })}
+        <Table className="w-full">
+            <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => {
+                            return (
+                                <TableHead key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(header.column.columnDef.header, header.getContext())}
+                                </TableHead>
+                            );
+                        })}
+                    </TableRow>
+                ))}
+            </TableHeader>
+            <TableBody>
+                {table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                        <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && 'selected'}
+                            data-driver-id={row.original.id}
+                        >
+                            {row.getVisibleCells().map((cell) => (
+                                <TableCell key={cell.id}>
+                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                </TableCell>
+                            ))}
                         </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && 'selected'}
-                                data-driver-id={row.original.id}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow key="no-results">
-                            <TableCell colSpan={colDefs.length} className="h-24 text-center" key="nope-none">
-                                No results.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </div>
+                    ))
+                ) : (
+                    <TableRow key="no-results">
+                        <TableCell colSpan={colDefs.length} className="h-24 text-center" key="nope-none">
+                            No results.
+                        </TableCell>
+                    </TableRow>
+                )}
+            </TableBody>
+        </Table>
     );
 };
 export default PreviousResultsTable;

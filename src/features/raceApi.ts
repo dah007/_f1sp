@@ -1,7 +1,6 @@
 import { YEAR } from '@/constants/constants';
 import { NextLinkRaceProps } from '@/routes/RacesRoute';
 import { FastestLap, RaceProps, type NextRaceProps } from '@/types/races';
-import { buildErrorObject, dbFetch } from '@/utils';
 import { baseQueryWithRetry } from '@/utils/query';
 // import { buildErrorObject } from '@/utils';
 
@@ -30,6 +29,20 @@ export const raceApi = createApi({
             transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching last race results:', error);
+            },
+        }),
+        getLastResultsAtCircuit: builder.query({
+            query: ({circuitId}: { circuitId: string}) => {
+                console.log('Fetching last results at circuit:', circuitId);
+                return circuitId ? `/lastResultsByCircuit?$filter=circuit_id eq '${circuitId}'&$orderby=position_number` : `/lastResultsByCircuit?$filter=circuit_id eq 'baku'`;
+            },
+            transformResponse: (response: { value: RaceProps[] }) => {
+                console.log('-- Last results at circuit:', response);
+                return response?.value ?? [];
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching last results at circuit:', error);
+                return error;
             },
         }),
         getMaxRaceIdByCircuit: builder.query({
@@ -124,19 +137,19 @@ export const raceApi = createApi({
         //     },
         // }),
         /** @deprecated */
-        getFastestPitStop: builder.query({
-            queryFn: async (raceId: number | string = '') => {
-                try {
-                    const data = await dbFetch(`/fastestPitStop?raceId=${raceId}`);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
-        getLastResultsAtCircuit: builder.query({
+        // getFastestPitStop: builder.query({
+        //     queryFn: async (raceId: number | string = '') => {
+        //         try {
+        //             const data = await dbFetch(`/fastestPitStop?raceId=${raceId}`);
+        //             return { data: data };
+        //         } catch (error) {
+        //             return buildErrorObject(error);
+        //         }
+        //     },
+        // }),
+        getPreviousWinnersAtCircuit: builder.query({
             query: (circuitId: string) =>
-                circuitId ? `/previousResultsByCircuit?$filter=circuitId eq ${circuitId}` : `/previousResultsByCircuit`,
+                circuitId ? `/previousWinnersAtCircuit?$filter=circuitId eq ${circuitId}` : `/previousWinnersAtCircuit`,
             transformResponse: (response: { value: RaceProps }) => {
                 console.log('-- Last results at circuit:', response);
                 return response?.value ?? [];
@@ -146,29 +159,33 @@ export const raceApi = createApi({
                 return error;
             },
         }),
-        getRaceMaxYear: builder.query({
-            queryFn: async () => {
-                try {
-                    const results = await dbFetch('/raceMaxYear');
-                    return { data: results ?? [] };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
+
+        /** @deprecated */
+        // getRaceMaxYear: builder.query({
+        //     queryFn: async () => {
+        //         try {
+        //             const results = await dbFetch('/raceMaxYear');
+        //             return { data: results ?? [] };
+        //         } catch (error) {
+        //             return buildErrorObject(error);
+        //         }
+        //     },
+        // }),
         getPointsByRace: builder.query({
             query: (year: number = 2024) => `/pointsByRace?year=${year}`,
         }),
-        getPollPosition: builder.query({
-            queryFn: async (raceId: number | string = '') => {
-                try {
-                    const data = await dbFetch(`/pollPosition?raceId=${raceId}`);
-                    return { data: data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
+
+        /** @deprecated */
+        // getPollPosition: builder.query({
+        //     queryFn: async (raceId: number | string = '') => {
+        //         try {
+        //             const data = await dbFetch(`/pollPosition?raceId=${raceId}`);
+        //             return { data: data };
+        //         } catch (error) {
+        //             return buildErrorObject(error);
+        //         }
+        //     },
+        // }),
         getRaceNext: builder.query({
             query: () => `/raceNext`,
             transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? {},
@@ -177,16 +194,18 @@ export const raceApi = createApi({
                 return error;
             },
         }),
-        getRaceResultsPrevious: builder.query({
-            queryFn: async (circuitId: string) => {
-                try {
-                    const data = await dbFetch(`/getRaceLastResults?circuitId=${circuitId}`);
-                    return { data };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
+
+        /** @deprecated */
+        // getRaceResultsPrevious: builder.query({
+        //     queryFn: async (circuitId: string) => {
+        //         try {
+        //             const data = await dbFetch(`/getRaceLastResults?circuitId=${circuitId}`);
+        //             return { data };
+        //         } catch (error) {
+        //             return buildErrorObject(error);
+        //         }
+        //     },
+        // }),
         getRacesResultsWithQual: builder.query({
             query: (id: number) => {
                 console.log('getRacesResultsWithQual id:', id);
@@ -209,39 +228,40 @@ export const raceApi = createApi({
                 return error;
             },
         }),
-        getTotalWins: builder.query({
-            queryFn: async (year: number = YEAR) => {
-                try {
-                    const results = await dbFetch(`/totalWinsSeason?year=${year}`);
-                    return { data: results };
-                } catch (error) {
-                    return buildErrorObject(error);
-                }
-            },
-        }),
+        /** @deprecated */
+        // getTotalWins: builder.query({
+        //     queryFn: async (year: number = YEAR) => {
+        //         try {
+        //             const results = await dbFetch(`/totalWinsSeason?year=${year}`);
+        //             return { data: results };
+        //         } catch (error) {
+        //             return buildErrorObject(error);
+        //         }
+        //     },
+        // }),
     }),
 });
 
 export const {
     // useGetDriverOfTheDayQuery, -- @deprecated
     useGetFastestLapQuery,
-    useGetFastestPitStopQuery,
+    // useGetFastestPitStopQuery,
     useGetLastRaceResultsQuery,
     useGetLastResultsAtCircuitQuery,
     useGetMaxRaceIdByCircuitQuery,
     useGetNextPageQuery,
     useGetNextRaceQuery,
     useGetPointsByRaceQuery,
-    useGetPollPositionQuery,
-    useGetPreviousFirstPlaceResultsQuery,
+    // useGetPollPositionQuery,
+    useGetPreviousWinnersAtCircuitQuery,
     useGetRaceCountQuery,
-    useGetRaceMaxYearQuery,
+    // useGetRaceMaxYearQuery,
     useGetRaceNextQuery,
     useGetRaceQuery,
-    useGetRaceResultsPreviousQuery,
+    // useGetRaceResultsPreviousQuery,
     useGetRaceResultsWithQualQuery,
     useGetRaceWithGPQuery,
     useGetRacesQuery,
     useGetRacesResultsWithQualQuery,
-    useGetTotalWinsQuery,
+    // useGetTotalWinsQuery,
 } = raceApi;

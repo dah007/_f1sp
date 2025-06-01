@@ -101,5 +101,5 @@ export interface ZoomToProps {
 export interface CreateMarkerProps {
     circuit: CircuitProps;
     map: Map | null;
-    mapboxgl: typeof mapboxgl;
+    mapboxgl: typeof mapboxgl | mapboxgl;
 }

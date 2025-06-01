@@ -11,10 +11,11 @@ export interface Engine {
 }
 
 export interface GeoJsonData {
+    bbox: [number, number, number, number];
     type: string;
     features: Array<{
         type: string;
-        properties: Record<string, any>;
+        properties: Record<string, object>;
         geometry: {
             type: string;
             coordinates: Array<number[] | number[][]>;
