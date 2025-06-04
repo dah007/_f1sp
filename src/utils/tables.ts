@@ -1,6 +1,4 @@
 import type { ExtendedColumnDef } from '@/types/dataTable';
-import { RaceProps } from '@/types/races';
-
 export const GetInVisibleColumn = (colDefs: ExtendedColumnDef[]): Record<string, boolean> => {
     const inVisibleColumns: ExtendedColumnDef[] = colDefs.filter(
         (col) => 'visible' in col && col.visible === false,
@@ -27,14 +25,13 @@ type Item = {
 };
 
 // input: your array of results
-export const groupWinnersWithChildren = (arr: Record<string, RaceProps>[]) => {
+export const groupWinnersWithChildren = (arr: Item[]) => {
     // Group by id
     const grouped: Record<string, Item[]> = {};
 
-    arr.forEach((item: Record<string, RaceProps>) => {
-        const typedItem = item as unknown as Item;
-        if (!grouped[typedItem.id]) grouped[typedItem.id] = [];
-        grouped[typedItem.id].push(typedItem);
+    arr.forEach((item: Item) => {
+        if (!grouped[item.id]) grouped[item.id] = [];
+        grouped[item.id].push(item);
     });
 
     // For each group, find position 1 and attach children
