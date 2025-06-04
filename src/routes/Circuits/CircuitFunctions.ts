@@ -1,6 +1,7 @@
 import { CIRCUIT_DETAILS, CONTINENTS } from 'constants/circuitConstants';
 import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike } from 'mapbox-gl';
 import type {
+    CircuitLabelProps,
     CircuitProps,
     CreateMarkerProps,
     FlyToPOIProps,
@@ -8,7 +9,7 @@ import type {
     GotoCircuitProps,
     GotoContinentProps,
     LoadCircuitLayersProps,
-    ZoomToProps
+    ZoomToProps,
 } from 'types/circuits';
 import { isBoundingBoxOutside, isPointInsideBoundingBox } from 'utils/maps';
 
@@ -173,7 +174,7 @@ export const gotoContinent = ({ c, map, setC, setCon }: GotoContinentProps) => {
 
 export const loadCircuitLayers = async ({ data, map }: LoadCircuitLayersProps) => {
     if (!data || !map) return;
-    
+
     const uniqueArray: CircuitProps[] = Object.values(data).filter(
         (obj: CircuitProps, index: number, self: CircuitProps[]) =>
             index === self.findIndex((t: CircuitProps) => t.id === obj.id && t.name === obj.name),
@@ -190,7 +191,7 @@ export const loadCircuitLayers = async ({ data, map }: LoadCircuitLayersProps) =
                 map.addSource(circuit.id, {
                     type: 'geojson',
                     data: `/assets/tracks/${circuit.id}.geojson`,
-                    generateId: false,                    
+                    generateId: false,
                 });
 
                 map.addLayer({
@@ -258,11 +259,11 @@ export const updateMarkerVisibility = (zoomLevel: number) => {
     const shouldHide = zoomLevel >= 12.5;
 
     const markerContainers = document.getElementsByClassName('mapMarker');
-    
+
     for (let i = 0; i < markerContainers.length; i++) {
         const container = markerContainers[i] as HTMLElement;
         const marker = container.querySelector('.marker') as HTMLElement;
-        
+
         if (shouldHide) {
             // Hide markers if we're zoomed in too far
             container.style.visibility = 'hidden';

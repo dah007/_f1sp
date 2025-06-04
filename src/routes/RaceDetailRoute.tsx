@@ -22,29 +22,9 @@ const RaceDetail = () => {
     const [pollPosition, setPollPosition] = useState<PolePosition>();
     const [raceDetail, setRaceDetail] = useState<RaceProps[]>();
 
-    const { data: fastestLapData, isError: fastestLapError } = useGetFastestLapQuery(raceId) as {
-        data: FastestLap[];
-        isError: boolean;
-    };
-    // const { data: fastestPitData, isError: fastestPitError } = useGetFastestPitStopQuery(raceId) as {
-    //     data: TNamedObject<string>[];
-    //     isError: boolean;
-    // };
+    const { data: fastestLapData, isError: fastestLapError } = useGetFastestLapQuery(raceId);
     const { data: pollPositionData, isError: pollPositionError } = useGetPollPositionQuery(raceId);
     const { data: raceResultsData, isError: raceResultsError } = useGetRacesResultsWithQualQuery(raceId);
-
-    // if (fastestLapError || fastestPitError || pollPositionError) {
-    //     dispatch(setError(true));
-    // }
-    // useEffect(() => {
-    //     if (driverOfTheDayError) {
-    //         dispatch(setError(true));
-    //         return;
-    //     }
-    //     if (!driverOfTheDayData) return;
-    //     console.log('Driver of the Day:', driverOfTheDayData);
-    //     // setDriverOfTheDay(driverOfTheDayData);
-    // }, [driverOfTheDayData, dispatch, driverOfTheDayError]);
 
     useEffect(() => {
         if (fastestLapError) {
@@ -52,18 +32,9 @@ const RaceDetail = () => {
             return;
         }
         if (!fastestLapData) return;
-        console.log('Fastest Lap:', fastestLapData[0]);
-        setFastestLap(fastestLapData[0]);
+        console.log('Fastest Lap:', fastestLapData);
+        setFastestLap(fastestLapData);
     }, [fastestLapData, dispatch, fastestLapError]);
-
-    // useEffect(() => {
-    //     if (fastestPitError) {
-    //         dispatch(setError(true));
-    //         return;
-    //     }
-    //     if (!fastestPitData) return;
-    //     setFastestPit(fastestPitData[0]);
-    // }, [fastestPitData, dispatch, fastestPitError]);
 
     useEffect(() => {
         if (pollPositionError) {

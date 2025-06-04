@@ -17,7 +17,7 @@ export const raceApi = createApi({
     endpoints: (builder) => ({
         getFastestLap: builder.query({
             query: (raceId: number) => `/fastestLap?$filter=race_id eq ${raceId}`,
-            transformResponse: (response: { value: FastestLap }) => response?.value ?? {},
+            transformResponse: (response: { value: FastestLap[] }) => response?.value[0] ?? {},
             transformErrorResponse: (error) => {
                 console.error('Error fetching fastest lap:', error);
                 return error;

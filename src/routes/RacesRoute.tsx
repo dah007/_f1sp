@@ -437,7 +437,18 @@ const Races: React.FC = (): JSX.Element => {
                                                     >
                                                         <Outlet />
                                                     </Suspense>
-                                                    <div className="flex mt-2">
+                                                    <div className="flex items-center mt-2">
+                                                        <Button
+                                                            variant="link"
+                                                            onClick={() => {
+                                                                setClickedRowId(null);
+                                                                navigate(`/races/results/${row.original.id}#top`);
+                                                            }}
+                                                            className="px-2 py-1 text-sm text-blue-700 dark:text-blue-300 hover:text-blue-500 cursor-pointer"
+                                                        >
+                                                            View Results
+                                                        </Button>
+                                                        {' | '}
                                                         <Button
                                                             variant="link"
                                                             onClick={() => {
