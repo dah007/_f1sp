@@ -4,8 +4,7 @@ import { CONTINENTS } from 'constants/circuitConstants';
 
 import { BUTTON_CLASSES, SELECT_CLASSES } from 'constants/constants';
 import type { Map } from 'mapbox-gl';
-import { type GotoContinentProps } from 'routes/Circuits/CircuitFunctions';
-import type { CircuitProps } from 'types/circuits';
+import type { CircuitProps, GotoContinentProps } from 'types/circuits';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface ContinentSelectProps {

@@ -1,6 +1,6 @@
 import { BUTTON_CLASSES, SELECT_CLASSES } from '@/constants/constants';
+import type { GotoCircuitProps } from '@/types/circuits';
 import type { Map } from 'mapbox-gl';
-import type { GotoCircuitProps } from 'routes/Circuits/CircuitFunctions';
 import type { CircuitDetailsProps, CircuitProps } from 'types/circuits';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 

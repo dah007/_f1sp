@@ -1,6 +1,15 @@
 import { CIRCUIT_DETAILS, CONTINENTS } from 'constants/circuitConstants';
 import mapboxgl, { EasingOptions, LngLat, LngLatBounds, LngLatLike } from 'mapbox-gl';
-import type { CircuitProps, CreateMarkerProps, FlyToPOIProps, FlyToProps, GotoCircuitProps, GotoContinentProps, LoadCircuitLayersProps, ZoomToProps } from 'types/circuits';
+import type {
+    CircuitProps,
+    CreateMarkerProps,
+    FlyToPOIProps,
+    FlyToProps,
+    GotoCircuitProps,
+    GotoContinentProps,
+    LoadCircuitLayersProps,
+    ZoomToProps
+} from 'types/circuits';
 import { isBoundingBoxOutside, isPointInsideBoundingBox } from 'utils/maps';
 
 export const SHOW_PIN_ZOOM = 16; // Zoom level at which the markers are hidden

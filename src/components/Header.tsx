@@ -193,13 +193,22 @@ const Header: React.FC = () => {
             shadow-md"
         >
             <div
-                className="cursor-pointer absolute top-4 right-4 flex flex-col items-center"
+                className="cursor-pointer absolute top-4 right-4 flex items-center gap-4"
                 title="What's New"
                 role="button"
                 onClick={() => handleNavigation('/whats-new')}
             >
-                <Newspaper size={16} />
-                <div className="text-xs text-zinc-300 text-nowrap">What&apos;s New</div>
+                <div className="flex flex-col items-center">
+                    <Newspaper size={16} />
+                    <div className="text-xs text-zinc-300 text-center">
+                        What&apos;s
+                        <br />
+                        New
+                    </div>
+                </div>
+                <a href="https://buymeacoffee.com/dah007" rel="noreferrer" target="_blank" title="Buy me a coffee">
+                    <LucideCoffee className="text-yellow-400 light:text-brown-500" />
+                </a>
             </div>
             {/* HAMBURGER MENU */}
             <div className="flex lg:hidden xl:hidden justify-end grow">

@@ -16,7 +16,7 @@ export const raceApi = createApi({
     baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
         getFastestLap: builder.query({
-            query: (raceId: number | string = '') => `/fastestLap?raceId=${raceId}`,
+            query: (raceId: number) => `/fastestLap?$filter=race_id eq ${raceId}`,
             transformResponse: (response: { value: FastestLap }) => response?.value ?? {},
             transformErrorResponse: (error) => {
                 console.error('Error fetching fastest lap:', error);
@@ -32,9 +32,11 @@ export const raceApi = createApi({
             },
         }),
         getLastResultsAtCircuit: builder.query({
-            query: ({circuitId}: { circuitId: string}) => {
+            query: ({ circuitId }: { circuitId: string }) => {
                 console.log('Fetching last results at circuit:', circuitId);
-                return circuitId ? `/lastResultsByCircuit?$filter=circuit_id eq '${circuitId}'&$orderby=position_number` : `/lastResultsByCircuit?$filter=circuit_id eq 'baku'`;
+                return circuitId
+                    ? `/lastResultsByCircuit?$filter=circuit_id eq '${circuitId}'&$orderby=position_number`
+                    : `/lastResultsByCircuit?$filter=circuit_id eq '${circuitId}'`;
             },
             transformResponse: (response: { value: RaceProps[] }) => {
                 console.log('-- Last results at circuit:', response);
@@ -69,13 +71,36 @@ export const raceApi = createApi({
         }),
         getPreviousFirstPlaceResults: builder.query({
             query: (circuitId: string) => {
-                console.log(circuitId ? `/previousFirstPlaceResults?$filter=circuit_id eq '${circuitId}'` : `/previousFirstPlaceResults`)
-                return (circuitId ? `/previousFirstPlaceResults?$filter=circuit_id eq '${circuitId}'` : `/previousFirstPlaceResults`);
+                console.log(
+                    circuitId
+                        ? `/previousFirstPlaceResults?$filter=circuit_id eq '${circuitId}'`
+                        : `/previousFirstPlaceResults`,
+                );
+                return circuitId
+                    ? `/previousFirstPlaceResults?$filter=circuit_id eq '${circuitId}'`
+                    : `/previousFirstPlaceResults`;
             },
 
             transformResponse: (response: { value: RaceProps[] }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching previous first place results:', error);
+                return error;
+            },
+        }),
+        getPreviousRaceResults: builder.query({
+            query: (circuitId: string) => {
+                console.log(
+                    circuitId
+                        ? `/previousRaceResults?$filter=circuit_id eq '${circuitId}'&$orderby=year desc`
+                        : `/previousRaceResults`,
+                );
+                return circuitId
+                    ? `/previousRaceResults?$filter=circuit_id eq '${circuitId}'&$orderby=year desc`
+                    : `/previousRaceResults`;
+            },
+            transformResponse: (response: { value: RaceProps[] }) => response?.value ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error fetching previous race results:', error);
                 return error;
             },
         }),
@@ -88,6 +113,14 @@ export const raceApi = createApi({
         }),
         getRaceCount: builder.query({
             query: () => `/raceCount`,
+            transformResponse: (response: { value: RaceProps[] }) => response?.value[0].totalRaceCount ?? 0,
+            transformErrorResponse: (error) => {
+                console.error('Error ', error);
+                return error;
+            },
+        }),
+        getRaceCountByCircuit: builder.query({
+            query: (circuitId: string) => `/raceCountByCircuit?$filter=circuit_id eq '${circuitId}'`,
             transformResponse: (response: { value: RaceProps[] }) => response?.value[0].totalRaceCount ?? 0,
             transformErrorResponse: (error) => {
                 console.error('Error ', error);
@@ -175,17 +208,16 @@ export const raceApi = createApi({
             query: (year: number = 2024) => `/pointsByRace?year=${year}`,
         }),
 
-        /** @deprecated */
-        // getPollPosition: builder.query({
-        //     queryFn: async (raceId: number | string = '') => {
-        //         try {
-        //             const data = await dbFetch(`/pollPosition?raceId=${raceId}`);
-        //             return { data: data };
-        //         } catch (error) {
-        //             return buildErrorObject(error);
-        //         }
-        //     },
-        // }),
+        getPollPosition: builder.query({
+            query: (raceId: number | string = '') =>
+                `/previousRaceResults?$filter=id eq ${raceId} and position_number eq 1`,
+            transformResponse: (response: { value: RaceProps }) => response?.value ?? {},
+            transformErrorResponse: (error) => {
+                console.error('Error fetching poll position:', error);
+                return error;
+            },
+        }),
+
         getRaceNext: builder.query({
             query: () => `/raceNext`,
             transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? {},
@@ -252,9 +284,12 @@ export const {
     useGetNextPageQuery,
     useGetNextRaceQuery,
     useGetPointsByRaceQuery,
-    // useGetPollPositionQuery,
+    useGetPollPositionQuery,
     useGetPreviousWinnersAtCircuitQuery,
+    useGetPreviousFirstPlaceResultsQuery,
+    useGetPreviousRaceResultsQuery,
     useGetRaceCountQuery,
+    useGetRaceCountByCircuitQuery,
     // useGetRaceMaxYearQuery,
     useGetRaceNextQuery,
     useGetRaceQuery,

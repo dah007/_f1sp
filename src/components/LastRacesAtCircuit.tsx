@@ -1,15 +1,15 @@
-import { JSX, useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import { JSX, useEffect } from 'react';
 
 import CustomLink from './CustomLink';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
-import { setPreviousResultsAtCircuit } from 'slices/racesSlice';
 import { useGetLastResultsAtCircuitQuery } from 'features/raceApi';
+import { setPreviousResultsAtCircuit } from 'slices/racesSlice';
 
-import { RaceProps } from 'types/races';
 import { YEAR } from 'constants/constants';
 import { setError, setLoading } from 'slices/siteWideSlice';
+import { RaceProps } from 'types/races';
 
 /**
  * `LastRacesAtCircuit` is a React functional component that displays the last race results at a specific circuit.
@@ -55,7 +55,9 @@ const LastRacesAtCircuit: React.FC = (): JSX.Element => {
         | RaceProps[]
         | null;
 
-    const { data, isError, isLoading } = useGetLastResultsAtCircuitQuery('');
+    const { data, isError, isLoading } = useGetLastResultsAtCircuitQuery({
+        circuitId: previousResultsAtCircuit?.[0]?.circuit_id || '',
+    });
 
     useEffect(() => {
         if (isError) {

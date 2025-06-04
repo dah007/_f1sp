@@ -29,7 +29,7 @@ import {
     PaginationPrevious,
 } from 'components/ui/pagination';
 import { useAppSelector } from 'hooks/reduxHooks';
-import { JSX, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, JSX, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { setRaces } from 'slices/racesSlice';
 import type { RaceProps } from 'types/races';
@@ -411,7 +411,7 @@ const Races: React.FC = (): JSX.Element => {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <>
+                                <Fragment key={row.id}>
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && 'selected'}
@@ -453,7 +453,7 @@ const Races: React.FC = (): JSX.Element => {
                                             </TableCell>
                                         </TableRow>
                                     )}
-                                </>
+                                </Fragment>
                             ))
                         ) : (
                             <TableRow>

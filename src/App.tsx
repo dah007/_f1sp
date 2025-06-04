@@ -24,6 +24,7 @@ const RaceDetail = lazy(() => import('./routes/RaceDetailRoute'));
 const Races = lazy(() => import('./routes/RacesRoute'));
 const RaceLast = lazy(() => import('./routes/RaceLastRoute'));
 const RaceNext = lazy(() => import('./routes/RaceNextRoute'));
+const RaceResults = lazy(() => import('./routes/RaceResultsRoute'));
 const SeasonCurrent = lazy(() => import('./routes/SeasonCurrentRoute'));
 const Seasons = lazy(() => import('./routes/SeasonsRoute'));
 const Standings = lazy(() => import('./routes/StandingsRoute'));
@@ -104,6 +105,7 @@ const App = () => {
                             </Route>
                             <Route path="races/last/:id?" element={<RaceLast />} />
                             <Route path="races/next/:id?" element={<RaceNext />} />
+                            <Route path="races/results/:id?" element={<RaceResults />} />
 
                             <Route path="seasons/current" element={<SeasonCurrent />} />
                             <Route path="seasons/:year?" element={<Seasons />} />

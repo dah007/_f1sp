@@ -1,7 +1,7 @@
--- f1sp.results_w_data source
+-- f1sp.previous_first_place_results source
 
 create or replace
-algorithm = UNDEFINED view `results_w_data` as
+algorithm = UNDEFINED view `previous_first_place_results` as
 select
     `c2`.`name` as `race_country`,
     `d`.`name` as `driver`,
@@ -46,7 +46,8 @@ join `country` `c` on
     ((`d`.`country_of_birth_country_id` = `c`.`id`)))
 join `country` `c2` on
     ((`cir`.`country_id` = `c2`.`id`)))
-
+where
+    (`rr`.`position_number` = 1)
 order by
     `r`.`year` desc,
     `r`.`id` desc;
