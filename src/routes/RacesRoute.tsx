@@ -442,7 +442,7 @@ const Races: React.FC = (): JSX.Element => {
                                                             variant="link"
                                                             onClick={() => {
                                                                 setClickedRowId(null);
-                                                                navigate(`/races/results/${row.original.id}#top`);
+                                                                navigate(`/raceResults/${row.original.id}#top`);
                                                             }}
                                                             className="px-2 py-1 text-sm text-blue-700 dark:text-blue-300 hover:text-blue-500 cursor-pointer"
                                                         >
