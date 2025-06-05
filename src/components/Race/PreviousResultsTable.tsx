@@ -1,45 +1,101 @@
+/**
+ * PreviousResultsTable Component
+ *
+ * This component displays a table of previous race results for a specific circuit.
+ * It shows race winners by year with expandable rows to view all race results for that year.
+ *
+ * Features:
+ * - Fetches and displays historical race results for a specific circuit
+ * - Expandable rows to show all race results for a given year
+ * - Sortable columns for different race statistics
+ * - Uses React Table for efficient table rendering and management
+ *
+ * @param {string} circuitId - The ID of the circuit to fetch results for
+ */
+
 import { useAppDispatch } from '@/app/store';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useGetLastResultsAtCircuitQuery } from '@/features/raceApi';
+import { useGetPreviousRaceResultsQuery, useGetRaceCountByCircuitQuery } from '@/features/raceApi';
 import { setError } from '@/slices/siteWideSlice';
 import { ExtendedColumnDef } from '@/types/dataTable';
 import { RaceResultProps } from '@/types/races';
 import { LinkRenderer } from '@/utils/dataTableRenderers';
-import { GetInVisibleColumn, pagination } from '@/utils/tables';
+import { intlNumberFormat } from '@/utils/number';
+import { GetInVisibleColumn, groupWinnersWithChildren, Item } from '@/utils/tables';
 import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
+    getExpandedRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ChartSpline, FlagIcon, Medal } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ArrowUpDown, ChartSpline, ChevronDown, ChevronRight, FlagIcon, Medal } from 'lucide-react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import Button from '../Button';
 import Flag from '../Flag';
 
+/**
+ * PreviousResultsTable component displays historical race results for a specific circuit
+ *
+ * @param {Object} props - Component props
+ * @param {string} props.circuitId - The ID of the circuit to fetch results for
+ * @returns {JSX.Element} Rendered table component
+ */
 const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
     circuitId,
     // setRaceResults,
 }): JSX.Element => {
     const dispatch = useAppDispatch();
 
+    // State for storing race results and metadata
     const [raceResults, setRaceResults] = useState<RaceResultProps[]>([]);
+    const [totalRaceCount, setTotalRaceCount] = useState<number>(0);
 
+    // Query to get the total number of races for this circuit
+    const { data: raceTotalCountData } = useGetRaceCountByCircuitQuery(circuitId) as {
+        data: number | undefined;
+    };
+
+    // Update total race count when data is received
+    useEffect(() => {
+        if (!raceTotalCountData) return;
+
+        console.log('Total race count:', raceTotalCountData);
+        setTotalRaceCount(raceTotalCountData || 0);
+    }, [raceTotalCountData]);
+
+    /**
+     * Defines the columns for the race results table
+     *
+     * @returns {ColumnDef<RaceResultProps>[]} Array of column definitions
+     */
     const colDefs = (): ColumnDef<RaceResultProps>[] => [
         {
-            accessorKey: 'position_number',
+            header: ' ',
             cell: ({ row }) => {
-                return <div className="min-w-8 max-w-8 w-full text-center">{row.getValue('position_number')}</div>;
+                return row.getCanExpand() ? (
+                    <button onClick={row.getToggleExpandedHandler()} style={{ cursor: 'pointer' }}>
+                        {row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}
+                    </button>
+                ) : (
+                    ''
+                );
+            },
+        },
+        {
+            accessorKey: 'year',
+            cell: ({ row }) => {
+                return <div className="min-w-8 max-w-8 w-full text-center">{row.getValue('year')}</div>;
             },
             header: ({ column }) => (
                 <Button
                     variant="ghost"
                     className="cursor-pointer min-w-8 max-w-8 w-8"
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-                    title="Finish Position"
+                    title="Year"
                 >
                     <FlagIcon size={24} />
                     <ArrowUpDown className="w-4 h-4 ml-2" />
@@ -47,23 +103,25 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
             ),
         },
         {
-            accessorKey: 'countryId',
+            accessorKey: 'driverNationality',
             cell: ({ row }) => {
                 return (
-                    <div className="min-w-8 w-8 max-w-8">{Flag({ nameAsId: row.getValue('countryId'), size: 24 })}</div>
+                    <div className="min-w-8 w-8 max-w-8">
+                        {Flag({ cCode: row.getValue('driverNationality'), size: 24 })}
+                    </div>
                 );
             },
             size: 8,
             header: () => <div></div>,
         },
         {
-            accessorKey: 'driver_name',
+            accessorKey: 'driver',
 
             cell: ({ row }) => (
                 <div className="min-w-12 w-12 max-w-12">
                     {LinkRenderer({
                         gotoCB: () => `/drivers/${row.getValue('driver_id')}`,
-                        label: row.getValue('driver_name'),
+                        label: row.getValue('driver'),
                         value: row.original.id as unknown as string,
                     })}
                 </div>
@@ -76,22 +134,10 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
                 </Button>
             ),
         },
-        // {
-        //     accessorKey: 'date',
-        //     cell: ({ row }) => <div className="text-right">{row.getValue('date')}</div>,
-        //     header: ({ column }) => {
-        //         return (
-        //             <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        //                 Date
-        //                 <ArrowUpDown className="w-4 h-4 ml-2" />
-        //             </Button>
-        //         );
-        //     },
-        // },
         {
-            accessorKey: 'time',
+            accessorKey: 'result_time',
             size: 15,
-            cell: ({ row }) => <div className="text-right w-full">{row.getValue('time')}</div>,
+            cell: ({ row }) => <div className="text-right w-full">{row.getValue('result_time')}</div>,
             header: ({ column }) => (
                 <Button
                     variant="ghost"
@@ -99,6 +145,23 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
                     onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
                 >
                     Time
+                    <ArrowUpDown className="w-4 h-4 ml-2" />
+                </Button>
+            ),
+        },
+        {
+            accessorKey: 'time_penalty',
+            size: 15,
+            cell: ({ row }) => (
+                <div className="text-right w-full">{intlNumberFormat(row.getValue('time_penalty'))}</div>
+            ),
+            header: ({ column }) => (
+                <Button
+                    variant="ghost"
+                    className="cursor-pointer"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+                >
+                    Penalty
                     <ArrowUpDown className="w-4 h-4 ml-2" />
                 </Button>
             ),
@@ -143,29 +206,6 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
             },
             size: 10,
         },
-        // {
-        //     accessorKey: 'year',
-        //     cell: ({ row }) => (
-        //         <div
-        //             // onClick={() => (location.href = `/drivers/${row.original.id}`)}
-        //             className="cursor-pointer hover:text-blue-500"
-        //         >
-        //             {row.getValue('year')}
-        //         </div>
-        //     ),
-        //     size: 40,
-        //     header: ({ column }) => (
-        //         <Button
-        //             variant="ghost"
-        //             className="cursor-pointer"
-        //             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        //         >
-        //             Year
-        //             <ArrowUpDown className="w-4 h-4 ml-2" />
-        //         </Button>
-        //     ),
-        // },
-
         {
             accessorKey: 'points',
             cell: ({ row }) => {
@@ -262,89 +302,172 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
         },
     ];
 
+    // Query to fetch previous race results
     const {
-        data: previousFirstPlaceResults,
-        isLoading: previousFirstPlaceResultsLoading,
-        isError: previousFirstPlaceResultsError,
-    } = useGetLastResultsAtCircuitQuery({ circuitId }) as {
+        data: previousRaceResults,
+        isLoading: previousRaceResultsLoading,
+        isError: previousRaceResultsError,
+    } = useGetPreviousRaceResultsQuery(circuitId) as {
         data: RaceResultProps[] | undefined;
         isLoading: boolean;
         isError: boolean;
     };
 
+    // Configure pagination based on the race count
+    const pagination = useMemo(() => {
+        return {
+            pageIndex: 0,
+            pageSize: totalRaceCount > 0 ? totalRaceCount : 10, // default page size
+            // Show all results on a single page if possible
+        };
+    }, [raceResults]);
+
+    // Initialize and configure the table
     const table = useReactTable({
         columns: colDefs(),
         data: raceResults || [],
         getCoreRowModel: getCoreRowModel(),
+        getExpandedRowModel: getExpandedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        // Return children array as sub-rows for expandable functionality
+        getSubRows: (row) => (row as RaceResultProps).children as RaceResultProps[] | undefined,
+        initialState: {
+            columnVisibility: GetInVisibleColumn(colDefs() as unknown as ExtendedColumnDef[]),
+            sorting: [
+                {
+                    id: 'year',
+                    desc: true, // Sort by most recent years first
+                },
+            ],
+        },
+        paginateExpandedRows: false, // Do not include expanded rows in pagination calculation
+        rowCount: raceResults?.length ?? 0,
         state: {
             pagination: pagination,
         },
-        rowCount: raceResults?.length ?? 0,
-        initialState: {
-            columnVisibility: GetInVisibleColumn(colDefs() as unknown as ExtendedColumnDef[]),
-        },
     });
 
+    // Commented pagination functionality - kept for potential future use
+    // const gotoNext = () => {
+    //     const nextPage = table.getState().pagination.pageIndex + 1;
+    //     console.log('Next page:', nextPage);
+    //     if (nextPage < table.getPageCount()) {
+    //         console.log('Going to next page:', nextPage);
+    //         table.setPageIndex(nextPage);
+    //     }
+    // };
+
+    // Process race results when data is fetched
     useEffect(() => {
-        if (previousFirstPlaceResultsError) {
-            console.error('>>>>> Error fetching previous first place results:', previousFirstPlaceResultsError);
+        if (previousRaceResultsError) {
+            console.error('>>>>> Error fetching previous first place results:', previousRaceResultsError);
             dispatch(setError(true));
             return;
         }
-        if (previousFirstPlaceResultsLoading) {
+        if (previousRaceResultsLoading) {
             console.log('Loading previous first place results...');
             return;
         }
-        if (!previousFirstPlaceResults) return;
+        if (!previousRaceResults) return;
 
-        setRaceResults(previousFirstPlaceResults);
-        console.log('Previous first place results fetched successfully:', previousFirstPlaceResults);
-    }, [previousFirstPlaceResults, previousFirstPlaceResultsError, previousFirstPlaceResultsLoading, dispatch]);
+        // Group results by year with race winners as parent rows
+        const orgedResults = groupWinnersWithChildren(previousRaceResults as unknown as Item[]);
+        setRaceResults(orgedResults as unknown as RaceResultProps[]);
+        console.log('ordered results:', orgedResults);
+    }, [previousRaceResults, previousRaceResultsError, previousRaceResultsLoading, dispatch]);
 
     return (
-        <Table className="w-full">
-            <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => {
-                            return (
+        <>
+            <div className="flex w-fit">
+                {/* Pagination components (currently disabled) */}
+                {/* <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious href="#" />
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationEllipsis />
+                        </PaginationItem>
+
+                        <PaginationItem>
+                            <PaginationNext onClick={gotoNext} href="#" />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination> */}
+            </div>
+            <Table className="w-full">
+                {/* Table header with sortable column headers */}
+                <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => (
                                 <TableHead key={header.id}>
                                     {header.isPlaceholder
                                         ? null
                                         : flexRender(header.column.columnDef.header, header.getContext())}
                                 </TableHead>
-                            );
-                        })}
-                    </TableRow>
-                ))}
-            </TableHeader>
-            <TableBody>
-                {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                        <TableRow
-                            key={row.id}
-                            data-state={row.getIsSelected() && 'selected'}
-                            data-driver-id={row.original.id}
-                        >
-                            {row.getVisibleCells().map((cell) => (
-                                <TableCell key={cell.id}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </TableCell>
                             ))}
                         </TableRow>
-                    ))
-                ) : (
-                    <TableRow key="no-results">
-                        <TableCell colSpan={colDefs.length} className="h-24 text-center" key="nope-none">
-                            No results.
-                        </TableCell>
-                    </TableRow>
-                )}
-            </TableBody>
-        </Table>
+                    ))}
+                </TableHeader>
+                {/* Table body with race results and expandable rows */}
+                <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row, index) => {
+                            // Determine if this is a child row and find its parent/siblings
+                            const isChild = !!row.parentId;
+                            const parentRow = isChild
+                                ? table.getRowModel().rows.find((r) => r.id === row.parentId)
+                                : null;
+                            const siblings = isChild && parentRow ? parentRow.subRows : [];
+                            const isLastChild = isChild && siblings && siblings[siblings.length - 1]?.id === row.id;
+
+                            return (
+                                <Fragment key={`${row.id}-${index}`}>
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && 'selected'}
+                                        data-driver-id={row.original.id}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                    {/* Add separator after expanded rows or last child rows */}
+                                    {(row.getIsExpanded() || isLastChild) && (
+                                        <tr>
+                                            <td
+                                                colSpan={row.getAllCells().length}
+                                                className="border border-red-500"
+                                            ></td>
+                                        </tr>
+                                    )}
+                                    {/* Placeholder for potential future custom row after last child */}
+                                    {/* {isLastChild && (
+                                    <TableRow>
+                                        <TableCell colSpan={row.getAllCells().length}>
+                                            <div className="text-center text-xs text-gray-400">End of children</div>
+                                        </TableCell>
+                                    </TableRow>
+                                )} */}
+                                </Fragment>
+                            );
+                        })
+                    ) : (
+                        <TableRow key="no-results">
+                            <TableCell colSpan={colDefs.length} className="h-24 text-center" key="nope-none">
+                                No results.
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </>
     );
 };
+
 export default PreviousResultsTable;

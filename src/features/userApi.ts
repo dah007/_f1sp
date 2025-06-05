@@ -30,9 +30,9 @@ export const userApi = createApi({
             transformErrorResponse: (response) => {
                 console.error('Vote check error:', response);
                 return response;
-            }
+            },
         }),
-        
+
         createUser: builder.mutation<User, CreateUserRequest>({
             query: (createUser) => ({
                 url: 'createUser',
@@ -46,16 +46,20 @@ export const userApi = createApi({
             transformErrorResponse: (response) => {
                 console.error('!!!! User creation error:', response);
                 return response;
-            }
+            },
         }),
 
         getUser: builder.query<User, number | undefined>({
             query: (id: number | undefined) => `user/${id}`,
         }),
-        
+
         submitVote: builder.mutation<VoteValueProps, SubmitVoteRequest>({
             query: (voteRequest) => {
-                console.log('%cVote submission request:', 'color: blue; font-weight: bold; background:white; font-size:16px', voteRequest);
+                console.log(
+                    '%cVote submission request:',
+                    'color: blue; font-weight: bold; background:white; font-size:16px',
+                    voteRequest,
+                );
                 return {
                     url: 'vote',
                     method: 'POST',
@@ -63,7 +67,11 @@ export const userApi = createApi({
                 };
             },
             transformResponse: (response: VoteValueProps) => {
-                console.log('%cVote submission response:', 'color: green; font-weight: bold; background:white; font-size:16px', response);
+                console.log(
+                    '%cVote submission response:',
+                    'color: green; font-weight: bold; background:white; font-size:16px',
+                    response,
+                );
                 return response;
             },
             transformErrorResponse: (response) => {
@@ -75,9 +83,4 @@ export const userApi = createApi({
     reducerPath: 'userApi',
 });
 
-export const { 
-    useCheckVoteQuery,    
-    useGetUserQuery, 
-    useCreateUserMutation, 
-    useSubmitVoteMutation 
-} = userApi;
+export const { useCheckVoteQuery, useGetUserQuery, useCreateUserMutation, useSubmitVoteMutation } = userApi;

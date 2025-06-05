@@ -44,8 +44,8 @@ export interface FastestLap {
 }
 
 export type PolePosition = {
-    permanent_number: number;
-    full_name: string;
+    permanent_number?: number;
+    driver: string;
 };
 
 export type RaceProps = {
@@ -69,7 +69,7 @@ export type RaceProps = {
     free_practice_4_date: string | null;
     free_practice_4_time: string | null;
     grand_prix_id: string;
-    id: string;
+    id: number;
     laps: number;
     official_name: string;
     permanent_number: number;

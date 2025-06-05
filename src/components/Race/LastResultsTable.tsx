@@ -20,6 +20,10 @@ import { useEffect, useState } from 'react';
 import Button from '../Button';
 import Flag from '../Flag';
 
+/**
+ * LastResultsTable component displays the last race results for a specific circuit.
+ * @deprecated
+ */
 const LastResultsTable: React.FC<{ circuitId: string }> = ({
     circuitId,
     // setRaceResults,

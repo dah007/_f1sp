@@ -7,20 +7,23 @@ import { setLastRaceResults, setRaceWGP } from '@/slices/racesSlice';
 import { setError, setLoading } from '@/slices/siteWideSlice';
 import type { RaceProps, RaceResultProps } from '@/types/races';
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
-const RaceLastRoute = () => {
+const RaceResultsRoute = () => {
     const dispatch = useAppDispatch();
 
-    // Only used here, to get the last race id
-    const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
+    const { id } = useParams<{ id: string }>();
+
+    // // Only used here, to get the last race id
+    // const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
     const raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as RaceProps | null;
 
     const {
         data: raceWGPData,
         isLoading: raceWGPisLoading,
         isError: raceWGPisError,
-    } = useGetRaceWithGPQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
-        data: Partial<RaceProps> | undefined;
+    } = useGetRaceWithGPQuery(parseInt(id as string, 10) || 0) as {
+        data: RaceProps | undefined;
         isLoading: boolean;
         isError: boolean;
     };
@@ -40,7 +43,7 @@ const RaceLastRoute = () => {
         data: dataResults,
         isLoading: dataIsLoading,
         isError: dataIsError,
-    } = useGetLastRaceResultsQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
+    } = useGetLastRaceResultsQuery(parseInt(id as unknown as string, 10) - 1 || 0) as {
         data: RaceResultProps[] | undefined;
         isLoading: boolean;
         isError: boolean;
@@ -57,7 +60,9 @@ const RaceLastRoute = () => {
         dispatch(setLoading(false));
     }, [dataResults, dataIsError, dataIsLoading, dispatch]);
 
-    if (!raceWGP) return <></>;
+    if (!raceWGP || !dataResults) return <>Nope.</>;
+
+    console.log('RaceResultsRoute', raceWGP);
 
     const circuitDetails = CIRCUIT_DETAILS[raceWGP.circuit_id as keyof typeof CIRCUIT_DETAILS];
 
@@ -125,4 +130,4 @@ const RaceLastRoute = () => {
         </>
     );
 };
-export default RaceLastRoute;
+export default RaceResultsRoute;

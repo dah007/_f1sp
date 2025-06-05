@@ -10,7 +10,7 @@ const WhatsNew: React.FC = (): JSX.Element => {
                     </button>
                 </div>
                 <div className="w-[50%]">
-                    <h2 className="krona-one-regular text-lg">2025-May-25 v0.65.0</h2>
+                    <h2 className="krona-one-regular text-lg">2025-May-25 v0.46.0</h2>
 
                     <ul className="w-96 text-surface dark:text-white pb-6">
                         <li className="w-full py-4">Fixed: Standings no longer a disaster on mobile</li>
@@ -21,7 +21,7 @@ const WhatsNew: React.FC = (): JSX.Element => {
                 </div>
 
                 <div>
-                    <h2 className="krona-one-regular text-lg">2025-May-22 v0.6.0</h2>
+                    <h2 className="krona-one-regular text-lg">2025-May-22 v0.45.0</h2>
 
                     <ul className="w-96 text-surface dark:text-white">
                         <li className="w-full py-4">Fixed: Circuits map more mobile friendly</li>

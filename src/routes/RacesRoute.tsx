@@ -29,7 +29,7 @@ import {
     PaginationPrevious,
 } from 'components/ui/pagination';
 import { useAppSelector } from 'hooks/reduxHooks';
-import { JSX, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, JSX, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { setRaces } from 'slices/racesSlice';
 import type { RaceProps } from 'types/races';
@@ -411,7 +411,7 @@ const Races: React.FC = (): JSX.Element => {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <>
+                                <Fragment key={row.id}>
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && 'selected'}
@@ -424,7 +424,7 @@ const Races: React.FC = (): JSX.Element => {
                                         ))}
                                     </TableRow>
                                     {/* Render Outlet after the clicked row */}
-                                    {clickedRowId === row.original.id && (
+                                    {clickedRowId === String(row.original.id) && (
                                         <TableRow>
                                             <TableCell colSpan={colDefs.length} className="p-0">
                                                 <div className="bg-slate-100 dark:bg-zinc-800 p-4 rounded-md shadow-md mt-2 mb-4">
@@ -437,7 +437,18 @@ const Races: React.FC = (): JSX.Element => {
                                                     >
                                                         <Outlet />
                                                     </Suspense>
-                                                    <div className="flex mt-2">
+                                                    <div className="flex items-center mt-2">
+                                                        <Button
+                                                            variant="link"
+                                                            onClick={() => {
+                                                                setClickedRowId(null);
+                                                                navigate(`/races/results/${row.original.id}#top`);
+                                                            }}
+                                                            className="px-2 py-1 text-sm text-blue-700 dark:text-blue-300 hover:text-blue-500 cursor-pointer"
+                                                        >
+                                                            View Results
+                                                        </Button>
+                                                        {' | '}
                                                         <Button
                                                             variant="link"
                                                             onClick={() => {
@@ -453,7 +464,7 @@ const Races: React.FC = (): JSX.Element => {
                                             </TableCell>
                                         </TableRow>
                                     )}
-                                </>
+                                </Fragment>
                             ))
                         ) : (
                             <TableRow>

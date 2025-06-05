@@ -165,7 +165,7 @@
             "source": {
                 "type": "view",
                 "key-fields": ["circuit_id"],
-                "object": "last_race_circuit"
+                "object": "results_w_data"
             },
             "permissions": [
                 {
@@ -201,6 +201,19 @@
                 }
             ]
         },
+        "pollPosition": {
+            "source": {
+                "type": "view",
+                "key-fields": ["race_id"],
+                "object": "race_result"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
         "previousWinnersAtCircuit": {
             "source": {
                 "type": "view",
@@ -219,6 +232,19 @@
                 "type": "view",
                 "key-fields": ["id"],
                 "object": "race_w_data"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "raceCountByCircuit": {
+            "source": {
+                "type": "view",
+                "key-fields": ["totalRaceCount"],
+                "object": "race_count_by_circuit"
             },
             "permissions": [
                 {
@@ -280,6 +306,19 @@
             ]
         },
         "previousFirstPlaceResults": {
+            "source": {
+                "type": "view",
+                "key-fields": ["circuit_id"],
+                "object": "previous_first_place_results"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "previousRaceResults": {
             "source": {
                 "type": "view",
                 "key-fields": ["circuit_id"],
