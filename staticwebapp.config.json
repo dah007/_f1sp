@@ -12,7 +12,7 @@
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["/assets*", "*.css", "*.js", "*.mjs", "/styles*", "/favicon.ico", "/favicon.png", "/manifest.json"]
+        "exclude": ["/assets/*", "*.css", "*.js", "*.mjs", "/styles*", "/favicon.ico", "/favicon.png", "/manifest.json"]
     },
     "routes": [
         {
