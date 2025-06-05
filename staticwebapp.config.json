@@ -7,12 +7,11 @@
         ".js": "application/javascript",
         ".json": "application/json",
         ".mjs": "application/javascript",
-        ".css": "text/css",
-        ".html": "text/html"
+        ".css": "text/css"
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["*.css", "*.js", "*.mjs", "/styles*", "/favicon.ico", "/favicon.png", "/manifest.json"]
+        "exclude": ["/assets*", "/styles*", "/favicon.ico", "/favicon.png", "/manifest.json"]
     },
     "routes": [
         {
@@ -25,7 +24,9 @@
         },
         {
             "route": "/assets/*",
-            "allowedRoles": ["anonymous"]
+            "headers": {
+                "cache-control": "must-revalidate, max-age=15770000"
+            }
         }
     ],
     "trailingSlash": "auto"
