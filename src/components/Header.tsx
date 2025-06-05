@@ -20,22 +20,22 @@ export const constructorMenuItems: { title: string; href: string; description: s
     },
     {
         title: 'Constructor Records',
-        href: '/constructors/records',
+        href: '/constructorRecords',
         description: 'View constructor records and statistics (coming soon).',
     },
     {
         title: 'Engine Manufacturers',
-        href: '/extra',
+        href: '/extra?tab=engine',
         description: 'View engine records and statistics (coming soon).',
     },
     {
         title: 'Tire Suppliers',
-        href: '/extra',
+        href: '/extra?tab=tire',
         description: 'View tire records and statistics (coming soon).',
     },
     {
         title: 'Chassis Manufacturers',
-        href: '/extra',
+        href: '/extra?tab=chassis',
         description: 'View chassis records and statistics (coming soon).',
     },
 ];
@@ -57,19 +57,24 @@ export const driverMenuItems: { title: string; href: string; description: string
     },
     {
         title: 'Driver Records',
-        href: '/drivers/records',
+        href: '/driverRecords',
         description: 'View driver records and statistics (coming soon).',
+    },
+    {
+        title: 'Most Points w/o a Win',
+        href: '/extra?tab=points',
+        description: 'Top 100 drivers with the most points without a win.',
     },
 ];
 export const raceMenuItems: { title: string; href: string; description: string }[] = [
     {
         title: 'Next Race',
-        href: `/races/next`,
+        href: `/raceNext`,
         description: 'View details about the next race.',
     },
     {
         title: 'Last Race',
-        href: `/races/last`,
+        href: `/raceLast`,
         description: 'View details about the last race.',
     },
     {
@@ -83,14 +88,14 @@ export const raceMenuItems: { title: string; href: string; description: string }
         description: "View the current season's circuits.",
     },
     {
-        title: 'Previous Season',
+        title: 'All Races',
         href: '/races',
         description:
-            "View the previous season's races. Table of results, single table view for a given season with filtering.",
+            'Changing to a season by season view soon. Table of results, single table view for a given season with filtering.',
     },
     {
         title: 'Records',
-        href: '/races/records',
+        href: '/racesRecords',
         description: 'View race records and statistics. (coming soon)',
     },
 ];
