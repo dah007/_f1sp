@@ -424,7 +424,7 @@ const Races: React.FC = (): JSX.Element => {
                                         ))}
                                     </TableRow>
                                     {/* Render Outlet after the clicked row */}
-                                    {clickedRowId === row.original.id && (
+                                    {clickedRowId === String(row.original.id) && (
                                         <TableRow>
                                             <TableCell colSpan={colDefs.length} className="p-0">
                                                 <div className="bg-slate-100 dark:bg-zinc-800 p-4 rounded-md shadow-md mt-2 mb-4">

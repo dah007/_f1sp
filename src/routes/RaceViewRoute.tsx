@@ -19,7 +19,7 @@ const RaceViewRoute = () => {
     console.log('location.pathname', location.pathname);
 
     if (location.pathname === '/races/next') {
-        raceId = nextRace?.id ? parseInt(nextRace.id, 10) : 0;
+        raceId = nextRace?.id ? nextRace.id : 0;
         setRace(nextRace as Partial<RaceProps>);
     } else {
         const { id } = useParams<{ id: string }>();

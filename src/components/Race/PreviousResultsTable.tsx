@@ -18,10 +18,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useGetPreviousRaceResultsQuery, useGetRaceCountByCircuitQuery } from '@/features/raceApi';
 import { setError } from '@/slices/siteWideSlice';
 import { ExtendedColumnDef } from '@/types/dataTable';
-import { RaceProps, RaceResultProps } from '@/types/races';
+import { RaceResultProps } from '@/types/races';
 import { LinkRenderer } from '@/utils/dataTableRenderers';
 import { intlNumberFormat } from '@/utils/number';
-import { GetInVisibleColumn, groupWinnersWithChildren } from '@/utils/tables';
+import { GetInVisibleColumn, groupWinnersWithChildren, Item } from '@/utils/tables';
 import {
     ColumnDef,
     flexRender,
@@ -373,7 +373,7 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
         if (!previousRaceResults) return;
 
         // Group results by year with race winners as parent rows
-        const orgedResults = groupWinnersWithChildren(previousRaceResults as unknown as Record<string, RaceProps>[]);
+        const orgedResults = groupWinnersWithChildren(previousRaceResults as unknown as Item[]);
         setRaceResults(orgedResults as unknown as RaceResultProps[]);
         console.log('ordered results:', orgedResults);
     }, [previousRaceResults, previousRaceResultsError, previousRaceResultsLoading, dispatch]);

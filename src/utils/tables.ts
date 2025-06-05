@@ -17,7 +17,7 @@ export const pagination = {
     pageSize: 1000, // default page size is only 10...
 };
 
-type Item = {
+export type Item = {
     id: string;
     points?: number;
     position_number: number;
