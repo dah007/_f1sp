@@ -104,7 +104,7 @@ const App = () => {
                                 <Route path="race/:id" element={<RaceDetail />} />
                             </Route>
                             <Route path="race/last/:id?" element={<RaceLast />} />
-                            <Route path="raceNext/:id?" element={<RaceNext />} />
+                            <Route path="race/next/:id?" element={<RaceNext />} />
                             <Route path="race/results/:id?" element={<RaceResults />} />
 
                             <Route path="seasonsCurrent" element={<SeasonCurrent />} />

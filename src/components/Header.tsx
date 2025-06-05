@@ -20,7 +20,7 @@ export const constructorMenuItems: { title: string; href: string; description: s
     },
     {
         title: 'Constructor Records',
-        href: '/constructorRecords',
+        href: '/constructor/records',
         description: 'View constructor records and statistics (coming soon).',
     },
     {
@@ -57,7 +57,7 @@ export const driverMenuItems: { title: string; href: string; description: string
     },
     {
         title: 'Driver Records',
-        href: '/driverRecords',
+        href: '/driver/records',
         description: 'View driver records and statistics (coming soon).',
     },
     {
@@ -69,12 +69,12 @@ export const driverMenuItems: { title: string; href: string; description: string
 export const raceMenuItems: { title: string; href: string; description: string }[] = [
     {
         title: 'Next Race',
-        href: `/raceNext`,
+        href: `/race/next`,
         description: 'View details about the next race.',
     },
     {
         title: 'Last Race',
-        href: `/raceLast`,
+        href: `/race/last`,
         description: 'View details about the last race.',
     },
     {
@@ -95,7 +95,7 @@ export const raceMenuItems: { title: string; href: string; description: string }
     },
     {
         title: 'Records',
-        href: '/racesRecords',
+        href: '/races/records',
         description: 'View race records and statistics. (coming soon)',
     },
 ];
