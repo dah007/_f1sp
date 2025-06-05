@@ -11,7 +11,22 @@
     },
     "navigationFallback": {
         "rewrite": "/index.html",
-        "exclude": ["/assets*", "/styles*", "/favicon.ico", "/favicon.png", "/manifest.json"]
+        "exclude": [
+            "/assets/*",
+            "*.js",
+            "*.css",
+            "*.mjs",
+            "*.json",
+            "*.png",
+            "*.jpg",
+            "*.jpeg",
+            "*.gif",
+            "*.svg",
+            "*.ico",
+            "/favicon.ico",
+            "/favicon.png",
+            "/manifest.json"
+        ]
     },
     "routes": [
         {
