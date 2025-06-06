@@ -7,6 +7,7 @@ import { setError } from '@/slices/siteWideSlice';
 import type { FastestLap, PolePosition, RaceProps } from '@/types/races';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+// import { useImageExists } from '@/hooks/useImageExists'; // Uncomment if you want to use the hook approach
 
 const RaceDetail = () => {
     const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ const RaceDetail = () => {
     const [firstRow, setFirstRow] = useState<RaceProps>();
     const [pollPosition, setPollPosition] = useState<PolePosition>();
     const [raceDetail, setRaceDetail] = useState<RaceProps[]>();
+    const [trackImageError, setTrackImageError] = useState<boolean>(false);
 
     const { data: fastestLapData, isError: fastestLapError } = useGetFastestLapQuery(raceId);
     const { data: pollPositionData, isError: pollPositionError } = useGetPollPositionQuery(raceId);
@@ -60,6 +62,11 @@ const RaceDetail = () => {
         console.log(raceDetail);
     }, [raceResultsData, raceResultsError, dispatch]);
 
+    // Reset track image error when circuit changes
+    useEffect(() => {
+        setTrackImageError(false);
+    }, [firstRow?.circuit_id]);
+
     const getCircuitType = (type: string | undefined | null) => {
         let result = '-';
         Object.entries(CIRCUIT_TYPES).forEach(([key, value]) => {
@@ -80,41 +87,52 @@ const RaceDetail = () => {
     };
 
     return (
-        <div className="flex w-full gap-4 mb-4 p-4 border border-red-400">
+        <div className="flex flex-col lg:flex-row w-[80vw] gap-4 mb-4 p-4 border border-red-400">
             {/* LEFT column: Track map */}
-            <div className="flex items-start justify-start">
-                <img src={`/assets/tracks/${firstRow?.circuit_id}.png`} alt="track" width="200" />
+            <div className="flex items-start justify-center lg:justify-start flex-shrink-0">
+                {!trackImageError && (
+                    <img
+                        src={trackImageError ? '/assets/images/404.png' : `/assets/tracks/${firstRow?.circuit_id}.png`}
+                        alt={trackImageError ? 'Track image not found' : 'track'}
+                        width="200"
+                        className="max-w-full h-auto"
+                        onError={() => setTrackImageError(true)}
+                        onLoad={() => setTrackImageError(false)}
+                    />
+                )}
             </div>
             {/* MIDDLE column: Race stats */}
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-left lg:text-md md:text-md">
-                <div className="font-semibold">Round:</div>
-                <div>{firstRow?.round}</div>
-                <div className="font-semibold">Total Races Held:</div>
-                <div>{firstRow?.total_races_held}</div>
-                <div className="font-semibold">Turns:</div>
-                <div>{firstRow?.turns}</div>
-                <div className="font-semibold">Course Length:</div>
-                <div>{firstRow?.course_length} km</div>
-                <div className="font-semibold">Race Length:</div>
-                <div>{firstRow?.distance} km</div>
+            <div className="flex-1 min-w-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-left lg:text-md md:text-md">
+                <div className="font-semibold whitespace-nowrap">Round:</div>
+                <div className="break-words">{firstRow?.round}</div>
+                <div className="font-semibold whitespace-nowrap">Total Races Held:</div>
+                <div className="break-words">{firstRow?.total_races_held}</div>
+                <div className="font-semibold whitespace-nowrap">Turns:</div>
+                <div className="break-words">{firstRow?.turns}</div>
+                <div className="font-semibold whitespace-nowrap">Course Length:</div>
+                <div className="break-words">{firstRow?.course_length} km</div>
+                <div className="font-semibold whitespace-nowrap">Race Length:</div>
+                <div className="break-words">{firstRow?.distance} km</div>
             </div>
             {/* RIGHT column */}
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-left lg:text-md md:text-md max-w-[13vw]">
-                <div className="font-semibold w-[2w]">Fastest Lap:</div>
-                <div>
+            <div className="flex-1 min-w-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-left lg:text-md md:text-md">
+                <div className="font-semibold whitespace-nowrap">Fastest Lap:</div>
+                <div className="break-words">
                     {fastestLap?.driver} - {fastestLap?.time} - Lap {fastestLap?.lap}
                 </div>
-                <div className="font-semibold w-[15vw]">Pole Position:</div>
-                <div>
+                <div className="font-semibold whitespace-nowrap">Pole Position:</div>
+                <div className="break-words">
                     {pollPosition?.permanent_number} {pollPosition?.driver}
                 </div>
 
-                <div className="font-semibold">Type:</div>
-                <div>{getCircuitType(firstRow?.circuit_type)}</div>
-                <div className="font-semibold">Direction:</div>
-                <div>{getTrackDirection(firstRow?.direction as unknown as string | undefined | null)}</div>
-                <div className="font-semibold">Laps:</div>
-                <div>{firstRow?.laps}</div>
+                <div className="font-semibold whitespace-nowrap">Type:</div>
+                <div className="break-words">{getCircuitType(firstRow?.circuit_type)}</div>
+                <div className="font-semibold whitespace-nowrap">Direction:</div>
+                <div className="break-words">
+                    {getTrackDirection(firstRow?.direction as unknown as string | undefined | null)}
+                </div>
+                <div className="font-semibold whitespace-nowrap">Laps:</div>
+                <div className="break-words">{firstRow?.laps}</div>
             </div>
         </div>
     );

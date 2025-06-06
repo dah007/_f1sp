@@ -30,7 +30,7 @@ import {
 } from 'components/ui/pagination';
 import { useAppSelector } from 'hooks/reduxHooks';
 import { Fragment, JSX, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { setRaces } from 'slices/racesSlice';
 import type { RaceProps } from 'types/races';
 import { DistanceCellRenderer, LinkRenderer } from 'utils/dataTableRenderers';
@@ -208,10 +208,12 @@ const Races: React.FC = (): JSX.Element => {
         setTotalPages(tPages);
     }, [raceTotalCountData]);
 
-    // Track the clicked driver ID
+    // Track the clicked race ID
+    const location = useLocation();
     const [clickedRowId, setClickedRowId] = useState<string | null>(() => {
         // Extract raceId from URL if viewing race detail
-        const raceDetailMatch = location.pathname.match(/\/race\/\d+\/race\/([^/]+)/);
+        // The route pattern is /races/race/:id based on App.tsx
+        const raceDetailMatch = location.pathname.match(/\/races\/race\/([^/]+)/);
         const extractedId = raceDetailMatch ? raceDetailMatch[1] : null;
 
         // Schedule scroll into view if we have an ID from the URL
@@ -227,8 +229,16 @@ const Races: React.FC = (): JSX.Element => {
         return extractedId;
     });
 
+    // Sync clickedRowId with URL changes
+    useEffect(() => {
+        const raceDetailMatch = location.pathname.match(/\/races\/race\/([^/]+)/);
+        const extractedId = raceDetailMatch ? raceDetailMatch[1] : null;
+        setClickedRowId(extractedId);
+    }, [location.pathname]);
+
     const navigateRace = useCallback(
         (id: string) => {
+            console.log('Navigating to race:', id);
             // Use React's startTransition to handle the potentially suspended state
             // This prevents the UI from showing loading indicators for quick transitions
             // which is what the error message was warning about
@@ -242,7 +252,7 @@ const Races: React.FC = (): JSX.Element => {
                 // Add slight delay to ensure the row is rendered before scrolling
                 setTimeout(() => {
                     // Find the row element and scroll it into view
-                    const rowElement = document.querySelector(`tr[data-driver-id="${id}"]`);
+                    const rowElement = document.querySelector(`tr[data-race-id="${id}"]`);
                     if (rowElement) {
                         rowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
@@ -431,7 +441,7 @@ const Races: React.FC = (): JSX.Element => {
                                                     <Suspense
                                                         fallback={
                                                             <div className="p-4 text-center">
-                                                                Loading driver details...
+                                                                Loading race details...
                                                             </div>
                                                         }
                                                     >
@@ -442,7 +452,7 @@ const Races: React.FC = (): JSX.Element => {
                                                             variant="link"
                                                             onClick={() => {
                                                                 setClickedRowId(null);
-                                                                navigate(`/raceResults/${row.original.id}#top`);
+                                                                navigate(`/race/results/${row.original.id}#top`);
                                                             }}
                                                             className="px-2 py-1 text-sm text-blue-700 dark:text-blue-300 hover:text-blue-500 cursor-pointer"
                                                         >
