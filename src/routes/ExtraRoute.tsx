@@ -1,37 +1,38 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-import { ArrowUpDown } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-
 import DataTable from '@/components/DataTable';
 import PageContainer from '@/components/PageContainer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
+import { ColumnDef } from '@tanstack/react-table';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import Button from 'components/Button';
 import Flag from 'components/Flag';
-
-import { /*setEngines,*/ setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
-import { setError, setLoading } from '@/slices/siteWideSlice';
-import {
-    useGetEnginesManufacturersQuery,
-    // useGetEnginesQuery,
-    useGetTyresManufacturersQuery,
-} from 'features/constructorsApi';
-
-import { intlNumberFormat } from 'utils/number';
-
+import { useGetEnginesManufacturersQuery, useGetTyresManufacturersQuery } from 'features/constructorsApi';
+import { ArrowUpDown } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import type { ManufacturerProps } from 'types/constructors';
-
+import { intlNumberFormat } from 'utils/number';
+import SeasonsRoute from './SeasonsRoute';
 // import type { Engine } from '@/types';
 // import { ENGINE_TYPES } from 'constants/constants';
 
 const Extra: React.FC = () => {
     const dispatch = useAppDispatch();
 
+    const [defaultTab, setDefaultTab] = useState('engine');
+    const [whatTab, setWhatTab] = useState('engine');
+
+    const { tab } = useParams<{ tab?: string }>();
+
+    useEffect(() => {
+        setDefaultTab(tab || 'engine');
+        setWhatTab(tab || 'engine');
+    }, []);
+
     // const engines = useAppSelector((state: RootState) => state.constructors.engines);
     const enginesManufacturers = useAppSelector((state: RootState) => state.constructors.enginesManufacturers);
     const tyreManufacturers = useAppSelector((state: RootState) => state.constructors.tyresManufacturers);
-
-    const [whatTab, setWhatTab] = useState('engines');
 
     // const enginesColDefs = useMemo<ColumnDef<Engine>[]>(
     //     () => [
@@ -333,7 +334,6 @@ const Extra: React.FC = () => {
         isLoading: boolean;
     };
 
-
     useEffect(() => {
         if (enginesManufacturerIsError) {
             dispatch(setError(true));
@@ -359,15 +359,16 @@ const Extra: React.FC = () => {
     useEffect(() => {}, [whatTab]);
 
     const tabs = [
-        { value: 'seasons', label: 'Seasons' },
+        { value: 'season', label: 'Seasons', children: <SeasonsRoute /> },
+        ,
         // { value: 'chassis', label: 'Chassis' },
         {
-            value: 'enginesManufacturers',
+            value: 'engine',
             label: 'Engine Manufacturers',
             children: <DataTable className="w-fit" columns={manufacturerColDefs} data={enginesManufacturers ?? []} />,
         },
         {
-            value: 'tyreManufacturers',
+            value: 'tyre',
             label: 'Tyre Manufacturers',
             children: <DataTable className="w-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />,
         },
@@ -375,34 +376,33 @@ const Extra: React.FC = () => {
 
     return (
         <PageContainer title="Extras" showBreadcrumbs={true} lastCrumb="Extras">
-            <Tabs
-                defaultValue="enginesManufacturers"
-                value={whatTab}
-                className="max-w-[85vw] w-[85vw] overflow-hidden pb-10"
-            >
+            <Tabs defaultValue={defaultTab} value={whatTab} className="max-w-[85vw] w-[85vw] overflow-hidden pb-10">
                 <TabsList className="flexmd:grid w-full md:grid-cols-4">
-                    {tabs.map((tab) => (
-                        <TabsTrigger
-                            key={tab.value}
-                            value={tab.value}
-                            className={`cursor-pointer ${whatTab === tab.value ? 'bg-zinc-800' : ''}`}
-                            onClick={() => setWhatTab(tab.value)}
-                        >
-                            {tab.label}
-                        </TabsTrigger>
-                    ))}
+                    {tabs.map((tab) => {
+                        if (!tab) return null;
+                        return (
+                            <TabsTrigger
+                                key={tab.value}
+                                value={tab.value}
+                                className={`cursor-pointer ${whatTab === tab.value ? 'bg-zinc-800' : ''}`}
+                                onClick={() => setWhatTab(tab.value)}
+                            >
+                                {tab.label}
+                            </TabsTrigger>
+                        );
+                    })}
                 </TabsList>
 
-                <TabsContent value="chassis">
-                    <div className="w-full h-full flex items-center justify-center">Coming soon</div>
-                </TabsContent>
+                {/* <TabsContent value="season">
+                    <SeasonsRoute />
+                </TabsContent> */}
 
-                <TabsContent value="enginesManufacturers">
+                <TabsContent value="engine">
                     <DataTable className="w-0-fit" columns={manufacturerColDefs} data={enginesManufacturers ?? []} />
                 </TabsContent>
 
-                <TabsContent value="tyreManufacturers">
-                    <DataTable className="w-0-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />
+                <TabsContent value="tyre">
+                    <DataTable columns={manufacturerColDefs} data={tyreManufacturers ?? []} />
                 </TabsContent>
             </Tabs>
         </PageContainer>

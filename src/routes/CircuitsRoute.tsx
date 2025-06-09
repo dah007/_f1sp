@@ -1,9 +1,9 @@
 import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
+import { setError } from '@/slices/systemWideSlice';
 import PageContainer from 'components/PageContainer';
 import { useAppDispatch } from 'hooks/reduxHooks';
 import mapboxgl from 'mapbox-gl';
 import { useEffect, useRef, useState } from 'react';
-import { setError } from 'slices/siteWideSlice';
 import {
     gotoCircuit,
     gotoContinent,

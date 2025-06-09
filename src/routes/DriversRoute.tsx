@@ -1,3 +1,4 @@
+import { setError, setSelectedYear } from '@/slices/systemWideSlice';
 import { LinkRenderer } from '@/utils/dataTableRenderers';
 import { Scrollbar } from '@radix-ui/react-scroll-area';
 import {
@@ -23,7 +24,6 @@ import { ArrowUpDown } from 'lucide-react';
 import { JSX, Suspense, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { setDrivers } from 'slices/driversSlice';
-import { setError, setSelectedYear } from 'slices/siteWideSlice';
 import { type ExtendedColumnDef } from 'types/dataTable';
 import { type Driver } from 'types/drivers';
 import { type AdditionalFiltersYearProps } from 'types/index';
@@ -70,7 +70,7 @@ const Drivers: React.FC = (): JSX.Element => {
         driversRef.current = drivers ?? [];
     }, [drivers]);
 
-    let selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
+    let selectedYear = useAppSelector((state: RootState) => state.systemWide.selectedYear);
 
     const navigateYearCB = (newYear: string) => {
         dispatch(setSelectedYear(Number(newYear)));

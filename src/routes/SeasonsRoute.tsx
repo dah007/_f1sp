@@ -1,70 +1,31 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
-
-import DataTable from 'components/DataTable';
-import Flag from 'components/Flag';
-import { LinkRenderer } from '../utils/dataTableRenderers';
-
-import { setError, setSelectedYear } from 'slices/siteWideSlice';
-import { setSeasonStats } from 'slices/seasonsSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { useGetSeasonStatsQuery } from 'features/seasonsApi';
 
+import DataTable from '@/components/DataTable';
+import Flag from '@/components/Flag';
+import { setSeasons } from '@/slices/seasonsSlice';
+import { LinkRenderer } from '@/utils/dataTableRenderers';
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
+import { useNavigate } from 'react-router-dom';
 import type { Season } from 'types/season';
-import PageContainer from 'components/PageContainer';
 
-/**
- * The `Seasons` component is a React functional component that displays a table of F1 seasons.
- * It fetches season statistics data and updates the Redux store with the fetched data.
- * The component also provides filtering options for selecting a specific year.
- *
- * @component
- * @returns {JSX.Element} A JSX element representing the Seasons component.
- *
- * @example
- * <Seasons />
- *
- * @remarks
- * This component uses several hooks:
- * - `useAppDispatch` to dispatch actions to the Redux store.
- * - `useAppSelector` to select data from the Redux store.
- * - `useEffect` to handle side effects.
- * - `useGetSeasonStatsQuery` to fetch season statistics data.
- * - `useNavigate` to navigate programmatically.
- * - `useParams` to get URL parameters.
- *
- * The component defines several helper functions and components:
- * - `AdditionalFilters` to render additional filter options.
- * - `navigateYearCB` to handle navigation to a specific year.
- * - `onFilterTextBoxChanged` to handle changes in the filter text box.
- * - `rightAligned` to render right-aligned text.
- *
- * The component also defines column definitions for the data table using `useState`.
- *
- * @dependencies
- * - `DataTable`
- * - `Flag`
- * - `LinkRenderer`
- * - `Titles`
- * - `createColumnHelper`
- * - `useAppDispatch`
- * - `useAppSelector`
- * - `useEffect`
- * - `useGetSeasonStatsQuery`
- * - `useNavigate`
- * - `useParams`
- */
 const Seasons: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const columnHelper = createColumnHelper<Season>();
 
-    const selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
+    const selectedYear = useAppSelector((state: RootState) => state.systemWide.selectedYear);
     const seasons = useAppSelector((state: RootState) => state.seasons.seasons);
-    let { year } = useParams() as { year: string };
+
+    // let { year } = useParams() as { year: string };
+
+    const rightAligned = (value: string | number) => {
+        return <div className="text-right">{value}</div>;
+    };
 
     const {
         data: seasonsData,
@@ -77,28 +38,21 @@ const Seasons: React.FC = (): JSX.Element => {
     };
 
     useEffect(() => {
-        if (isError || isLoading) return;
+        if (isError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (isLoading) {
+            dispatch(setError(false));
+            dispatch(setLoading(true));
+            return;
+        }
+        if (!seasonsData) return;
 
-        console.log('Error loading season stats');
-        setError(isError);
-    }, [isError, isLoading]);
-
-    useEffect(() => {
-        if (!seasonsData || isLoading || isError) return;
-
-        dispatch(setSeasonStats(seasonsData));
+        console.log('Seasons Data:', seasonsData);
+        dispatch(setLoading(false));
+        dispatch(setSeasons(seasonsData));
     }, [dispatch, isError, isLoading, seasonsData]);
-
-    if (!year) year = selectedYear.toString();
-
-    if (year !== selectedYear.toString()) dispatch(setSelectedYear(parseInt(year)));
-
-    const rightAligned = (value: string | number) => <div className="text-right">{value}</div>;
-
-    const navigateYearCB = (newYear: string, url: string) => {
-        dispatch(setSelectedYear(Number(newYear)));
-        navigate(url);
-    };
 
     const [colDefs] = useState<ColumnDef<Season, unknown>[]>([
         {
@@ -118,15 +72,7 @@ const Seasons: React.FC = (): JSX.Element => {
                 return (
                     <div className="flex items-center gap-2">
                         <Flag nameAsId={row.original.driverNationality} size={32} />
-                        {LinkRenderer({
-                            gotoCB: () =>
-                                navigateYearCB(
-                                    row.getValue('year'),
-                                    `/drivers/${selectedYear}/driver/${row.original.driverChampionId}`,
-                                ),
-                            label: row.getValue('driverChampion'),
-                            value: row.original.driverChampionId,
-                        })}
+                        {row.getValue('driverChampion')}
                     </div>
                 );
             },
@@ -134,7 +80,7 @@ const Seasons: React.FC = (): JSX.Element => {
         },
         {
             accessorKey: 'driverChampionPoints',
-            cell: ({ row }) => rightAligned(row.getValue('driverChampionPoints')),
+            cell: ({ row }) => row.getValue('driverChampionPoints'),
             header: () => <div className="min-w-8">Points</div>,
         },
         {
@@ -168,11 +114,11 @@ const Seasons: React.FC = (): JSX.Element => {
             header: () => <div className="pl-6 text-center border-l">Totals:</div>,
             columns: [
                 columnHelper.accessor('driverCount', {
-                    cell: (info) => rightAligned(info.getValue()),
+                    cell: (info: { getValue: () => string | number }) => rightAligned(info.getValue()),
                     header: () => <span>Drivers</span>,
                 }),
                 columnHelper.accessor('constructorCount', {
-                    cell: (info) => rightAligned(info.getValue()),
+                    cell: (info: { getValue: () => string | number }) => rightAligned(info.getValue()),
                     header: () => <span>Constructors</span>,
                 }),
                 columnHelper.accessor('raceCount', {
@@ -188,9 +134,10 @@ const Seasons: React.FC = (): JSX.Element => {
     ]);
 
     return (
-        <PageContainer lastCrumb="Seasons" title="Seasons">
-            <DataTable classNames="w-full min-w-[90%]" columns={colDefs} data={seasons} />
-        </PageContainer>
+        <div>
+            <p className="font-bold mb-4">hello</p>
+            <DataTable data={seasons} columns={colDefs} />
+        </div>
     );
 };
 

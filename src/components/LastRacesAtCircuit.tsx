@@ -7,8 +7,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useGetLastResultsAtCircuitQuery } from 'features/raceApi';
 import { setPreviousResultsAtCircuit } from 'slices/racesSlice';
 
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { YEAR } from 'constants/constants';
-import { setError, setLoading } from 'slices/siteWideSlice';
 import { RaceProps } from 'types/races';
 
 /**

@@ -3,19 +3,20 @@
 import { cn } from '@/lib/utils';
 import { RootState, useAppSelector } from 'app/store';
 import CardContainer from 'components/CardContainer';
-import ConstructorStandings from 'components/ConstructorsStandings';
 import DriverOfTheDay from 'components/DriverOfTheDay';
-import DriverStandingsChart from 'components/DriverStandingsChart';
 import ErrorDialog from 'components/ErrorDialog';
-import LastRaceResultsPod from 'components/LastRaceResultsPod';
 import NextReactBanner from 'components/NextRaceBanner';
-import TotalWinsPerYear from 'components/TotalWinsPerYear';
 import { Alert, AlertDescription, AlertTitle } from 'components/ui/alert';
-import { CardFooter } from 'components/ui/card';
 import { InfoIcon } from 'lucide-react';
-import { Outlet } from 'react-router-dom';
 
 import type { RaceProps } from 'types/races';
+
+import ConstructorStandings from '@/components/ConstructorsStandings';
+import DriverStandingsChart from '@/components/DriverStandingsChart';
+import LastRaceResultsPod from '@/components/LastRaceResultsPod';
+import TotalWinsPerYear from '@/components/TotalWinsPerYear';
+import { CardFooter } from '@/components/ui/card';
+import { selectError } from 'selectors/systemWideSelector';
 
 interface MessageFromURLResult {
     success: string | null;
@@ -34,6 +35,9 @@ const getMessageFromURL: () => MessageFromURLResult = () => {
 };
 
 const Home: React.FC = () => {
+    const systemError = useAppSelector((state: RootState) => selectError(state));
+    const isLoading = useAppSelector((state: RootState) => state.systemWide.loading);
+
     let raceWGP: Partial<RaceProps> | null = null;
     try {
         raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
@@ -41,7 +45,7 @@ const Home: React.FC = () => {
         console.error('!!! Error fetching raceWGP !!!:', error);
     }
     // const raceWGP = useAppSelector((state: RootState) =>
-    const systemError = useAppSelector((state) => state.siteWide.error);
+    // const systemError = useAppSelector((state) => state.systemWide.error);
 
     const widthsNHeights = 'min-h-[250px] h-[35vh] md:h-[25vh] max-h-[25vh] md:max-h-[35vh]';
 
@@ -84,7 +88,9 @@ const Home: React.FC = () => {
 
     return (
         <>
-            <Outlet />
+            {/* <Outlet /> */}
+
+            {isLoading && <div>Loading...</div>}
 
             {voteSuccessful && (
                 <MessageBox title="Vote">

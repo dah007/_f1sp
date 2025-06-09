@@ -4,7 +4,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
 import { useGetNextRaceQuery } from '@/features/raceApi';
 import { setRaceNext } from '@/slices/racesSlice';
-import { setError, setLoading } from '@/slices/siteWideSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import type { NextRaceProps, RaceProps } from '@/types/races';
 import { useEffect, useState } from 'react';
 import PreviousResultsTable from '../components/Race/PreviousResultsTable';
