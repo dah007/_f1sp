@@ -5,7 +5,7 @@ import { useGetConstructorStandingsQuery } from 'features/standingsApi';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
-import { setError, setLoading } from 'slices/siteWideSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { setConstructorStandings } from 'slices/standingsSlice';
 
 import { cn } from '@/lib/utils';

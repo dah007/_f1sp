@@ -1,7 +1,7 @@
 import { RootState, useAppDispatch, useAppSelector } from '@/app/store';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 
-import { setError } from '@/slices/siteWideSlice';
+import { setError } from '@/slices/systemWideSlice';
 import { useEffect } from 'react';
 import errorImage500 from '/assets/images/500.png';
 
@@ -30,8 +30,8 @@ import errorImage500 from '/assets/images/500.png';
 const ErrorDialog: React.FC = () => {
     // add a close function that dispatches the setError action to false
     const dispatch = useAppDispatch();
-    const loading = useAppSelector((state: RootState) => state.siteWide.loading);
-    const error = useAppSelector((state: RootState) => state.siteWide.error);
+    const loading = useAppSelector((state: RootState) => state.systemWide.loading);
+    const error = useAppSelector((state: RootState) => state.systemWide.error);
 
     const setOpen = (errorStatus: boolean) => {
         dispatch(setError(errorStatus));

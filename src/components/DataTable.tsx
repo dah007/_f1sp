@@ -13,12 +13,12 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 
+import { cn } from '@/lib/utils';
 import { Input } from 'components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'components/ui/table';
+import { BUTTON_CLASSES } from 'constants/constants';
 import { DataTableProps, ExtendedColumnDef } from 'types/dataTable';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
-import { BUTTON_CLASSES } from 'constants/constants';
-import { cn } from '@/lib/utils';
 
 /**
  * DataTable component for rendering a table with various functionalities such as filtering, sorting, and pagination.
@@ -106,7 +106,7 @@ const DataTable = <TData, TValue>({
                 <ScrollBar />
                 <ScrollBar orientation="horizontal" />
                 <Table className="w-full pr-16">
-                    <TableHeader>
+                    <TableHeader className="sticky top-0 z-10 bg-background">
                         {table.getHeaderGroups().map((headerGroup, groupIndex) => (
                             <TableRow key={`${headerGroup.id}-${groupIndex}`}>
                                 {headerGroup.headers.map((header, headerIndex) => {

@@ -1,11 +1,11 @@
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import React, { useEffect } from 'react';
 
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { useGetDriverOfTheDayQuery } from 'features/driversApi';
 import { useGetRaceNextQuery } from 'features/raceApi';
 import { setDriversOfTheDay } from 'slices/driversSlice';
 import { setRaceNext } from 'slices/racesSlice';
-import { setError, setLoading } from 'slices/siteWideSlice';
 
 import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 

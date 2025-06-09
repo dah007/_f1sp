@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { constructorMenuItems, driverMenuItems, raceMenuItems } from './Header';
+import { constructorMenuItems, driverMenuItems, raceMenuItems, seasonsMenuItems } from './Header';
 
 const menuButton =
     'text-zinc-800 dark:text-zinc-300 hover:text-zinc-500 dark:hover:text-zinc-300 font-extrabold text-xl';
@@ -54,6 +54,19 @@ export function DesktopNavigation() {
                     <NavigationMenuContent className={menuItemBG}>
                         <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                             {driverMenuItems.map((component) => (
+                                <ListItem key={component.title} title={component.title} href={component.href}>
+                                    {component.description}
+                                </ListItem>
+                            ))}
+                        </ul>
+                    </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                    <NavigationMenuTrigger className={menuButton}>Seasons</NavigationMenuTrigger>
+                    <NavigationMenuContent className={menuItemBG}>
+                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                            {seasonsMenuItems.map((component) => (
                                 <ListItem key={component.title} title={component.title} href={component.href}>
                                     {component.description}
                                 </ListItem>

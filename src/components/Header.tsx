@@ -25,17 +25,17 @@ export const constructorMenuItems: { title: string; href: string; description: s
     },
     {
         title: 'Engine Manufacturers',
-        href: '/extra?tab=engine',
+        href: '/extra/engine',
         description: 'View engine records and statistics (coming soon).',
     },
     {
         title: 'Tire Suppliers',
-        href: '/extra?tab=tire',
+        href: '/extra/tyre',
         description: 'View tire records and statistics (coming soon).',
     },
     {
         title: 'Chassis Manufacturers',
-        href: '/extra?tab=chassis',
+        href: '/extra/chassis',
         description: 'View chassis records and statistics (coming soon).',
     },
 ];
@@ -97,6 +97,24 @@ export const raceMenuItems: { title: string; href: string; description: string }
         title: 'Records',
         href: '/races/records',
         description: 'View race records and statistics. (coming soon)',
+    },
+];
+
+export const seasonsMenuItems: { title: string; href: string; description: string }[] = [
+    {
+        title: 'All Seasons',
+        href: `/seasons`,
+        description: 'View all seasons at the top level with the ability to  and their details.',
+    },
+    {
+        title: 'Current Seasons',
+        href: `/seasons/season/2025`,
+        description: 'View current season and their details.',
+    },
+    {
+        title: 'Season Records',
+        href: '/seasons/records',
+        description: 'View season records and statistics (coming soon).',
     },
 ];
 
@@ -288,21 +306,6 @@ const Header: React.FC = () => {
 
                 <ul className="ml-4 mt-4">
                     {driverMenuItems.map((component) => (
-                        <li key={component.title}>
-                            <MenuButton
-                                label={component.title}
-                                onClick={() => handleNavigationMobile(component.href)}
-                            />
-                        </li>
-                    ))}
-                </ul>
-
-                <li>
-                    <MenuButton label="Constructors" onClick={() => handleNavigationMobile('/constructors')} />
-                </li>
-
-                <ul className="ml-4 mt-4">
-                    {constructorMenuItems.map((component) => (
                         <li key={component.title}>
                             <MenuButton
                                 label={component.title}

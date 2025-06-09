@@ -9,7 +9,7 @@ import Home from './routes/HomeRoute';
 import Leaderboard from './routes/LeaderboardRoute';
 import Static from './routes/Static';
 import { setRaceNext } from './slices/racesSlice';
-import { setError, setLoading } from './slices/siteWideSlice';
+import { setError, setLoading } from './slices/systemWideSlice';
 import { NextRaceProps, RaceResultProps } from './types/races';
 import Error404Image from '/assets/images/404.png';
 
@@ -25,11 +25,11 @@ const Races = lazy(() => import('./routes/RacesRoute'));
 const RaceLast = lazy(() => import('./routes/RaceLastRoute'));
 const RaceNext = lazy(() => import('./routes/RaceNextRoute'));
 const RaceResults = lazy(() => import('./routes/RaceResultsRoute'));
-const SeasonCurrent = lazy(() => import('./routes/SeasonCurrentRoute'));
+const SeasonsRoute = lazy(() => import('./routes/SeasonsRoute'));
 const Seasons = lazy(() => import('./routes/SeasonsRoute'));
 const Standings = lazy(() => import('./routes/StandingsRoute'));
+const Tyres = lazy(() => import('./routes/TyreRoute'));
 const VoteDnD = lazy(() => import('./routes/VoteRoute'));
-const WhatsNew = lazy(() => import('./routes/WhatsNewRoute'));
 const App = () => {
     const dispatch = useAppDispatch();
 
@@ -80,7 +80,8 @@ const App = () => {
                     <Suspense fallback={<div className="flex justify-center items-center h-[50vh]">Loading...</div>}>
                         <Routes>
                             <Route path="/" element={<Home />}>
-                                <Route path="whats-new" element={<WhatsNew />} />
+                                {/* <Route path="whats-new" element={<WhatsNew />} /> */}
+                                <Route path="whats-new" element={<Static page="whatsNew" />} />
                             </Route>
 
                             <Route path="circuits" element={<Circuits />} />
@@ -91,7 +92,7 @@ const App = () => {
                                 <Route path="driver/:id" element={<DriverDetail />} />
                             </Route>
 
-                            <Route path="extra" element={<Extra />} />
+                            <Route path="extra/:tab?" element={<Extra />} />
 
                             <Route path="leaderboard" element={<Leaderboard />} />
 
@@ -100,17 +101,20 @@ const App = () => {
                             <Route path="account/new" element={<AccountNew />} />
                             <Route path="login" element={<LoginForm />} />
 
-                            <Route path="races" element={<Races />}>
+                            <Route path="races/:year?" element={<Races />}>
                                 <Route path="race/:id" element={<RaceDetail />} />
                             </Route>
                             <Route path="race/last/:id?" element={<RaceLast />} />
                             <Route path="race/next/:id?" element={<RaceNext />} />
                             <Route path="race/results/:id?" element={<RaceResults />} />
 
-                            <Route path="seasonsCurrent" element={<SeasonCurrent />} />
-                            <Route path="season/:year?" element={<Seasons />} />
+                            <Route path="seasons" element={<SeasonsRoute />}>
+                                <Route path="season/:year?" element={<Seasons />} />
+                            </Route>
 
                             <Route path="standings" element={<Standings />} />
+
+                            <Route path="tyres" element={<Tyres />} />
 
                             <Route path="vote" element={<VoteDnD />} />
 

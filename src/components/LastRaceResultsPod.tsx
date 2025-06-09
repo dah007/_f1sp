@@ -1,10 +1,10 @@
 import { FULL_ROW_HEIGHT } from '@/constants/constants';
 import { cn } from '@/lib/utils';
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import { useGetLastRaceResultsQuery } from 'features/raceApi';
 import { JSX, useEffect } from 'react';
 import { setLastRaceResults } from 'slices/racesSlice';
-import { setError, setLoading } from 'slices/siteWideSlice';
 import type { RaceResultProps } from 'types/races';
 import CardSkeleton from './CardSkeleton';
 import { ScrollArea } from './ui/scroll-area';
