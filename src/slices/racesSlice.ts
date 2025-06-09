@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
 import type { RaceProps, RaceResultProps } from 'types/races';
 
-export interface IState {
+export interface RacesState {
     lastRace: RaceProps | null;
     lastRaceId: number | null;
     lastRaceResults: RaceResultProps[] | null;
@@ -11,15 +10,15 @@ export interface IState {
     raceNext: Partial<RaceProps> | null;
     races: RaceProps[];
     raceWGP: Partial<RaceProps> | null;
-    totalRaceCount: number | 0;
+    totalRaceCount: number;
 }
 
-const initialState: IState = {
+const initialState: RacesState = {
     lastRace: null,
     lastRaceId: null,
     lastRaceResults: null,
     lastRaceAtCircuit: null,
-    previousResultsAtCircuit: [],
+    previousResultsAtCircuit: null,
     raceNext: null,
     races: [],
     raceWGP: null,
@@ -28,36 +27,28 @@ const initialState: IState = {
 
 const racesSlice = createSlice({
     name: 'races',
-
     initialState,
-
     reducers: {
-        // setCircuitLastTime(state, action: PayloadAction<number | null>) {
-        //     state.circuit = action.payload || null;
-        // },
         setLastRaceResults(state, action: PayloadAction<RaceResultProps[]>) {
             state.lastRaceResults = action.payload;
         },
         setRaceNext(state, action: PayloadAction<Partial<RaceProps> | null>) {
             state.raceNext = action.payload;
         },
-        setPreviousResultsAtCircuit(state, action: PayloadAction<RaceProps[] | null>) {
-            state.previousResultsAtCircuit = action.payload || null;
-        },
         setRaces(state, action: PayloadAction<RaceProps[]>) {
-            state.races = action.payload || [];
+            state.races = action.payload;
         },
         setLastRaceId(state, action: PayloadAction<number | null>) {
-            state.lastRaceId = action.payload || null;
+            state.lastRaceId = action.payload;
         },
         setLastRaceAtCircuit(state, action: PayloadAction<RaceProps | null>) {
-            state.lastRaceAtCircuit = action.payload || null;
+            state.lastRaceAtCircuit = action.payload;
         },
         setRaceWGP(state, action: PayloadAction<Partial<RaceProps> | null>) {
-            state.raceWGP = action.payload || null;
+            state.raceWGP = action.payload;
         },
         setTotalRaceCount(state, action: PayloadAction<number>) {
-            state.totalRaceCount = action.payload || 0;
+            state.totalRaceCount = action.payload;
         },
     },
 });
@@ -66,7 +57,7 @@ export const {
     setLastRaceId,
     setLastRaceResults,
     setLastRaceAtCircuit,
-    setPreviousResultsAtCircuit,
+    // setPreviousResultsAtCircuit,
     setRaceNext,
     setRaceWGP,
     setRaces,

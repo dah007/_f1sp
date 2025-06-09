@@ -61,17 +61,19 @@ export default defineConfig({
         },
     },
     test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: ['./test/setup.ts'],
         coverage: {
-            exclude: ['node_modules/', 'test/', 'setupTests.ts'],
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
-            reportsDirectory: './coverage',
         },
         deps: {
-            inline: ['vitest-canvas-mock'],
+            optimizer: {
+                web: {
+                    include: ['react', 'react-dom', '@testing-library/react', '@reduxjs/toolkit', 'react-redux'],
+                },
+            },
         },
-        environment: 'jsdom',
-        globals: true,
-        // setupFiles: './setupTests.ts',
     },
 });

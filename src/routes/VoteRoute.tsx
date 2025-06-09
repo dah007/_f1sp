@@ -1,31 +1,25 @@
-import { DndContext, UniqueIdentifier } from '@dnd-kit/core';
-import { arrayMove, rectSortingStrategy, SortableContext } from '@dnd-kit/sortable';
-import { Scrollbar } from '@radix-ui/react-scroll-area';
-import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-
-import SortableItem from 'components/dnd-kit/SortableItem';
-import LoadingToast from 'components/LoadingToast';
-import { Card, CardTitle } from 'components/ui/card';
-import { Form } from 'components/ui/form';
-import { ScrollArea } from 'components/ui/scroll-area';
-
-import { YEAR } from 'constants/constants';
-
-import { useGetDriversByYearQuery } from 'features/driversApi';
-import { SubmitVoteRequest, useCheckVoteQuery, useSubmitVoteMutation } from 'features/userApi';
-
 import DriverCheckbox from '@/components/Driver/DriverCheckbox';
 import Toggle from '@/components/Toggle';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { setError, setLoading } from '@/slices/systemWideSlice';
+import { Scrollbar } from '@radix-ui/react-scroll-area';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import LoadingToast from 'components/LoadingToast';
+import { Card, CardTitle } from 'components/ui/card';
+import { Form } from 'components/ui/form';
+import { ScrollArea } from 'components/ui/scroll-area';
+import { YEAR } from 'constants/constants';
+import { useGetDriversByYearQuery } from 'features/driversApi';
+import { SubmitVoteRequest, useCheckVoteQuery, useSubmitVoteMutation } from 'features/userApi';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { setDriversByYear } from 'slices/driversSlice';
-import { setError, setLoading } from 'slices/siteWideSlice';
-import { type Driver } from 'types/drivers';
-import { type VoteValueProps } from 'types/vote';
+import type { Driver } from 'types/drivers';
+import type { VoteValueProps } from 'types/vote';
 import LoginForm from './LoginFormRoute';
 // const columnHeights = 'lg:max-h-[70vh] md:max-h-[50vh] max-h-[32vh] min-h-[32vh]';
 
@@ -122,30 +116,30 @@ const Vote: React.FC = (): JSX.Element => {
         setVoteValues(newValues);
     };
 
-    const handleDragEnd = (event: { active: { id: UniqueIdentifier }; over: { id: UniqueIdentifier } | null }) => {
-        const { active, over } = event;
+    // const handleDragEnd = (event: { active: { id: UniqueIdentifier }; over: { id: UniqueIdentifier } | null }) => {
+    //     const { active, over } = event;
 
-        const de = () => {
-            const oldIndex = voteOrderedDrivers.findIndex((driver) => driver.id === active.id);
-            const newIndex = over ? voteOrderedDrivers.findIndex((driver) => driver.id === over.id) : -1;
-            updateVoteValues({ finishOrder: arrayMove(voteOrderedDrivers, oldIndex, newIndex) });
+    //     const de = () => {
+    //         const oldIndex = voteOrderedDrivers.findIndex((driver) => driver.id === active.id);
+    //         const newIndex = over ? voteOrderedDrivers.findIndex((driver) => driver.id === over.id) : -1;
+    //         updateVoteValues({ finishOrder: arrayMove(voteOrderedDrivers, oldIndex, newIndex) });
 
-            const updatedDrivers = arrayMove(voteOrderedDrivers, oldIndex, newIndex);
-            return updatedDrivers;
-        };
+    //         const updatedDrivers = arrayMove(voteOrderedDrivers, oldIndex, newIndex);
+    //         return updatedDrivers;
+    //     };
 
-        if (active.id !== over?.id) {
-            console.log('handleDragEnd', de());
-            setVoteOrderedDrivers((drivers) => {
-                const oldIndex = drivers.findIndex((driver) => driver.id === active.id);
-                const newIndex = over ? drivers.findIndex((driver) => driver.id === over.id) : -1;
-                updateVoteValues({ finishOrder: arrayMove(drivers, oldIndex, newIndex) });
+    //     if (active.id !== over?.id) {
+    //         console.log('handleDragEnd', de());
+    //         setVoteOrderedDrivers((drivers) => {
+    //             const oldIndex = drivers.findIndex((driver) => driver.id === active.id);
+    //             const newIndex = over ? drivers.findIndex((driver) => driver.id === over.id) : -1;
+    //             updateVoteValues({ finishOrder: arrayMove(drivers, oldIndex, newIndex) });
 
-                const updatedDrivers = arrayMove(drivers, oldIndex, newIndex);
-                return updatedDrivers;
-            });
-        }
-    };
+    //             const updatedDrivers = arrayMove(drivers, oldIndex, newIndex);
+    //             return updatedDrivers;
+    //         });
+    //     }
+    // };
 
     const onSubmit = async (formData: FieldValues) => {
         console.log('onSubmit', `currently: ${voteCheck}`, formData);
@@ -206,6 +200,26 @@ const Vote: React.FC = (): JSX.Element => {
         navigate('/?success=true&message=Vote submitted successfully!');
     };
 
+    const moveBy = (direction: string, driver: Driver) => {
+        console.log('string', direction, 'driver', driver);
+        // i need to move the past in driver up or down in the list of drivers (voteOrderedDrivers
+        const currentIndex = voteOrderedDrivers.findIndex((d) => d.id === driver.id);
+        if (currentIndex === -1) return; // Driver not found
+        let newIndex = currentIndex;
+        if (direction === 'up' && currentIndex > 0) {
+            newIndex = currentIndex - 1;
+        } else if (direction === 'down' && currentIndex < voteOrderedDrivers.length - 1) {
+            newIndex = currentIndex + 1;
+        }
+        if (newIndex === currentIndex) return; // No change in position
+        const updatedDrivers = [...voteOrderedDrivers];
+        updatedDrivers.splice(currentIndex, 1); // Remove the driver from the current position
+        updatedDrivers.splice(newIndex, 0, driver); // Insert the driver at the new position
+        setVoteOrderedDrivers(updatedDrivers);
+        updateVoteValues({ finishOrder: updatedDrivers });
+        console.log('Updated drivers:', updatedDrivers);
+    };
+
     if (driversByYearLoading) return <LoadingToast isLoading={driversByYearLoading} />;
 
     if (driversByYearError) {
@@ -235,7 +249,7 @@ const Vote: React.FC = (): JSX.Element => {
                         Next race: {raceNext?.date} - {raceNext?.short_name}
                     </p>
                     <p>Voting opens on Wednesday of Race week</p>
-                    <p>Voting closes 1 hour before lights out</p>
+                    <p>Voting closes 1 hour before lights out (give or take)</p>
                 </div>
             </div>
         );
@@ -256,13 +270,28 @@ const Vote: React.FC = (): JSX.Element => {
                     Voting closes 1 hours before lights out & opens on Tuesday after a race.
                 </p>
 
-                <div className="flex flex-col">
-                    <Card className="dark:bg-zinc-800 bg-zinc-300 w-[98%] h-[120vh]">
+                <div className="flex flex-col h-[40vh]">
+                    <Card className="dark:bg-zinc-800 overflow-hidden bg-zinc-300 w-[98%]">
                         <CardTitle className="pl-4 pt-0 m-0">Finish Order</CardTitle>
 
-                        <ScrollArea className="h-[120vh] w-full">
+                        <ScrollArea className="h-[40vh] w-full">
                             <Scrollbar />
-                            <DndContext onDragEnd={handleDragEnd}>
+                            {voteOrderedDrivers?.map((driver, index) => (
+                                <div
+                                    className="w-full flex justify-between p-4 border border-amber-400 spacing"
+                                    id={driver.id}
+                                    data-index={index + 1}
+                                    key={`${driver.id}-${index}`}
+                                >
+                                    {driver.name}
+                                    <div className="flex gap-1 cursor-pointer">
+                                        <ChevronUp className="w-6 h-6" onClick={() => moveBy('up', driver)} />
+                                        <ChevronDown className="w-6 h-6" onClick={() => moveBy('down', driver)} />
+                                    </div>
+                                </div>
+                            ))}
+
+                            {/* <DndContext onDragEnd={handleDragEnd}>
                                 <SortableContext items={voteOrderedDrivers} strategy={rectSortingStrategy}>
                                     {voteOrderedDrivers?.map((driver, index) => (
                                         <SortableItem
@@ -274,7 +303,7 @@ const Vote: React.FC = (): JSX.Element => {
                                         />
                                     ))}
                                 </SortableContext>
-                            </DndContext>
+                            </DndContext> */}
                         </ScrollArea>
                     </Card>
                 </div>
@@ -284,7 +313,6 @@ const Vote: React.FC = (): JSX.Element => {
                     <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full h-full')}>
                         <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
                         <div className="grid grid-cols-2 gap-4 pr-4">
-                            {/* FIRST LAP CRASH */}
                             <div className="overflow-hidden rounded-lg p-4 flex flex-col gap-3">
                                 <div className="flex items-center space-x-2">
                                     <Toggle
@@ -405,15 +433,8 @@ const Vote: React.FC = (): JSX.Element => {
 
                                 <p>
                                     <strong className="font-extrabold">NOTE:</strong> Your votes are saved, however due
-                                    to a bug, they aren&apos;t currently displayed in the UI. There is an open issue for{' '}
-                                    {/* <a
-                                        href="https://github.com/dah007/_f1sp/issues/20"
-                                        className="text-blue-700 dark:text-blue-500 hover:text-blue-300"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    > */}
-                                    it
-                                    {/* </a> */}.
+                                    to a bug, they aren&apos;t currently displayed in the UI. There is an open issue for
+                                    it.
                                 </p>
 
                                 <button

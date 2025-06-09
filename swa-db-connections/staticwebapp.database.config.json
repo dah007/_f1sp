@@ -332,6 +332,20 @@
             ]
         },
 
+        "seasonStats": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "season_stats"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
         "standingsWithConstructors": {
             "source": {
                 "type": "view",

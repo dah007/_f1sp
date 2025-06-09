@@ -3,7 +3,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, expect, test, vi } from 'vitest';
 import DriverDetail from '../DriverDetailRoute';
-// import { Driver } from '../../types';
 
 // Mock the API call
 vi.mock('../../api/drivers', () => ({
