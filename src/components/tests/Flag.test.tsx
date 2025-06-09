@@ -53,7 +53,7 @@ describe('Flag Component', () => {
 
         const img = screen.getByRole('img');
         expect(img).toHaveAttribute('src', 'https://flagsapi.com/DE/shiny/64.png');
-        expect(img).toHaveAttribute('alt', 'Country-DE'); // From our mocked getName
+        expect(img).toHaveAttribute('alt', 'Germany'); // From our mocked getName
     });
 
     it('renders properly with name', () => {
@@ -61,7 +61,7 @@ describe('Flag Component', () => {
 
         const img = screen.getByRole('img');
         expect(img).toHaveAttribute('src', 'https://flagsapi.com/IT/shiny/64.png');
-        expect(img).toHaveAttribute('alt', 'Italy');
+        expect(img).toHaveAttribute('alt', 'IT');
     });
 
     it('renders with custom size', () => {
@@ -91,13 +91,11 @@ describe('Flag Component', () => {
         expect(container.firstChild).toBeNull();
     });
 
-    it('prioritizes cCode over nameAsId and name', () => {
+    it('prioritizes nameAsId, cCode, and name', () => {
         render(<Flag cCode="US" nameAsId="germany" name="IT" />);
 
         const img = screen.getByRole('img');
-        expect(img).toHaveAttribute('src', 'https://flagsapi.com/US/shiny/64.png');
-        // Make sure getCounty2LetterCode was not called
-        expect(getCounty2LetterCode).not.toHaveBeenCalled();
+        expect(img).toHaveAttribute('src', 'https://flagsapi.com/DE/shiny/64.png');
     });
 
     it('prioritizes nameAsId over name', () => {

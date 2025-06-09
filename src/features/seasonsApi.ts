@@ -1,33 +1,49 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { F1SP_BASE_DB_URL } from 'constants/constants';
-
-import { dbFetch } from 'utils/index';
+import { baseQueryWithRetry } from '@/utils/query';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 export const seasonsApi = createApi({
     reducerPath: 'seasonsApi',
-    baseQuery: fetchBaseQuery({ baseUrl: F1SP_BASE_DB_URL }),
+    baseQuery: baseQueryWithRetry,
     endpoints: (builder) => ({
-        getConstructorSeasons: builder.query({
-            queryFn: async (arg) => {
-                const year = arg ?? 2024;
-                const result = await dbFetch(`/standingsWithConstructors?year=${year}`);
-                return { data: result };
+        // getConstructorSeasons: builder.query({
+        //     queryFn: async (arg) => {
+        //         const year = arg ?? 2024;
+        //         const result = await dbFetch(`/standingsWithConstructors?year=${year}`);
+        //         return { data: result };
+        //     },
+        // }),
+        // getDriverSeasons: builder.query({
+        //     queryFn: async (arg) => {
+        //         const year = arg ?? 2024;
+        //         const result = await dbFetch(`/standingsWithDrivers?year=${year}`);
+        //         return { data: result };
+        //     },
+        // }),
+        /* getLastRaceResults: builder.query({
+            query: (raceId: number) =>
+                `raceResults?$orderby=position_display_order&$filter=race_id eq ${parseInt(raceId.toString(), 10)}`,
+            transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
+            transformErrorResponse: (error) => {
+                console.error('Error fetching last race results:', error);
             },
-        }),
-        getDriverSeasons: builder.query({
-            queryFn: async (arg) => {
-                const year = arg ?? 2024;
-                const result = await dbFetch(`/standingsWithDrivers?year=${year}`);
-                return { data: result };
-            },
-        }),
+        }), */
         getSeasonStats: builder.query({
-            queryFn: async () => {
-                const result = await dbFetch(`/seasonStats`);
-                return { data: result };
+            query: (arg) => {
+                console.log('---------- Fetching season stats for year:', arg);
+                const year = arg ?? 2024;
+                return year ? `/seasonStats?$orderby=year desc` : `/seasonStats?$orderby=year desc`;
+            },
+            transformResponse: (response) => {
+                console.log('Season stats response:', response);
+                // return response?.value ?? [];
+                return response?.value || [];
+            },
+            transformErrorResponse: (error) => {
+                console.error('Error fetching season stats:', error);
+                return { error: 'Failed to fetch season stats' };
             },
         }),
     }),
 });
 
-export const { useGetConstructorSeasonsQuery, useGetDriverSeasonsQuery, useGetSeasonStatsQuery } = seasonsApi;
+export const { /*useGetConstructorSeasonsQuery, useGetDriverSeasonsQuery,*/ useGetSeasonStatsQuery } = seasonsApi;
