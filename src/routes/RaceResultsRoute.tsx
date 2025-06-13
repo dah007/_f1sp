@@ -4,7 +4,7 @@ import RaceDetailHeader from '@/components/Race/RaceDetailHeader';
 import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
 import { useGetLastRaceResultsQuery, useGetRaceWithGPQuery } from '@/features/raceApi';
 import { setLastRaceResults, setRaceWGP } from '@/slices/racesSlice';
-import { setError, setLoading } from '@/slices/siteWideSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import type { RaceProps, RaceResultProps } from '@/types/races';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';

@@ -1,64 +1,62 @@
-import { useDispatch, useSelector } from 'react-redux';
-
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
+import { useDispatch, useSelector } from 'react-redux';
 
+// API imports
 import { raceApi } from '@/features/raceApi';
 import { circuitsApi } from 'features/circuitsApi';
 import { constructorsApi } from 'features/constructorsApi';
 import { driversApi } from 'features/driversApi';
+import { seasonsApi } from 'features/seasonsApi';
 import { standingsApi } from 'features/standingsApi';
 import { userApi } from 'features/userApi';
 
-import { seasonsApi } from 'features/seasonsApi';
+// Slice imports
 import constructorsReducer from 'slices/constructorsSlice';
 import driversReducer from 'slices/driversSlice';
 import racesReducer from 'slices/racesSlice';
 import routeSlice from 'slices/routeSlice';
 import seasonApi from 'slices/seasonsSlice';
-import siteWideSlice from 'slices/siteWideSlice';
 import standingsReducer from 'slices/standingsSlice';
+import systemWideReducer from 'slices/systemWideSlice';
 import userReducer from 'slices/userSlice';
 
-export type TAppDispatch = typeof store.dispatch;
+// Define API endpoints array
+const apiEndpoints = [raceApi, circuitsApi, constructorsApi, driversApi, seasonsApi, standingsApi, userApi];
 
 export const store = configureStore({
     reducer: {
+        // API reducers
+        [raceApi.reducerPath]: raceApi.reducer,
         [circuitsApi.reducerPath]: circuitsApi.reducer,
         [constructorsApi.reducerPath]: constructorsApi.reducer,
         [driversApi.reducerPath]: driversApi.reducer,
-        [raceApi.reducerPath]: raceApi.reducer,
         [seasonsApi.reducerPath]: seasonsApi.reducer,
         [standingsApi.reducerPath]: standingsApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
 
+        // Slice reducers
         constructors: constructorsReducer,
         currentRoute: routeSlice,
         drivers: driversReducer,
         races: racesReducer,
         seasons: seasonApi,
-        siteWide: siteWideSlice,
         standings: standingsReducer,
+        systemWide: systemWideReducer, // Assuming this is the correct slice for system-wide state
         user: userReducer,
     },
-
-    // Adding the api middleware enables caching, invalidation, polling, and other features of RTK Query
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
-            .concat(circuitsApi.middleware)
-            .concat(constructorsApi.middleware)
-            .concat(driversApi.middleware)
-            .concat(raceApi.middleware)
-            .concat(seasonsApi.middleware)
-            .concat(standingsApi.middleware)
-            .concat(userApi.middleware),
+        getDefaultMiddleware().concat(...apiEndpoints.map((endpoint) => endpoint.middleware)),
 });
 
-// Enable listeners behavior for refetchOnMount and refetchOnReconnect behaviors
+// Enable listeners for RTK Query
 setupListeners(store.dispatch);
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
+// Type definitions
 export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
-export const useAppDispatch = useDispatch.withTypes<TAppDispatch>();
-export const useAppSelector = useSelector.withTypes<RootState>();
+// Typed hooks
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector = <TSelected>(selector: (state: RootState) => TSelected): TSelected =>
+    useSelector<RootState, TSelected>(selector);

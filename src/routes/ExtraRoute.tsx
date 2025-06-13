@@ -1,105 +1,27 @@
-import { ColumnDef } from '@tanstack/react-table';
-import { RootState, useAppDispatch, useAppSelector } from 'app/store';
-import { ArrowUpDown } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-
-import DataTable from '@/components/DataTable';
 import PageContainer from '@/components/PageContainer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ColumnDef } from '@tanstack/react-table';
 import Button from 'components/Button';
 import Flag from 'components/Flag';
-
-import { /*setEngines,*/ setEnginesManufacturers, setTyresManufacturers } from '@/slices/constructorsSlice';
-import { setError, setLoading } from '@/slices/siteWideSlice';
-import {
-    useGetEnginesManufacturersQuery,
-    // useGetEnginesQuery,
-    useGetTyresManufacturersQuery,
-} from 'features/constructorsApi';
-
-import { intlNumberFormat } from 'utils/number';
-
+import { ArrowUpDown } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import type { ManufacturerProps } from 'types/constructors';
-
-// import type { Engine } from '@/types';
-// import { ENGINE_TYPES } from 'constants/constants';
+import { intlNumberFormat } from 'utils/number';
+import ChassisRoute from './ChassisRoute';
+import EnginesRoute from './EnginesRoute';
+import TyreRoute from './TyreRoute';
 
 const Extra: React.FC = () => {
-    const dispatch = useAppDispatch();
+    const [defaultTab, setDefaultTab] = useState('engine');
+    const [whatTab, setWhatTab] = useState('engine');
 
-    // const engines = useAppSelector((state: RootState) => state.constructors.engines);
-    const enginesManufacturers = useAppSelector((state: RootState) => state.constructors.enginesManufacturers);
-    const tyreManufacturers = useAppSelector((state: RootState) => state.constructors.tyresManufacturers);
+    const { tab } = useParams<{ tab?: string }>();
 
-    const [whatTab, setWhatTab] = useState('engines');
-
-    // const enginesColDefs = useMemo<ColumnDef<Engine>[]>(
-    //     () => [
-    //         {
-    //             accessorKey: 'alpha2_code',
-    //             cell: ({ row }) => {
-    //                 return (
-    //                     <div className="min-w-8 w-8 max-w-8">
-    //                         {Flag({ cCode: row.getValue('alpha2_code'), size: 24 })}
-    //                     </div>
-    //                 );
-    //             },
-    //             size: 8,
-    //             maxWidth: 8,
-    //             minWidth: 8,
-    //             header: () => <div></div>,
-    //         },
-    //         {
-    //             accessorKey: 'full_name',
-    //             cell: ({ row }) => <div>{row.getValue('full_name') || '-'}</div>,
-    //             header: ({ column }) => {
-    //                 return (
-    //                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-    //                         Name
-    //                         <ArrowUpDown className="w-4 h-4 ml-2" />
-    //                     </Button>
-    //                 );
-    //             },
-    //         },
-    //         {
-    //             accessorKey: 'capacity',
-    //             cell: ({ row }) => <div>{row.getValue('capacity') || '-'}</div>,
-    //             header: ({ column }) => {
-    //                 return (
-    //                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-    //                         Capacity
-    //                         <ArrowUpDown className="w-4 h-4 ml-2" />
-    //                     </Button>
-    //                 );
-    //             },
-    //         },
-    //         {
-    //             accessorKey: 'configuration',
-    //             cell: ({ row }) => <div>{row.getValue('configuration') || '-'}</div>,
-    //             header: ({ column }) => {
-    //                 return (
-    //                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-    //                         Configuration
-    //                         <ArrowUpDown className="w-4 h-4 ml-2" />
-    //                     </Button>
-    //                 );
-    //             },
-    //         },
-    //         {
-    //             accessorKey: 'aspiration',
-    //             cell: ({ row }) => <div>{ENGINE_TYPES[row.getValue('aspiration') as keyof typeof ENGINE_TYPES]}</div>,
-    //             header: ({ column }) => {
-    //                 return (
-    //                     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-    //                         Aspiration
-    //                         <ArrowUpDown className="w-4 h-4 ml-2" />
-    //                     </Button>
-    //                 );
-    //             },
-    //         },
-    //     ],
-    //     [],
-    // );
+    useEffect(() => {
+        setDefaultTab(tab || 'engine');
+        setWhatTab(tab || 'engine');
+    }, []);
 
     const manufacturerColDefs = useMemo<ColumnDef<ManufacturerProps>[]>(
         () => [
@@ -313,96 +235,51 @@ const Extra: React.FC = () => {
         [],
     );
 
-    const {
-        data: enginesManufacturerData,
-        isError: enginesManufacturerIsError,
-        isLoading: enginesManufacturerIsLoading,
-    } = useGetEnginesManufacturersQuery(undefined) as {
-        data: ManufacturerProps[];
-        isError: boolean;
-        isLoading: boolean;
-    };
-
-    const {
-        data: tyreManufacturerData,
-        isError: tyreManufacturerIsError,
-        isLoading: tyreManufacturerIsLoading,
-    } = useGetTyresManufacturersQuery([]) as {
-        data: ManufacturerProps[];
-        isError: boolean;
-        isLoading: boolean;
-    };
-
-
-    useEffect(() => {
-        if (enginesManufacturerIsError) {
-            dispatch(setError(true));
-            return;
-        }
-        if (enginesManufacturerIsLoading) dispatch(setLoading(true));
-        if (!enginesManufacturerData) return;
-        dispatch(setEnginesManufacturers(enginesManufacturerData));
-        dispatch(setLoading(false));
-    }, [enginesManufacturerIsError, enginesManufacturerData, enginesManufacturerIsLoading, dispatch]);
-
-    useEffect(() => {
-        if (tyreManufacturerIsError) {
-            dispatch(setError(true));
-            return;
-        }
-        if (tyreManufacturerIsLoading) dispatch(setLoading(true));
-        if (!tyreManufacturerData) return;
-        dispatch(setTyresManufacturers(tyreManufacturerData));
-        dispatch(setLoading(false));
-    }, [tyreManufacturerData]);
-
     useEffect(() => {}, [whatTab]);
 
     const tabs = [
-        { value: 'seasons', label: 'Seasons' },
-        // { value: 'chassis', label: 'Chassis' },
+        { value: 'chassis', label: 'Chassis', children: <ChassisRoute /> },
         {
-            value: 'enginesManufacturers',
+            value: 'engine',
             label: 'Engine Manufacturers',
-            children: <DataTable className="w-fit" columns={manufacturerColDefs} data={enginesManufacturers ?? []} />,
+            children: <EnginesRoute className="w-fit" manufacturerColDefs={manufacturerColDefs} />,
         },
         {
-            value: 'tyreManufacturers',
+            value: 'tyre',
             label: 'Tyre Manufacturers',
-            children: <DataTable className="w-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />,
+            children: <TyreRoute className="w-fit" manufacturerColDefs={manufacturerColDefs} />,
         },
     ];
 
     return (
-        <PageContainer title="Extras" showBreadcrumbs={true} lastCrumb="Extras">
-            <Tabs
-                defaultValue="enginesManufacturers"
-                value={whatTab}
-                className="max-w-[85vw] w-[85vw] overflow-hidden pb-10"
-            >
+        <PageContainer title="Constructor Data" showBreadcrumbs={true} lastCrumb={'Constructor Data'}>
+            <Tabs defaultValue={defaultTab} value={whatTab} className="max-w-[85vw] w-[85vw] overflow-hidden pb-10">
                 <TabsList className="flexmd:grid w-full md:grid-cols-4">
-                    {tabs.map((tab) => (
-                        <TabsTrigger
-                            key={tab.value}
-                            value={tab.value}
-                            className={`cursor-pointer ${whatTab === tab.value ? 'bg-zinc-800' : ''}`}
-                            onClick={() => setWhatTab(tab.value)}
-                        >
-                            {tab.label}
-                        </TabsTrigger>
-                    ))}
+                    {tabs.map((tab) => {
+                        if (!tab) return null;
+                        return (
+                            <TabsTrigger
+                                key={tab.value}
+                                value={tab.value}
+                                className={`cursor-pointer ${whatTab === tab.value ? 'bg-zinc-800' : ''}`}
+                                onClick={() => setWhatTab(tab.value)}
+                            >
+                                {tab.label}
+                            </TabsTrigger>
+                        );
+                    })}
                 </TabsList>
 
-                <TabsContent value="chassis">
-                    <div className="w-full h-full flex items-center justify-center">Coming soon</div>
+                {/* <TabsContent value="season">
+                    <SeasonsRoute />
+                </TabsContent> */}
+
+                <TabsContent value="engine">
+                    <EnginesRoute className="w-fit" manufacturerColDefs={manufacturerColDefs} />
                 </TabsContent>
 
-                <TabsContent value="enginesManufacturers">
-                    <DataTable className="w-0-fit" columns={manufacturerColDefs} data={enginesManufacturers ?? []} />
-                </TabsContent>
-
-                <TabsContent value="tyreManufacturers">
-                    <DataTable className="w-0-fit" columns={manufacturerColDefs} data={tyreManufacturers ?? []} />
+                <TabsContent value="tyre">
+                    <TyreRoute className="w-fit" manufacturerColDefs={manufacturerColDefs} />
                 </TabsContent>
             </Tabs>
         </PageContainer>

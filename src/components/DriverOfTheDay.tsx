@@ -1,11 +1,11 @@
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import React, { useEffect } from 'react';
 
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { useGetDriverOfTheDayQuery } from 'features/driversApi';
 import { useGetRaceNextQuery } from 'features/raceApi';
 import { setDriversOfTheDay } from 'slices/driversSlice';
 import { setRaceNext } from 'slices/racesSlice';
-import { setError, setLoading } from 'slices/siteWideSlice';
 
 import { FULL_ROW_HEIGHT, YEAR } from 'constants/constants';
 
@@ -75,7 +75,7 @@ const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
     if (driverOfTheDayLoading || raceNextLoading || !dataDriversOfTheDay) return <CardSkeleton />;
 
     return (
-        <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-0', className)}>
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, className, 'overflow-hidden border-t', 'mb-40')}>
             <Table className="w-full mb-10">
                 <TableHeader>
                     <TableRow>

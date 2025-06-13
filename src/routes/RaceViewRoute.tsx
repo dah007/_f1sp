@@ -1,7 +1,7 @@
 import { RootState, useAppDispatch, useAppSelector } from '@/app/store';
 import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
 import { useGetPreviousWinnersAtCircuitQuery, useGetRacesResultsWithQualQuery } from '@/features/raceApi';
-import { setError } from '@/slices/siteWideSlice';
+import { setError } from '@/slices/systemWideSlice';
 import type { RaceProps, RaceResultProps } from '@/types/races';
 import { useEffect, /*useMemo, */ useState } from 'react';
 import { useParams } from 'react-router-dom';

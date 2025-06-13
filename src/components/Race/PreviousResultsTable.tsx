@@ -16,7 +16,7 @@
 import { useAppDispatch } from '@/app/store';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useGetPreviousRaceResultsQuery, useGetRaceCountByCircuitQuery } from '@/features/raceApi';
-import { setError } from '@/slices/siteWideSlice';
+import { setError } from '@/slices/systemWideSlice';
 import { ExtendedColumnDef } from '@/types/dataTable';
 import { RaceResultProps } from '@/types/races';
 import { LinkRenderer } from '@/utils/dataTableRenderers';

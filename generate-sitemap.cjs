@@ -1,54 +1,50 @@
 const fs = require('fs');
 const path = require('path');
 
-// The base URL of the project and today's date
-const baseUrl = 'https://f1sp.app';
-const today = new Date().toISOString().split('T')[0];
-
-// Read all files in the routes folder
-const routesDir = path.join(__dirname, 'src', 'routes');
-
-// Sitemap headers
-let sitemap = '';
-
-// Scan all *Routes.js files in the folder using dynamic import
-(async () => {
-    const files = fs.readdirSync(routesDir);
+// Refactored: inject fs and path for testability
+function generateSitemap({
+    baseUrl = 'https://f1sp.app',
+    today = new Date().toISOString().split('T')[0],
+    routesDir = path.join(__dirname, 'src', 'routes'),
+    publicDir = path.join(__dirname, 'public'),
+    fsModule = fs,
+    pathModule = path,
+} = {}) {
+    let sitemap = '';
+    const files = fsModule.readdirSync(routesDir);
     let tempSitemap = '';
 
     for (const file of files) {
         if (file.endsWith('.tsx')) {
-            const baseName = path.basename(file, '.tsx'); // e.g., 'AccountNewRoute'
-
+            const baseName = pathModule.basename(file, '.tsx');
             if (baseName.toString().endsWith('Route')) {
-                const filePath = path.join(routesDir, file);
-                const stats = fs.statSync(filePath);
-                const lastModified = stats.mtime.toISOString().split('T')[0]; // Format: YYYY-MM-DD
-                console.log(`Processing file: ${file}`, lastModified);
+                const filePath = pathModule.join(routesDir, file);
+                const stats = fsModule.statSync(filePath);
+                const lastModified = stats.mtime.toISOString().split('T')[0];
                 tempSitemap =
                     tempSitemap +
-                    `
-    <url>
-      <loc>${baseUrl}/${baseName.replace('Route', '')}</loc>
-      <lastmod>${lastModified}</lastmod>
-    </url>\n`;
+                    `\n    <url>\n      <loc>${baseUrl}/${baseName.replace(
+                        'Route',
+                        '',
+                    )}</loc>\n      <lastmod>${lastModified}</lastmod>\n    </url>\n`;
             }
         }
     }
 
     sitemap =
-        `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-      <loc>${baseUrl}/</loc>
-      <lastmod>${today}</lastmod>
-    </url>` +
+        `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n    <url>\n      <loc>${baseUrl}/</loc>\n      <lastmod>${today}</lastmod>\n    </url>` +
         tempSitemap +
-        `
-</urlset>`;
+        `\n</urlset>`;
 
-    // Create the sitemap.xml file
-    fs.writeFileSync(path.join(__dirname, 'public', 'sitemap.xml'), sitemap);
+    fsModule.writeFileSync(pathModule.join(publicDir, 'sitemap.xml'), sitemap);
+    return sitemap;
+}
 
-    console.log('sitemap.xml successfully created!');
-})();
+if (require.main === module) {
+    (async () => {
+        generateSitemap();
+        console.log('sitemap.xml successfully created!');
+    })();
+}
+
+module.exports = { generateSitemap };

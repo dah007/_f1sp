@@ -1,39 +1,69 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { ConstructorStanding, DriverStanding } from 'types/standings';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { Season } from 'types/season';
 
+interface FastestLapsByYear {
+    year: number;
+    name: string;
+    fastest_laps: number;
+}
+
+interface TotalWinsBySeason {
+    year: number;
+    name: string;
+    wins: number;
+}
+
+interface TotalDNFByYear {
+    year: number;
+    name: string;
+    totalDNF: number;
+}
+
 interface IState {
-    constructors: ConstructorStanding[];
-    drivers: DriverStanding[];
     seasons: Season[];
+    fastestLapsByYear: FastestLapsByYear[];
+    totalWinsBySeason: TotalWinsBySeason[];
+    totalConstructorsBySeason: TotalWinsBySeason[];
+    totalDNFBySeason: TotalDNFByYear[];
 }
 
 const initialState: IState = {
-    constructors: [],
-    drivers: [],
     seasons: [],
+    fastestLapsByYear: [],
+    totalWinsBySeason: [],
+    totalConstructorsBySeason: [],
+    totalDNFBySeason: [],
 };
 
 export const seasonsSlice = createSlice({
     name: 'seasons',
     initialState,
     reducers: {
-        setConstructorSeasons: (state, action: PayloadAction<ConstructorStanding[]>) => {
-            let payload = action.payload;
-
-            if (!payload) payload = [];
-            state.constructors = payload;
-        },
-        setDriverSeasons: (state, action: PayloadAction<DriverStanding[]>) => {
-            state.drivers = action.payload;
-        },
-        setSeasonStats: (state, action: PayloadAction<Season[]>) => {
+        setSeasons: (state, action: PayloadAction<Season[]>) => {
             state.seasons = action.payload;
+        },
+        setFastestLapsByYear: (state, action: PayloadAction<FastestLapsByYear[]>) => {
+            state.fastestLapsByYear = action.payload;
+        },
+        setTotalWinsBySeason: (state, action: PayloadAction<TotalWinsBySeason[]>) => {
+            state.totalWinsBySeason = action.payload;
+        },
+        setTotalConstructorsBySeason: (state, action: PayloadAction<TotalWinsBySeason[]>) => {
+            state.totalConstructorsBySeason = action.payload;
+        },
+        setTotalDNFBySeason: (state, action: PayloadAction<TotalDNFByYear[]>) => {
+            state.totalDNFBySeason = action.payload;
         },
     },
 });
 
-export const { setConstructorSeasons, setDriverSeasons, setSeasonStats } = seasonsSlice.actions;
+export const {
+    setSeasons,
+    setFastestLapsByYear,
+    setTotalWinsBySeason,
+    setTotalConstructorsBySeason,
+    setTotalDNFBySeason,
+} = seasonsSlice.actions;
 
 export default seasonsSlice.reducer;

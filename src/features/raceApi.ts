@@ -129,7 +129,7 @@ export const raceApi = createApi({
         }),
         getRaces: builder.query({
             query: (year: number | undefined) =>
-                year ? `/races?year=${year}&$orderby=date%20desc` : `/races?$orderby=date%20desc`,
+                year ? `/races?$filter=year eq ${year}&$orderby=date%20desc` : `/races?$orderby=date%20desc`,
             transformResponse: (response: NextLinkRaceProps) => response ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching races:', error);

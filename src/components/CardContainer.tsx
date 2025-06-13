@@ -55,7 +55,7 @@ const CardContainer: React.FC<CardProps> = ({
 }: CardProps): JSX.Element => {
     // const [notLoaded, setNotLoaded] = useState(true);
     return (
-        <Card className={cn('dark:bg-zinc-900 bg-zinc-300 shadow-md ', className)}>
+        <Card className={cn('card dark:bg-zinc-900 bg-zinc-300 shadow-md ', className)}>
             {(title || description) && (
                 <CardHeader>
                     {title && <CardTitle className={cn('m-0', titleClassName)}>{title}</CardTitle>}
@@ -63,12 +63,14 @@ const CardContainer: React.FC<CardProps> = ({
                 </CardHeader>
             )}
 
-            <CardContent className={cn(childrenClassName)}>
+            <CardContent className={cn('children-div', childrenClassName)}>
                 {!children && <Skeleton />}
                 {children}
             </CardContent>
 
-            {footer && <CardFooter className={cn('flex justify-between', footerClassName)}>{footer}</CardFooter>}
+            {footer && (
+                <CardFooter className={cn('card-footer flex justify-between', footerClassName)}>{footer}</CardFooter>
+            )}
         </Card>
     );
 };

@@ -19,3 +19,5 @@ public/large-assets/
 .editorconfig
 .markdownlint.jsonc
 .nvmrc
+
+coverage/*

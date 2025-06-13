@@ -3,15 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 interface IState {
-    currentRoute: TSimpleRoute;
+    currentRoute: SimpleRoute;
 }
 
-export type TSimpleRoute = {
+export type SimpleRoute = {
     label: string;
     path: string;
 };
 
-const defineCurrentRoute = (): TSimpleRoute => {
+const defineCurrentRoute = (): SimpleRoute => {
     let tempRoute = {
         label: 'Home',
         path: '/',
@@ -31,7 +31,7 @@ export const routeSlice = createSlice({
     name: 'routeSlice',
     initialState,
     reducers: {
-        setCurrentRoute: (state, action: PayloadAction<TSimpleRoute>) => {
+        setCurrentRoute: (state, action: PayloadAction<SimpleRoute>) => {
             let payload = action.payload;
             if (!payload) payload = initialState.currentRoute;
 

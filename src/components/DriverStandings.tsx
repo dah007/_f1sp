@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { useGetDriverStandingsQuery } from 'features/standingsApi';
-import { setError, setLoading } from 'slices/siteWideSlice';
 import { setDriverStandings } from 'slices/standingsSlice';
 
 import { cn } from '@/lib/utils';

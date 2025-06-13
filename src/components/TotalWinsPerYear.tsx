@@ -2,7 +2,7 @@ import { useAppDispatch } from '@/app/store';
 import { FULL_ROW_HEIGHT, YEAR } from '@/constants/constants';
 import { useGetTotalWinsByYearQuery } from '@/features/driversApi';
 import { cn } from '@/lib/utils';
-import { setError, setLoading } from '@/slices/siteWideSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { TotalWinsByYear } from '@/types/drivers';
 import { useEffect, useState } from 'react';
 import CardSkeleton from './CardSkeleton';

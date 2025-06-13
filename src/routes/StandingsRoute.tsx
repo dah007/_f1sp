@@ -161,7 +161,7 @@ export interface LocalDriverProps {
 const Standings: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
 
-    const selectedYear = useAppSelector((state: RootState) => state.siteWide.selectedYear);
+    const selectedYear = useAppSelector((state: RootState) => state.systemWide.selectedYear);
 
     const colorConstructors = useAppSelector((state: RootState) =>
         selectConstructorStandings(state),

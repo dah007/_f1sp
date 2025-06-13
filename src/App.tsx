@@ -1,6 +1,6 @@
 import Header from 'components/Header';
 import { lazy, Suspense, useEffect } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Outlet, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
 import Footer from './components/Footer';
@@ -9,7 +9,7 @@ import Home from './routes/HomeRoute';
 import Leaderboard from './routes/LeaderboardRoute';
 import Static from './routes/Static';
 import { setRaceNext } from './slices/racesSlice';
-import { setError, setLoading } from './slices/siteWideSlice';
+import { setError, setLoading } from './slices/systemWideSlice';
 import { NextRaceProps, RaceResultProps } from './types/races';
 import Error404Image from '/assets/images/404.png';
 
@@ -18,6 +18,7 @@ const Circuits = lazy(() => import('./routes/CircuitsRoute'));
 const Constructors = lazy(() => import('./routes/ConstructorsRoute'));
 const DriverDetail = lazy(() => import('./routes/DriverDetailRoute'));
 const Drivers = lazy(() => import('./routes/DriversRoute'));
+const Engines = lazy(() => import('./routes/EnginesRoute'));
 const Extra = lazy(() => import('./routes/ExtraRoute'));
 const LoginForm = lazy(() => import('./routes/LoginFormRoute'));
 const RaceDetail = lazy(() => import('./routes/RaceDetailRoute'));
@@ -25,11 +26,12 @@ const Races = lazy(() => import('./routes/RacesRoute'));
 const RaceLast = lazy(() => import('./routes/RaceLastRoute'));
 const RaceNext = lazy(() => import('./routes/RaceNextRoute'));
 const RaceResults = lazy(() => import('./routes/RaceResultsRoute'));
-const SeasonCurrent = lazy(() => import('./routes/SeasonCurrentRoute'));
-const Seasons = lazy(() => import('./routes/SeasonsRoute'));
+const SeasonsRoute = lazy(() => import('./routes/SeasonsRoute'));
+const SeasonsDetail = lazy(() => import('./routes/SeasonDetailRoute'));
 const Standings = lazy(() => import('./routes/StandingsRoute'));
+const Tyres = lazy(() => import('./routes/TyreRoute'));
 const VoteDnD = lazy(() => import('./routes/VoteRoute'));
-const WhatsNew = lazy(() => import('./routes/WhatsNewRoute'));
+
 const App = () => {
     const dispatch = useAppDispatch();
 
@@ -77,10 +79,12 @@ const App = () => {
                     sm:pl-4 sm:pr-4
                     pl-1 pr-1 w-[100vw]"
                 >
+                    <Outlet />
+
                     <Suspense fallback={<div className="flex justify-center items-center h-[50vh]">Loading...</div>}>
                         <Routes>
                             <Route path="/" element={<Home />}>
-                                <Route path="whats-new" element={<WhatsNew />} />
+                                <Route path="whats-new" element={<Static page="whatsNew" />} />
                             </Route>
 
                             <Route path="circuits" element={<Circuits />} />
@@ -91,7 +95,8 @@ const App = () => {
                                 <Route path="driver/:id" element={<DriverDetail />} />
                             </Route>
 
-                            <Route path="extra" element={<Extra />} />
+                            <Route path="engine" element={<Engines />} />
+                            <Route path="extra/:tab?" element={<Extra />} />
 
                             <Route path="leaderboard" element={<Leaderboard />} />
 
@@ -100,17 +105,20 @@ const App = () => {
                             <Route path="account/new" element={<AccountNew />} />
                             <Route path="login" element={<LoginForm />} />
 
-                            <Route path="races" element={<Races />}>
+                            <Route path="races/:year?" element={<Races />}>
                                 <Route path="race/:id" element={<RaceDetail />} />
                             </Route>
                             <Route path="race/last/:id?" element={<RaceLast />} />
                             <Route path="race/next/:id?" element={<RaceNext />} />
                             <Route path="race/results/:id?" element={<RaceResults />} />
 
-                            <Route path="seasonsCurrent" element={<SeasonCurrent />} />
-                            <Route path="season/:year?" element={<Seasons />} />
+                            <Route path="seasons" element={<SeasonsRoute />}>
+                                <Route path="season/:year?" element={<SeasonsDetail />} />
+                            </Route>
 
                             <Route path="standings" element={<Standings />} />
+
+                            <Route path="tyres" element={<Tyres />} />
 
                             <Route path="vote" element={<VoteDnD />} />
 

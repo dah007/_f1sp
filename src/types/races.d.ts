@@ -23,7 +23,7 @@
  */
 export interface FastestLap {
     constructor_id: string;
-    driver: string;
+    driver?: string;
     driver_id: string;
     driver_number: string;
     engine_manufacturer_id: string;
@@ -34,6 +34,7 @@ export interface FastestLap {
     interval_millis: number;
     lap: number;
     last_name: string;
+    name?: string;
     position_display_order: number;
     position_number: number;
     position_text: string;
