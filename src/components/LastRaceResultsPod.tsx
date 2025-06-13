@@ -1,7 +1,6 @@
 import { FULL_ROW_HEIGHT } from '@/constants/constants';
 import { cn } from '@/lib/utils';
 import { setError, setLoading } from '@/slices/systemWideSlice';
-import { Scrollbar } from '@radix-ui/react-scroll-area';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import { useGetLastRaceResultsQuery } from 'features/raceApi';
 import { JSX, useEffect } from 'react';
@@ -73,7 +72,6 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
 
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-40')}>
-            <Scrollbar className="h-full" />
             {dataIsLoading && <CardSkeleton />}
             <Table>
                 <TableHeader>

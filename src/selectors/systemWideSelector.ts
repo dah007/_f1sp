@@ -1,7 +1,7 @@
 import { RootState } from '@/app/store';
 import { createSelector } from '@reduxjs/toolkit';
 
-const selectState = (state: any) => state;
+const selectState = (state: RootState) => state;
 
 /**
  * Selects the system-wide state from the Redux store.

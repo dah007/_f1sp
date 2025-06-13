@@ -101,14 +101,14 @@ export const raceMenuItems: { title: string; href: string; description: string }
 ];
 export const seasonsMenuItems: { title: string; href: string; description: string }[] = [
     {
+        title: 'Current Season',
+        href: `/seasons/season/2025`,
+        description: 'View current season and their details.',
+    },
+    {
         title: 'All Seasons',
         href: `/seasons`,
         description: 'View all seasons at the top level with the ability to  and their details.',
-    },
-    {
-        title: 'Current Seasons',
-        href: `/seasons/season/2025`,
-        description: 'View current season and their details.',
     },
     {
         title: 'Season Records',
@@ -261,16 +261,6 @@ const Header: React.FC = () => {
 
             {/* MOBILE MENU */}
             <ul id="menu" className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50">
-                <div className="absolute bottom-8 right-8">
-                    <a href="https://buymeacoffee.com/dah007" rel="noreferrer" target="_blank" title="Buy me a coffee">
-                        <LucideCoffee size="32" className="text-yellow-400 light:text-brown-500" />
-                    </a>
-                </div>
-                <li className="md:hidden z-90 fixed top-4 right-6">
-                    <a href="javascript:void(0)" className="text-right text-white text-4xl" onClick={toggleMenu}>
-                        &times;
-                    </a>
-                </li>
                 <li>
                     <MenuButton
                         label="Vote"
@@ -278,41 +268,93 @@ const Header: React.FC = () => {
                         className="border dark:border-red-700 border-red-900"
                     />
                 </li>
-                <ul className="ml-4 mt-4">
-                    <li>
-                        <MenuButton label="Leaderboard" onClick={() => handleNavigationMobile('/leaderboard')} />
-                    </li>
-                </ul>
-
-                <li>
-                    <MenuButton label="Races" onClick={() => handleNavigationMobile('/races')} />
-                </li>
-
-                <ul className="ml-4 mt-4">
-                    {raceMenuItems.map((component) => (
-                        <li key={component.title}>
-                            <MenuButton
-                                label={component.title}
-                                onClick={() => handleNavigationMobile(component.href)}
-                            />
+                <div className="w-full grid grid-cols-3 border border-blue-300">
+                    <div>
+                        <li>
+                            <MenuButton label="Leaderboard" onClick={() => handleNavigationMobile('/leaderboard')} />
                         </li>
-                    ))}
-                </ul>
 
-                <li>
-                    <MenuButton label="Drivers" onClick={() => handleNavigationMobile('/drivers')} />
-                </li>
-
-                <ul className="ml-4 mt-4">
-                    {driverMenuItems.map((component) => (
-                        <li key={component.title}>
-                            <MenuButton
-                                label={component.title}
-                                onClick={() => handleNavigationMobile(component.href)}
-                            />
+                        <li>
+                            <MenuButton label="Races" onClick={() => handleNavigationMobile('/races')} />
                         </li>
-                    ))}
-                </ul>
+
+                        <ul className="ml-4 mt-0">
+                            {raceMenuItems.map((component) => (
+                                <li key={component.title}>
+                                    <MenuButton
+                                        label={component.title}
+                                        onClick={() => handleNavigationMobile(component.href)}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+
+                        <li>
+                            <MenuButton label="Drivers" onClick={() => handleNavigationMobile('/drivers')} />
+                        </li>
+
+                        <ul className="ml-4 mt-0">
+                            {driverMenuItems.map((component) => (
+                                <li key={component.title}>
+                                    <MenuButton
+                                        label={component.title}
+                                        onClick={() => handleNavigationMobile(component.href)}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <li>
+                            <MenuButton label="Seasons" onClick={() => handleNavigationMobile('/seasons')} />
+                        </li>
+                        <ul className="ml-4 mt-0">
+                            {seasonsMenuItems.map((component) => (
+                                <li key={component.title}>
+                                    <MenuButton
+                                        label={component.title}
+                                        onClick={() => handleNavigationMobile(component.href)}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+
+                        <li>
+                            <MenuButton label="Constructors" onClick={() => handleNavigationMobile('/constructors')} />
+                        </li>
+                        <ul className="ml-4 mt-0">
+                            {constructorMenuItems.map((component) => (
+                                <li key={component.title}>
+                                    <MenuButton
+                                        label={component.title}
+                                        onClick={() => handleNavigationMobile(component.href)}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <div className="absolute bottom-8 right-8">
+                            <a
+                                href="https://buymeacoffee.com/dah007"
+                                rel="noreferrer"
+                                target="_blank"
+                                title="Buy me a coffee"
+                            >
+                                <LucideCoffee size="32" className="text-yellow-400 light:text-brown-500" />
+                            </a>
+                        </div>
+                        <div className="lg:hidden z-90 fixed top-4 right-6">
+                            <a
+                                href="javascript:void(0)"
+                                className="text-right text-white text-4xl"
+                                onClick={toggleMenu}
+                            >
+                                &times;
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </ul>
         </header>
     );

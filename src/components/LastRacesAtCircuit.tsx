@@ -5,7 +5,6 @@ import CustomLink from './CustomLink';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
 import { useGetLastResultsAtCircuitQuery } from 'features/raceApi';
-import { setPreviousResultsAtCircuit } from 'slices/racesSlice';
 
 import { setError, setLoading } from '@/slices/systemWideSlice';
 import { YEAR } from 'constants/constants';
@@ -35,7 +34,6 @@ import { RaceProps } from 'types/races';
  * - `useAppSelector` from `react-redux`
  * - `useGetLastResultsAtCircuitQuery` from the API slice
  * - `setError` action from the Redux slice
- * - `setPreviousResultsAtCircuit` action from the Redux slice
  * - `CustomLink` component for driver links
  *
  * @param {Object} props - The props that are passed to the component.
@@ -66,7 +64,6 @@ const LastRacesAtCircuit: React.FC = (): JSX.Element => {
         }
         if (isLoading) dispatch(setLoading(true));
         if (!data) return;
-        dispatch(setPreviousResultsAtCircuit(data));
         dispatch(setLoading(false));
     }, [dispatch, data, isError, isLoading]);
 

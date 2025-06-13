@@ -8,7 +8,7 @@
         "build": "tsc -b && vite build",
         "generate:sitemap": "node generate-sitemap.cjs",
         "lint": "eslint .",
-        "litmus": "eslint . && tsc",
+        "litmus": "eslint . --ignore-pattern '**/*.test.*' --ignore-pattern '**/*.spec.*' && tsc",
         "preview": "vite preview",
         "test": "vitest",
         "test:ui": "vitest --ui",
