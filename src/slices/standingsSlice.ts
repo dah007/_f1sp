@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
 import type { ConstructorStanding, DriverStanding } from '@/types/standings';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface IState {
     constructors: ConstructorStanding[];

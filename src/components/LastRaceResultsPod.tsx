@@ -1,6 +1,7 @@
 import { FULL_ROW_HEIGHT } from '@/constants/constants';
 import { cn } from '@/lib/utils';
 import { setError, setLoading } from '@/slices/systemWideSlice';
+import { Scrollbar } from '@radix-ui/react-scroll-area';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import { useGetLastRaceResultsQuery } from 'features/raceApi';
 import { JSX, useEffect } from 'react';
@@ -10,45 +11,12 @@ import CardSkeleton from './CardSkeleton';
 import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
-/**
- * Displays the results of the last race in a table format.
- *
- * Uses Redux state for race results and next race data, and fetches additional race details
- * using RTK Query hooks (useGetRaceWithGPQuery and useGetLastRaceResultsQuery).
- *
- * The component handles loading states with a CardSkeleton placeholder and dispatches
- * loading/error states to the Redux store.
- *
- * @returns A scrollable table showing last race results with position, driver name,
- *          time gap, and points information.
- */
 const LastRaceResultsPod: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
 
     const raceResults: RaceResultProps[] = useAppSelector((state: RootState) => state.races.lastRaceResults) ?? [];
     // Only used here, to get the last race id
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
-
-    // const {
-    //     data: raceWGPData,
-    //     isLoading: raceWGPisLoading,
-    //     isError: raceWGPisError,
-    // } = useGetRaceWithGPQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
-    //     data: Partial<RaceProps> | undefined;
-    //     isLoading: boolean;
-    //     isError: boolean;
-    // };
-
-    // useEffect(() => {
-    //     if (raceWGPisError) {
-    //         dispatch(setError(true));
-    //         return;
-    //     }
-    //     if (raceWGPisLoading) dispatch(setLoading(true));
-    //     if (!raceWGPData) return;
-    //     dispatch(setRaceWGP(raceWGPData));
-    //     dispatch(setLoading(false));
-    // }, [raceWGPData, raceWGPisError, raceWGPisLoading, dispatch]);
 
     const {
         data: dataResults,
@@ -72,10 +40,13 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
     }, [dataResults, dataIsError, dataIsLoading, dispatch]);
 
     const RaceResults = ({ raceResults }: { raceResults: RaceResultProps[] }) => {
+        // Check if raceResults is not an array and return null instead of a fragment with key
         if (!Array.isArray(raceResults)) return null;
-        if (raceResults?.length === 0) {
+
+        // Handle empty array case
+        if (raceResults.length === 0) {
             return (
-                <TableRow>
+                <TableRow key="no-data">
                     <TableHead colSpan={5} className="text-center">
                         No data available
                     </TableHead>
@@ -83,9 +54,12 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
             );
         }
 
-        return raceResults?.map((race: RaceResultProps) => {
+        // Map through race results with proper keys
+        return raceResults.map((race: RaceResultProps, index) => {
+            const uniqueKey = `${index}-${race.permanent_number || index}`;
+
             return (
-                <TableRow key={race.permanent_number}>
+                <TableRow key={uniqueKey}>
                     <TableCell className="w-2 text-right">{race.position_text}</TableCell>
                     <TableCell className="cursor-pointer text-bolder">{race.driver_name}</TableCell>
                     <TableCell className="w-2 text-right">{race.gap}</TableCell>
@@ -99,6 +73,7 @@ const LastRaceResultsPod: React.FC = (): JSX.Element => {
 
     return (
         <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-40')}>
+            <Scrollbar className="h-full" />
             {dataIsLoading && <CardSkeleton />}
             <Table>
                 <TableHeader>

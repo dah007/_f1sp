@@ -47,7 +47,7 @@ const Home: React.FC = () => {
     // const raceWGP = useAppSelector((state: RootState) =>
     // const systemError = useAppSelector((state) => state.systemWide.error);
 
-    const widthsNHeights = 'min-h-[250px] h-[35vh] md:h-[25vh] max-h-[25vh] md:max-h-[35vh]';
+    const widthsNHeights = 'h-[25vh] md:h-[35vh]';
 
     const { success: voteSuccessful, message: voteMessage } = getMessageFromURL();
 

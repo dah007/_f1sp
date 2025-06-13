@@ -1,4 +1,6 @@
+// TODO: clean this file up
 import type { ExtendedColumnDef } from '@/types/dataTable';
+
 export const GetInVisibleColumn = (colDefs: ExtendedColumnDef[]): Record<string, boolean> => {
     const inVisibleColumns: ExtendedColumnDef[] = colDefs.filter(
         (col) => 'visible' in col && col.visible === false,
@@ -56,4 +58,8 @@ export const groupWinnersWithChildren = (arr: Item[]) => {
     });
 
     // return result;
+};
+
+export const rightAligned = (value: string | number) => {
+    return <div className="text-right">{value}</div>;
 };

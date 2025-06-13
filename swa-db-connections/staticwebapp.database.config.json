@@ -161,6 +161,20 @@
             ]
         },
 
+        "fastestLapsByYear": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "fastest_laps_by_year"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+
         "lastResultsByCircuit": {
             "source": {
                 "type": "view",
@@ -373,11 +387,50 @@
             ]
         },
 
+        "totalDNFBySeason": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "total_dnf_by_season"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
         "totalWinsByYear": {
             "source": {
                 "type": "view",
                 "key-fields": ["year"],
                 "object": "total_wins_by_year"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "totalWinsBySeason": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "total_wins_by_season"
+            },
+            "permissions": [
+                {
+                    "actions": ["*"],
+                    "role": "anonymous"
+                }
+            ]
+        },
+        "totalConstructorWinsBySeason": {
+            "source": {
+                "type": "view",
+                "key-fields": ["year"],
+                "object": "total_constructor_wins_by_season"
             },
             "permissions": [
                 {

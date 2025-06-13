@@ -141,7 +141,7 @@ const Footer = () => {
                                     rel="noreferrer"
                                     className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
                                 >
-                                    F1
+                                    Formula 1™
                                 </a>
                             </li>
                             <li>
@@ -182,7 +182,7 @@ const Footer = () => {
                                     rel="noreferrer"
                                     className="text-gray-700 transition hover:opacity-75 dark:text-gray-200"
                                 >
-                                    Ergast API (Depricated)
+                                    Ergast API (Deperecated)
                                 </a>
                             </li>
                             <li>

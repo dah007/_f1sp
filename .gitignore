@@ -35,3 +35,5 @@ dbServer/my.cnf
 
 *.yarn
 *:Zone.Identifier
+
+coverage/*

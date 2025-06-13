@@ -30,7 +30,7 @@ import {
 } from 'components/ui/pagination';
 import { useAppSelector } from 'hooks/reduxHooks';
 import { Fragment, JSX, startTransition, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { setRaces } from 'slices/racesSlice';
 import type { RaceProps } from 'types/races';
 import { DistanceCellRenderer, LinkRenderer } from 'utils/dataTableRenderers';
@@ -51,6 +51,8 @@ export type NextLinkRaceProps = {
 
 const Races: React.FC = (): JSX.Element => {
     const navigate = useNavigate();
+
+    const { year } = useParams<{ year: string }>();
 
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [currentNextLink, setCurrentNextLink] = useState<string | null>(null);
@@ -78,7 +80,7 @@ const Races: React.FC = (): JSX.Element => {
         data: raceData,
         isLoading: raceDataIsLoading,
         isError: raceDataIsError,
-    } = useGetRacesQuery(undefined) as {
+    } = useGetRacesQuery(parseInt(year as unknown as string, 10)) as {
         data: NextLinkRaceProps | undefined;
         isLoading: boolean;
         isError: boolean;
@@ -361,36 +363,48 @@ const Races: React.FC = (): JSX.Element => {
     });
 
     return (
-        <PageContainer className="h-full w-full" lastCrumb="Races" title="Races">
+        <PageContainer className="h-full w-full" lastCrumb="Races" title={`Races ${year ? `- ${year}` : ''}`}>
             <ScrollArea className="h-full w-full overflow-hidden">
                 <ScrollBar orientation="horizontal" className="w-full" />
                 <ScrollBar orientation="vertical" className="w-full" />
 
                 <div className="flex justify-between mb-2">
                     <h2>
-                        Total Races: {races.length} / Pages: {currentPage} of {totalPages}
+                        Total Races: {races.length}
+                        {!year && (
+                            <span>
+                                Pages: {currentPage} of {totalPages}
+                            </span>
+                        )}
                     </h2>
+                    {year && (
+                        <a className="text-blue-600 dark:text-blue-400 hover:underline" href="/races">
+                            View All Races
+                        </a>
+                    )}
                 </div>
                 <div className="flex p-2">
-                    <div className="flex w-fit">
-                        <Pagination>
-                            <PaginationContent>
-                                <PaginationItem>
-                                    <PaginationPrevious href="#" />
-                                </PaginationItem>
+                    {!year && (
+                        <div className="flex w-fit">
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious href="#" />
+                                    </PaginationItem>
 
-                                {/* {AddPaginationItems(1, totalPages)} */}
+                                    {/* {AddPaginationItems(1, totalPages)} */}
 
-                                <PaginationItem>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
+                                    <PaginationItem>
+                                        <PaginationEllipsis />
+                                    </PaginationItem>
 
-                                <PaginationItem>
-                                    <PaginationNext onClick={gotoNext} href="#" />
-                                </PaginationItem>
-                            </PaginationContent>
-                        </Pagination>
-                    </div>
+                                    <PaginationItem>
+                                        <PaginationNext onClick={gotoNext} href="#" />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+                        </div>
+                    )}
 
                     <div className="flex items-center gap-4 grow">
                         <Input

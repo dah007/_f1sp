@@ -1,14 +1,14 @@
 import { Location } from 'types';
 
 // @deprecated ??
-export interface Season {
-    url: string;
-    total: string;
-    CircuitTable: {
-        season: string;
-        Circuits: Circuit[];
-    };
-}
+// export interface Season {
+//     url: string;
+//     total: string;
+//     CircuitTable: {
+//         season: string;
+//         Circuits: Circuit[];
+//     };
+// }
 // @deprecated ??
 export type Circuit = {
     circuitId: string;
@@ -18,6 +18,12 @@ export type Circuit = {
 };
 
 export interface Season {
+    accessorKey?: string;
+    cell?: {
+        row: {
+            getValue: (key: string) => string | number;
+        };
+    };
     constructorChampion: string;
     constructorChampionPoints: number;
     constructorCount: number;

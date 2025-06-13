@@ -75,7 +75,7 @@ const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
     if (driverOfTheDayLoading || raceNextLoading || !dataDriversOfTheDay) return <CardSkeleton />;
 
     return (
-        <ScrollArea className={cn(FULL_ROW_HEIGHT, 'overflow-hidden border-t', 'mb-0', className)}>
+        <ScrollArea className={cn(FULL_ROW_HEIGHT, className, 'overflow-hidden border-t', 'mb-40')}>
             <Table className="w-full mb-10">
                 <TableHeader>
                     <TableRow>
