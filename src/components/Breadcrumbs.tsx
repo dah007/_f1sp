@@ -36,7 +36,7 @@ const Breadcrumbs: React.FC<BreadcrumbProps> = ({ lastCrumb, resolveIdLabel }): 
                     if (menuItem && menuItem.hidden) return null;
                     return (
                         <div key={to} className="flex items-center">
-                            <BreadcrumbSeparator className="mr-2 border border-red-400" />
+                            <BreadcrumbSeparator className="mr-2" />
                             <BreadcrumbItem>
                                 <BreadcrumbLink href={to}>{label}</BreadcrumbLink>
                             </BreadcrumbItem>
