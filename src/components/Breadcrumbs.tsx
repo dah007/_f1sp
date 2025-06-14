@@ -1,65 +1,53 @@
 import { MENU } from 'constants/constants';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { RouteProps } from './CustomLink';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from './ui/breadcrumb';
 
 interface BreadcrumbProps {
     lastCrumb?: string;
+    resolveIdLabel?: (id: string, context?: string) => string | undefined;
 }
 
-const Breadcrumbs: React.FC<BreadcrumbProps> = ({ lastCrumb }): JSX.Element => {
+const Breadcrumbs: React.FC<BreadcrumbProps> = ({ lastCrumb, resolveIdLabel }): JSX.Element => {
     const { id, year } = useParams();
     const location = useLocation();
     const [crumbs, setCrumbs] = useState<JSX.Element[]>([]);
 
+    console.log('id:', id);
+
     useEffect(() => {
-        const getMenuItem = (pathname: string): Partial<RouteProps> => {
-            return MENU.find((item) => item.path === pathname) || { path: '', label: '', hidden: false };
-        };
-
         const pathnames = location.pathname.split('/').filter((x) => x);
-
         const generateCrumbs = () => {
-            const Breadcrumbs = pathnames
+            return pathnames
                 .map((value, index) => {
-                    if (index === pathnames.length - 1) return;
-
                     const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-
-                    const menuItem = getMenuItem(value);
-
-                    let label = menuItem?.label ?? value;
-
-                    const hidden = menuItem?.hidden ?? false;
-
-                    if (value === year)
-                        return (
-                            <div key={to} className="hidden w-0">
-                                year
-                            </div>
-                        );
-
-                    if (value === id) {
-                        label = lastCrumb ?? 'bob';
-                    } else if (hidden) return <div key={to} className="hidden w-0"></div>;
-
+                    let label = value;
+                    // Special handling for known MENU items
+                    const menuItem = MENU.find((item) => item.path === value);
+                    if (menuItem && menuItem.label) label = menuItem.label;
+                    // Show year as its own crumb
+                    if (year && value === year) label = year;
+                    // Show id as lastCrumb if present
+                    if (id && value === id) {
+                        // Try to resolve a label for the id, fallback to lastCrumb or id
+                        label = (resolveIdLabel!(id, pathnames[index - 1]) || id || lastCrumb) as string;
+                    }
+                    // Hide hidden MENU items
+                    if (menuItem && menuItem.hidden) return null;
                     return (
                         <div key={to} className="flex items-center">
-                            <BreadcrumbSeparator className="mr-2" />
+                            <BreadcrumbSeparator className="mr-2 border border-red-400" />
                             <BreadcrumbItem>
                                 <BreadcrumbLink href={to}>{label}</BreadcrumbLink>
                             </BreadcrumbItem>
                         </div>
                     );
                 })
-                .filter((element): element is JSX.Element => element !== undefined);
-
-            return Breadcrumbs;
+                .filter(Boolean);
         };
-
-        setCrumbs(generateCrumbs());
-    }, [lastCrumb, location, id, year]);
+        // Fix the type issue by explicitly casting the filtered result
+        setCrumbs(generateCrumbs() as JSX.Element[]);
+    }, [lastCrumb, location, id, year, resolveIdLabel]);
 
     return (
         <Breadcrumb className="flex w-full m-0 mt-3 text-left">

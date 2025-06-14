@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 
 interface EnginesRouteProps {
     className?: string;
-    manufacturerColDefs?: ColumnDef<ManufacturerProps>[];
+    manufacturerColDefs?: ColumnDef<ManufacturerProps, unknown>[];
 }
 
 const EnginesRoute = ({ className, manufacturerColDefs }: EnginesRouteProps) => {
@@ -43,7 +43,7 @@ const EnginesRoute = ({ className, manufacturerColDefs }: EnginesRouteProps) => 
     return (
         <DataTable
             className={cn(className, 'w-0-fit')}
-            columns={manufacturerColDefs}
+            columns={manufacturerColDefs || []}
             data={enginesManufacturers ?? []}
         />
     );
