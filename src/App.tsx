@@ -4,6 +4,8 @@ import { Outlet, Route, BrowserRouter as Router, Routes } from 'react-router-dom
 import './App.css';
 import { RootState, useAppDispatch, useAppSelector } from './app/store';
 import Footer from './components/Footer';
+import { YEAR } from './constants/constants';
+import { useGetDriversQuery } from './features/driversApi';
 import { useGetNextRaceQuery } from './features/raceApi';
 import Home from './routes/HomeRoute';
 import Leaderboard from './routes/LeaderboardRoute';
@@ -34,6 +36,8 @@ const VoteDnD = lazy(() => import('./routes/VoteRoute'));
 
 const App = () => {
     const dispatch = useAppDispatch();
+
+    useGetDriversQuery(YEAR);
 
     // NEXT RACE
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;

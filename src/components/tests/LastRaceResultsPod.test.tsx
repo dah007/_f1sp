@@ -22,11 +22,7 @@ vi.mock('../ui/table', () => ({
 }));
 
 // Mock hooks and slices - use vi.hoisted to ensure they're available during hoisting
-const {
-    mockUseAppSelector,
-    mockUseGetLastRaceResultsQuery,
-    mockUseAppDispatch,
-} = vi.hoisted(() => ({
+const { mockUseAppSelector, mockUseGetLastRaceResultsQuery, mockUseAppDispatch } = vi.hoisted(() => ({
     mockUseAppSelector: vi.fn(),
     mockUseGetLastRaceResultsQuery: vi.fn(),
     mockUseAppDispatch: vi.fn(),
@@ -42,19 +38,19 @@ vi.mock('@/app/store', async () => {
 });
 vi.mock('@/features/raceApi', () => ({
     raceApi: {
-        reducer: (state = {}, action: any) => state, // Return the state as-is
+        reducer: (state = {}) => state, // Return the state as-is
         reducerPath: 'raceApi',
-        middleware: (store: any) => (next: any) => (action: any) => next(action), // Valid middleware function
+        middleware: () => (next: any) => (action: any) => next(action), // Valid middleware function
         endpoints: {},
     },
     useGetLastRaceResultsQuery: mockUseGetLastRaceResultsQuery,
 }));
 vi.mock('@/slices/racesSlice', () => ({
-    default: (state = {}, action: any) => state, // default export for the reducer
+    default: (state = {}) => state, // default export for the reducer
     setLastRaceResults: vi.fn(),
 }));
 vi.mock('@/slices/systemWideSlice', () => ({
-    default: (state = {}, action: any) => state, // default export for the reducer
+    default: (state = {}) => state, // default export for the reducer
     setError: vi.fn(),
     setLoading: vi.fn(),
 }));
@@ -84,7 +80,6 @@ const defaultState = {
     },
     systemWide: {},
 };
-
 
 describe('LastRaceResultsPod', () => {
     let store: any;

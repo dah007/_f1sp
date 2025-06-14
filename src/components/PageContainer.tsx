@@ -2,11 +2,12 @@ import { JSX } from 'react';
 
 // import Titles from './Titles';
 // import Breadcrumbs from './Breadcrumbs';
+import { DRIVERS_BY_ID } from '@/constants/driversConstants';
 import { cn } from '@/lib/utils';
+import { ScrollAreaScrollbar } from '@radix-ui/react-scroll-area';
 import Breadcrumbs from './Breadcrumbs';
 import Titles from './Titles';
 import { ScrollArea } from './ui/scroll-area';
-import { ScrollAreaScrollbar } from '@radix-ui/react-scroll-area';
 
 interface PageContainerProps {
     children: React.ReactNode;
@@ -16,6 +17,8 @@ interface PageContainerProps {
     showTitle?: boolean;
     title: string;
 }
+
+// const { id, year } = useParams();
 
 /**
  * PageContainer component that wraps its children with optional breadcrumbs and title.
@@ -40,7 +43,20 @@ const PageContainer: React.FC<PageContainerProps> = ({
 }: PageContainerProps): JSX.Element => {
     return (
         <div className={cn('flex', 'flex-col', 'h-[80vh]', 'gap-2', className)}>
-            {showBreadcrumbs && <Breadcrumbs lastCrumb={lastCrumb} />}
+            {showBreadcrumbs && (
+                <Breadcrumbs
+                    lastCrumb={lastCrumb}
+                    resolveIdLabel={(id, context) => {
+                        console.log('id', id, 'context', context);
+                        if (context === 'driver') {
+                            const driver = DRIVERS_BY_ID[id]?.name;
+                            return driver ? driver.toString() : undefined;
+                        }
+                        // if (context === 'race') return raceNameMap[id]; // e.g., { '1131': 'Formula 1 Crypto.com Miami Grand Prix 2025' }
+                        return undefined;
+                    }}
+                />
+            )}
             <div>{showTitle && title && <Titles title={title} type="h1" />}</div>
             <ScrollArea className="h-[80vh] w-full">
                 <ScrollAreaScrollbar />

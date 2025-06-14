@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from 'recharts';
 
+import { cn } from '@/lib/utils';
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from 'components/ui/chart';
 
 interface ChartProps {
@@ -29,7 +30,7 @@ const Chart: React.FC<ChartProps> = ({
     yAxis,
 }) => {
     return (
-        <ChartContainer config={config} className={`xl:h-[40vh] md:h-[20vh] h-[14vh] w-full ${className}`}>
+        <ChartContainer config={config} className={cn('xl:h-[40vh] md:h-[20vh] h-[14v1h] w-full', className)}>
             <BarChart accessibilityLayer data={data} layout={layout} margin={{ top: 0 }}>
                 <CartesianGrid horizontal={false} />
                 <YAxis

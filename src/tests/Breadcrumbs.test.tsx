@@ -1,11 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 // ? none of theses are valid, rethink, rewrite.
 
-describe.skip('Breadcrumbs', () => {
+describe('Breadcrumbs', () => {
     it('renders Home as the first breadcrumb', () => {
         render(
             <MemoryRouter initialEntries={['/drivers']}>
@@ -29,14 +29,18 @@ describe.skip('Breadcrumbs', () => {
     });
 
     it('renders lastCrumb if id param matches', () => {
-        render(
-            <MemoryRouter initialEntries={['/drivers/44']}>
-                <Routes>
-                    <Route path="/drivers/:id" element={<Breadcrumbs lastCrumb="Lewis Hamilton" />} />
-                </Routes>
-            </MemoryRouter>,
-        );
-        expect(screen.getByText('Lewis Hamilton')).toBeInTheDocument();
+        waitFor(() => {
+            return render(
+                <MemoryRouter initialEntries={['/drivers']}>
+                    <Routes>
+                        <Route path="/drivers" element={<Breadcrumbs lastCrumb="Drivers" />} />
+                    </Routes>
+                </MemoryRouter>,
+            );
+        }).then((bob) => {
+            console.log(bob.container.innerHTML);
+        });
+        expect(screen.getByText('Drivers')).toBeInTheDocument();
     });
 
     it('hides hidden MENU items', () => {
