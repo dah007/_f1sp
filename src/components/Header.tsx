@@ -25,13 +25,13 @@ export const constructorMenuItems: { title: string; href: string; description: s
     },
     {
         title: 'Engine Manufacturers',
-        href: '/engine',
-        description: 'View engine records and statistics (coming soon).',
+        href: '/extra/engine',
+        description: 'View engine records and statistics',
     },
     {
         title: 'Tire Suppliers',
         href: '/extra/tyre',
-        description: 'View tire records and statistics (coming soon).',
+        description: 'View tire records and statistics',
     },
     {
         title: 'Chassis Manufacturers',

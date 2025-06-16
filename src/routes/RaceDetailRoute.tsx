@@ -1,6 +1,7 @@
-import { useAppDispatch } from '@/app/store';
+import { useAppDispatch, useAppSelector } from '@/app/store';
 import { CIRCUIT_TYPES } from '@/constants/constants';
 import { useGetFastestLapQuery, useGetPollPositionQuery, useGetRacesResultsWithQualQuery } from '@/features/raceApi';
+import { setRaceDetails } from '@/slices/racesSlice';
 import { setError } from '@/slices/systemWideSlice';
 import type { FastestLap, PolePosition, RaceProps } from '@/types/races';
 import { useEffect, useState } from 'react';
@@ -39,13 +40,15 @@ const RaceDetail = () => {
     const [fastestLap, setFastestLap] = useState<FastestLap>();
     const [firstRow, setFirstRow] = useState<RaceProps>();
     const [pollPosition, setPollPosition] = useState<PolePosition>();
-    const [raceDetail, setRaceDetail] = useState<RaceProps[]>();
+    // const [raceDetail, setRaceDetail] = useState<RaceProps[]>();
     const [trackImageError, setTrackImageError] = useState<boolean>(false);
 
     // API queries for race data
     const { data: fastestLapData, isError: fastestLapError } = useGetFastestLapQuery(raceId);
     const { data: pollPositionData, isError: pollPositionError } = useGetPollPositionQuery(raceId);
     const { data: raceResultsData, isError: raceResultsError } = useGetRacesResultsWithQualQuery(raceId);
+
+    const raceDetail = useAppSelector((state) => state.races.raceDetails);
 
     // Handle fastest lap data updates
     useEffect(() => {
@@ -78,8 +81,8 @@ const RaceDetail = () => {
         if (!raceResultsData) return;
         // Normalize data to array format
         const resultsArray = Array.isArray(raceResultsData) ? raceResultsData : [raceResultsData];
-        setFirstRow(resultsArray[0]);
-        setRaceDetail(resultsArray as unknown as RaceProps[]);
+        setFirstRow(resultsArray[0]); // TODO: redundant?
+        dispatch(setRaceDetails(resultsArray[0]));
 
         console.log(raceDetail);
     }, [raceResultsData, raceResultsError, dispatch]);

@@ -2,6 +2,7 @@ import { JSX } from 'react';
 
 // import Titles from './Titles';
 // import Breadcrumbs from './Breadcrumbs';
+import { useAppSelector } from '@/app/store';
 import { DRIVERS_BY_ID } from '@/constants/driversConstants';
 import { cn } from '@/lib/utils';
 import { ScrollAreaScrollbar } from '@radix-ui/react-scroll-area';
@@ -41,16 +42,21 @@ const PageContainer: React.FC<PageContainerProps> = ({
     showTitle = true,
     title,
 }: PageContainerProps): JSX.Element => {
+    const raceDetails = useAppSelector((state) => state.races.raceDetails);
     return (
         <div className={cn('flex', 'flex-col', 'h-[80vh]', 'gap-2', className)}>
             {showBreadcrumbs && (
                 <Breadcrumbs
                     lastCrumb={lastCrumb}
-                    resolveIdLabel={(id, context) => {
+                    resolveIdLabel={(id: string, context?: string): string | undefined => {
                         console.log('id', id, 'context', context);
                         if (context === 'driver') {
                             const driver = DRIVERS_BY_ID[id]?.name;
-                            return driver ? driver.toString() : undefined;
+                            return driver ? String(driver) : undefined;
+                        } else if (context === 'race') {
+                            return raceDetails
+                                ? String(raceDetails.official_name) || String(raceDetails.full_name)
+                                : undefined;
                         }
                         // if (context === 'race') return raceNameMap[id]; // e.g., { '1131': 'Formula 1 Crypto.com Miami Grand Prix 2025' }
                         return undefined;

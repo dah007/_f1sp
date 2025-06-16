@@ -12,9 +12,6 @@ const Breadcrumbs: React.FC<BreadcrumbProps> = ({ lastCrumb, resolveIdLabel }): 
     const { id, year } = useParams();
     const location = useLocation();
     const [crumbs, setCrumbs] = useState<JSX.Element[]>([]);
-
-    console.log('id:', id);
-
     useEffect(() => {
         const pathnames = location.pathname.split('/').filter((x) => x);
         const generateCrumbs = () => {
