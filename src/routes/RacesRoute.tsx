@@ -42,6 +42,8 @@ export type OptionProps = {
     value: string;
 };
 
+const TOTAL_PER_PAGE = 500;
+
 // Update the type to explicitly include nextLink
 export type NextLinkRaceProps = {
     value: RaceProps[];
@@ -132,6 +134,7 @@ const Races: React.FC = (): JSX.Element => {
                 setNextLinkArray([queryPart]);
             }
         }
+        console.log('RACES:', raceData);
         dispatch(setRaces(raceData.value));
     }, [dispatch, raceData, raceDataIsError, raceDataIsLoading]);
 
@@ -206,7 +209,7 @@ const Races: React.FC = (): JSX.Element => {
     useEffect(() => {
         if (!raceTotalCountData) return;
 
-        const tPages = Math.ceil((raceTotalCountData as unknown as number) / 100);
+        const tPages = Math.ceil((raceTotalCountData as unknown as number) / TOTAL_PER_PAGE);
         setTotalPages(tPages);
     }, [raceTotalCountData]);
 
@@ -362,27 +365,30 @@ const Races: React.FC = (): JSX.Element => {
         },
     });
 
+    const paginationHeader = useCallback(() => {
+        const start = currentPage === 1 ? 1 : currentPage * TOTAL_PER_PAGE;
+        const end = currentPage * TOTAL_PER_PAGE;
+        if (year) {
+            return (
+                <a className="text-blue-600 text-left dark:text-blue-400 hover:underline" href="/races">
+                    View All Races
+                </a>
+            );
+        }
+        return (
+            <span>
+                {start} - {end} -- ({`Pages: ${currentPage} of ${totalPages}`})
+            </span>
+        );
+    }, [currentPage, totalPages, year]);
+
     return (
         <PageContainer className="h-full w-full" lastCrumb="Races" title={`Races ${year ? `- ${year}` : ''}`}>
             <ScrollArea className="h-full w-full overflow-hidden">
                 <ScrollBar orientation="horizontal" className="w-full" />
                 <ScrollBar orientation="vertical" className="w-full" />
 
-                <div className="flex justify-between mb-2">
-                    <h2>
-                        Total Races: {races.length}
-                        {!year && (
-                            <span>
-                                Pages: {currentPage} of {totalPages}
-                            </span>
-                        )}
-                    </h2>
-                    {year && (
-                        <a className="text-blue-600 dark:text-blue-400 hover:underline" href="/races">
-                            View All Races
-                        </a>
-                    )}
-                </div>
+                <div className="flex justify-between mb-2">{paginationHeader()}</div>
                 <div className="flex p-2">
                     {!year && (
                         <div className="flex w-fit">

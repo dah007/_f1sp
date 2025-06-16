@@ -1,6 +1,6 @@
 import { YEAR } from '@/constants/constants';
 import { cn } from '@/lib/utils';
-import { LucideCoffee, Newspaper } from 'lucide-react';
+import { LucideCoffee } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { DesktopNavigation } from './DesktopNavigation';
@@ -25,13 +25,13 @@ export const constructorMenuItems: { title: string; href: string; description: s
     },
     {
         title: 'Engine Manufacturers',
-        href: '/engine',
-        description: 'View engine records and statistics (coming soon).',
+        href: '/extra/engine',
+        description: 'View engine records and statistics',
     },
     {
         title: 'Tire Suppliers',
         href: '/extra/tyre',
-        description: 'View tire records and statistics (coming soon).',
+        description: 'View tire records and statistics',
     },
     {
         title: 'Chassis Manufacturers',
@@ -219,16 +219,15 @@ const Header: React.FC = () => {
                 className="cursor-pointer absolute top-4 right-4 flex items-center gap-4"
                 title="What's New"
                 role="button"
-                onClick={() => handleNavigation('/whats-new')}
             >
-                <div className="flex flex-col items-center">
+                {/* <div className="flex flex-col items-center" onClick={() => handleNavigation('/whats-new')}>
                     <Newspaper size={16} />
                     <div className="text-xs text-zinc-300 text-center">
                         What&apos;s
                         <br />
                         New
                     </div>
-                </div>
+                </div> */}
                 <a href="https://buymeacoffee.com/dah007" rel="noreferrer" target="_blank" title="Buy me a coffee">
                     <LucideCoffee className="text-yellow-400 light:text-brown-500" />
                 </a>
@@ -262,15 +261,11 @@ const Header: React.FC = () => {
             {/* MOBILE MENU */}
             <ul id="menu" className="hidden fixed top-0 right-0 px-10 py-16 bg-zinc-900 z-50">
                 <li>
-                    <MenuButton
-                        label="Vote"
-                        onClick={() => handleNavigationMobile('/vote')}
-                        className="border dark:border-red-700 border-red-900"
-                    />
+                    <MenuButton label="Vote" onClick={() => handleNavigationMobile('/vote')} />
                 </li>
-                <div className="w-full grid grid-cols-3 border border-blue-300">
+                <div className="w-full grid grid-cols-3">
                     <div>
-                        <li>
+                        <li className="ml-4">
                             <MenuButton label="Leaderboard" onClick={() => handleNavigationMobile('/leaderboard')} />
                         </li>
 

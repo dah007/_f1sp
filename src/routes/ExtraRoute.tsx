@@ -13,6 +13,7 @@ import EnginesRoute from './EnginesRoute';
 import TyreRoute from './TyreRoute';
 
 const Extra: React.FC = () => {
+    const [currentTab, setCurrentTab] = useState('Engine Manufacturers');
     const [defaultTab, setDefaultTab] = useState('engine');
     const [whatTab, setWhatTab] = useState('engine');
 
@@ -235,7 +236,21 @@ const Extra: React.FC = () => {
         [],
     );
 
-    useEffect(() => {}, [whatTab]);
+    useEffect(() => {
+        switch (whatTab) {
+            case 'chassis':
+                setCurrentTab('Chassis Manufacturers');
+                break;
+            case 'engine':
+                setCurrentTab('Engine Manufacturers');
+                break;
+            case 'tyre':
+                setCurrentTab('Tyre Manufacturers');
+                break;
+            default:
+                setCurrentTab('Engine Manufacturers');
+        }
+    }, [whatTab]);
 
     const tabs = [
         { value: 'chassis', label: 'Chassis', children: <ChassisRoute /> },
@@ -252,7 +267,7 @@ const Extra: React.FC = () => {
     ];
 
     return (
-        <PageContainer title="Constructor Data" showBreadcrumbs={true} lastCrumb={'Constructor Data'}>
+        <PageContainer title={currentTab} showBreadcrumbs={true} lastCrumb={currentTab}>
             <Tabs defaultValue={defaultTab} value={whatTab} className="max-w-[85vw] w-[85vw] overflow-hidden pb-10">
                 <TabsList className="flexmd:grid w-full md:grid-cols-4">
                     {tabs.map((tab) => {
@@ -270,9 +285,9 @@ const Extra: React.FC = () => {
                     })}
                 </TabsList>
 
-                {/* <TabsContent value="season">
-                    <SeasonsRoute />
-                </TabsContent> */}
+                <TabsContent value="chassis">
+                    <ChassisRoute manufacturerColDefs={manufacturerColDefs} />
+                </TabsContent>
 
                 <TabsContent value="engine">
                     <EnginesRoute className="w-fit" manufacturerColDefs={manufacturerColDefs} />

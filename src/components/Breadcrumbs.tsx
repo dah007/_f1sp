@@ -12,9 +12,6 @@ const Breadcrumbs: React.FC<BreadcrumbProps> = ({ lastCrumb, resolveIdLabel }): 
     const { id, year } = useParams();
     const location = useLocation();
     const [crumbs, setCrumbs] = useState<JSX.Element[]>([]);
-
-    console.log('id:', id);
-
     useEffect(() => {
         const pathnames = location.pathname.split('/').filter((x) => x);
         const generateCrumbs = () => {
@@ -36,7 +33,7 @@ const Breadcrumbs: React.FC<BreadcrumbProps> = ({ lastCrumb, resolveIdLabel }): 
                     if (menuItem && menuItem.hidden) return null;
                     return (
                         <div key={to} className="flex items-center">
-                            <BreadcrumbSeparator className="mr-2 border border-red-400" />
+                            <BreadcrumbSeparator className="mr-2" />
                             <BreadcrumbItem>
                                 <BreadcrumbLink href={to}>{label}</BreadcrumbLink>
                             </BreadcrumbItem>

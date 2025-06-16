@@ -7,6 +7,7 @@ export interface RacesState {
     lastRaceResults: RaceResultProps[] | null;
     lastRaceAtCircuit: RaceProps | null;
     previousResultsAtCircuit: RaceProps[] | null;
+    raceDetails: Partial<RaceProps> | null;
     raceNext: Partial<RaceProps> | null;
     races: RaceProps[];
     raceWGP: Partial<RaceProps> | null;
@@ -19,6 +20,7 @@ const initialState: RacesState = {
     lastRaceResults: null,
     lastRaceAtCircuit: null,
     previousResultsAtCircuit: null,
+    raceDetails: null,
     raceNext: null,
     races: [],
     raceWGP: null,
@@ -37,6 +39,9 @@ const racesSlice = createSlice({
         },
         setRaces(state, action: PayloadAction<RaceProps[]>) {
             state.races = action.payload;
+        },
+        setRaceDetails(state, action: PayloadAction<Partial<RaceProps> | null>) {
+            state.raceDetails = action.payload;
         },
         setLastRaceId(state, action: PayloadAction<number | null>) {
             state.lastRaceId = action.payload;
@@ -58,6 +63,7 @@ export const {
     setLastRaceResults,
     setLastRaceAtCircuit,
     // setPreviousResultsAtCircuit,
+    setRaceDetails,
     setRaceNext,
     setRaceWGP,
     setRaces,

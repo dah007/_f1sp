@@ -65,7 +65,7 @@ const Footer = () => {
                                     className="dark:text-red-700 text-red-900"
                                 />
                             </li>
-                            <ul className="ml-4 mt-4    ">
+                            <ul className="ml-4">
                                 <li>
                                     <MenuButton
                                         label="Leaderboard"
@@ -78,7 +78,7 @@ const Footer = () => {
                                 <MenuButton label="Races" onClick={() => handleNavigationMobile('/races')} />
                             </li>
 
-                            <ul className="ml-4 mt-4">
+                            <ul className="ml-4">
                                 {raceMenuItems.map((component) => (
                                     <li key={component.title}>
                                         <MenuButton
@@ -93,7 +93,7 @@ const Footer = () => {
                                 <MenuButton label="Drivers" onClick={() => handleNavigationMobile('/drivers')} />
                             </li>
 
-                            <ul className="ml-4 mt-4">
+                            <ul className="ml-4">
                                 {driverMenuItems.map((component) => (
                                     <li key={component.title}>
                                         <MenuButton
@@ -116,7 +116,7 @@ const Footer = () => {
                                 />
                             </li>
 
-                            <ul className="ml-4 mt-4">
+                            <ul className="ml-4">
                                 {constructorMenuItems.map((component) => (
                                     <li key={component.title}>
                                         <MenuButton
@@ -133,7 +133,7 @@ const Footer = () => {
                     <div>
                         <p className="font-medium text-gray-900 dark:text-white">Resources</p>
 
-                        <ul className="mt-6 space-y-4 text-sm">
+                        <ul className="mt-4 ml-2 space-y-4 text-sm">
                             <li>
                                 <a
                                     href="http://www.formula1.com/"
