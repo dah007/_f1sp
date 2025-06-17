@@ -286,7 +286,8 @@ const Extra: React.FC = () => {
                 </TabsList>
 
                 <TabsContent value="chassis">
-                    <ChassisRoute manufacturerColDefs={manufacturerColDefs} />
+                    <ChassisRoute />
+                    {/* manufacturerColDefs={manufacturerColDefs} /> */}
                 </TabsContent>
 
                 <TabsContent value="engine">
