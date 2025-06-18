@@ -9,7 +9,7 @@ const ImageWithFallback = ({
     alt: string;
     placeholder?: string;
     src: string;
-    style: React.CSSProperties;
+    style?: React.CSSProperties;
 }) => {
     const [imgSrc, setImgSrc] = useState<string>(src);
     const [imgStyle, setImgStyle] = useState<React.CSSProperties>(style);
