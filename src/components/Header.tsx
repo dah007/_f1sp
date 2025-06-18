@@ -79,7 +79,7 @@ export const raceMenuItems: { title: string; href: string; description: string }
     },
     {
         title: 'Current Season',
-        href: `/races`,
+        href: `/races/${YEAR}`,
         description: "View the current season's races. New current season interface coming some.",
     },
     {
