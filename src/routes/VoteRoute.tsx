@@ -267,31 +267,38 @@ const Vote: React.FC = (): JSX.Element => {
                 </div>
 
                 <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4 krona-one-regular">
-                    Voting closes 1 hours before lights out & opens on Tuesday after a race.
+                    Voting closes 1 hours before lights out & opens on Tuesday before the next race.
                 </p>
 
-                <div className="flex flex-col h-[40vh]">
-                    <Card className="dark:bg-zinc-800 overflow-hidden bg-zinc-300 w-[98%]">
-                        <CardTitle className="pl-4 pt-0 m-0">Finish Order</CardTitle>
+                <div className="flex md:flex-row flex-col gap-4">
+                    <div className="flex flex-col h-[40vh] flex-1">
+                        <Card className="dark:bg-zinc-800 overflow-hidden bg-zinc-300 w-[98%]">
+                            <CardTitle className="krona-one-regular pl-4 pt-0 m-0">Finish Order</CardTitle>
 
-                        <ScrollArea className="h-[40vh] w-full">
-                            <Scrollbar />
-                            {voteOrderedDrivers?.map((driver, index) => (
-                                <div
-                                    className="w-full flex justify-between p-4 border border-amber-400 spacing"
-                                    id={driver.id}
-                                    data-index={index + 1}
-                                    key={`${driver.id}-${index}`}
-                                >
-                                    {driver.name}
-                                    <div className="flex gap-1 cursor-pointer">
-                                        <ChevronUp className="w-6 h-6" onClick={() => moveBy('up', driver)} />
-                                        <ChevronDown className="w-6 h-6" onClick={() => moveBy('down', driver)} />
+                            <ScrollArea className="h-[40vh] w-full">
+                                <Scrollbar />
+                                {voteOrderedDrivers?.map((driver, index) => (
+                                    <div
+                                        className="w-full flex justify-between p-4 border select-none spacing"
+                                        id={driver.id}
+                                        data-index={index + 1}
+                                        key={`${driver.id}-${index}`}
+                                    >
+                                        {driver.name}
+                                        <div className="flex gap-1 cursor-pointer">
+                                            <ChevronUp
+                                                className="w-6 h-6 hover:text-green-700"
+                                                onClick={() => moveBy('up', driver)}
+                                            />
+                                            <ChevronDown
+                                                className="w-6 h-6 hover:text-red-700"
+                                                onClick={() => moveBy('down', driver)}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
 
-                            {/* <DndContext onDragEnd={handleDragEnd}>
+                                {/* <DndContext onDragEnd={handleDragEnd}>
                                 <SortableContext items={voteOrderedDrivers} strategy={rectSortingStrategy}>
                                     {voteOrderedDrivers?.map((driver, index) => (
                                         <SortableItem
@@ -304,115 +311,121 @@ const Vote: React.FC = (): JSX.Element => {
                                     ))}
                                 </SortableContext>
                             </DndContext> */}
-                        </ScrollArea>
-                    </Card>
-                </div>
+                            </ScrollArea>
+                        </Card>
+                    </div>
 
-                {/* RIGHT COLUMN */}
-                <div className="h-[32vh] mt-16 flex flex-col gap-4">
-                    <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full h-full')}>
-                        <CardTitle className="pl-4 pt-0 m-0">Race Specific</CardTitle>
-                        <div className="grid grid-cols-2 gap-4 pr-4">
-                            <div className="overflow-hidden rounded-lg p-4 flex flex-col gap-3">
-                                <div className="flex items-center space-x-2">
-                                    <Toggle
-                                        className="border-zinc-500"
-                                        id="firstLapCrash"
-                                        onClick={() => {
-                                            setToggleCrash(!toggleCrash);
-                                            setDriversInCrashDisabled(!driversInCrashDisabled);
-                                        }}
-                                    />
-                                    <Label htmlFor="firstLapCrash">Crash on First Lap</Label>
+                    {/* RIGHT COLUMN */}
+                    <div className="h-[40vh] flex flex-col  flex-1">
+                        <Card className={cn('overflow-hidden', 'dark:bg-zinc-800 bg-zinc-300 w-full h-full')}>
+                            <CardTitle className="krona-one-regular pl-4 pt-0 m-0">Race Specific</CardTitle>
+                            <div className="grid grid-cols-2 gap-4 pr-4">
+                                <div className="overflow-hidden rounded-lg p-4 flex flex-col gap-3">
+                                    <div className="flex items-center space-x-2">
+                                        <Toggle
+                                            className="border-zinc-500"
+                                            id="firstLapCrash"
+                                            onClick={() => {
+                                                setToggleCrash(!toggleCrash);
+                                                setDriversInCrashDisabled(!driversInCrashDisabled);
+                                            }}
+                                        />
+                                        <Label htmlFor="firstLapCrash">Crash on First Lap</Label>
+                                    </div>
+
+                                    <div className={cn('border', 'border-zinc-400 p-4 rounded-lg')}>
+                                        <Label
+                                            htmlFor="driversInCrash"
+                                            className="w-full p-1 pl-0 pb-0 border-b-zinc-300 border-b text-lg"
+                                        >
+                                            Drivers in crash
+                                        </Label>
+                                        <ScrollArea className="w-full h-[10vh] m-3 p-0 scroll-pb-20">
+                                            <Scrollbar />
+                                            {driversByYear?.map((driver, index) => {
+                                                if (!driver.name || driver.name.trim() === '') return null;
+                                                return (
+                                                    <div className="p-0 pb-2" key={`${driver.id}-${index}`}>
+                                                        <DriverCheckbox
+                                                            disabled={driversInCrashDisabled}
+                                                            driver={driver}
+                                                            index={index}
+                                                            key={`${driver.id}-${index}`}
+                                                            updateVoteValues={updateVoteValues}
+                                                            voteValues={voteValues}
+                                                        />
+                                                    </div>
+                                                );
+                                            })}
+                                        </ScrollArea>
+                                    </div>
                                 </div>
 
-                                <div className={cn('border', 'border-zinc-400 p-4 rounded-lg')}>
-                                    <Label
-                                        htmlFor="driversInCrash"
-                                        className="w-full p-1 pl-0 pb-0 border-b-zinc-300 border-b text-lg"
-                                    >
-                                        Drivers in crash
+                                <div className="flex flex-col gap-4">
+                                    <Label htmlFor="yellows" className="mt-2">
+                                        Total Yellows
                                     </Label>
-                                    <ScrollArea className="w-full h-[10vh] m-3 p-0 scroll-pb-20">
-                                        <Scrollbar />
-                                        {driversByYear?.map((driver, index) => {
-                                            if (!driver.name || driver.name.trim() === '') return null;
-                                            return (
-                                                <div className="p-0 pb-2" key={`${driver.id}-${index}`}>
-                                                    <DriverCheckbox
-                                                        disabled={driversInCrashDisabled}
-                                                        driver={driver}
-                                                        index={index}
-                                                        key={`${driver.id}-${index}`}
-                                                        updateVoteValues={updateVoteValues}
-                                                        voteValues={voteValues}
-                                                    />
-                                                </div>
-                                            );
-                                        })}
-                                    </ScrollArea>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-4">
-                                <Label htmlFor="yellows" className="mt-2">
-                                    Total Yellows
-                                </Label>
-                                <Input
-                                    className="border-zinc-400"
-                                    id="yellows"
-                                    min={0}
-                                    onChange={(e) => updateVoteValues({ yellows: Number(e.target.value) })}
-                                    placeholder="0"
-                                    type="number"
-                                />
-                                <Label htmlFor="reds" className="mt-2">
-                                    Total Reds
-                                </Label>
-
-                                <Input
-                                    className="border-zinc-400"
-                                    id="reds"
-                                    min={0}
-                                    onChange={(e) => updateVoteValues({ reds: Number(e.target.value) })}
-                                    placeholder="0"
-                                    type="number"
-                                />
-                                <div className="flex items-center space-x-2 mb-4">
-                                    <Toggle
-                                        id="rain"
-                                        onClick={() => {
-                                            setToggleRain(!toggleRain);
-                                            updateVoteValues({ rain: !voteValues.rain });
-                                        }}
+                                    <Input
+                                        className="border-zinc-400"
+                                        id="yellows"
+                                        min={0}
+                                        onChange={(e) => updateVoteValues({ yellows: Number(e.target.value) })}
+                                        placeholder="0"
+                                        type="number"
                                     />
-                                    <Label htmlFor="rain">Rain</Label>
-                                </div>
-                                <div className={cn(toggleRain ? 'block' : 'hidden', 'p-4 pt-0')}>
-                                    <div className="flex flex-col gap-2">
-                                        <div className="flex items-center gap-2">
-                                            <Toggle
-                                                id="intermediates"
-                                                onClick={() => updateVoteValues({ greenTires: !voteValues.greenTires })}
-                                            />
-                                            <Label htmlFor="intermediates">Intermediates</Label>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Toggle
-                                                id="fullWetBlueTires"
-                                                onClick={() => updateVoteValues({ blueTires: !voteValues.blueTires })}
-                                            />
-                                            <Label htmlFor="fullWetBlueTires">Full Wet</Label>
+                                    <Label htmlFor="reds" className="mt-2">
+                                        Total Reds
+                                    </Label>
+
+                                    <Input
+                                        className="border-zinc-400"
+                                        id="reds"
+                                        min={0}
+                                        onChange={(e) => updateVoteValues({ reds: Number(e.target.value) })}
+                                        placeholder="0"
+                                        type="number"
+                                    />
+                                    <div className="flex items-center space-x-2 mb-4">
+                                        <Toggle
+                                            id="rain"
+                                            onClick={() => {
+                                                setToggleRain(!toggleRain);
+                                                updateVoteValues({ rain: !voteValues.rain });
+                                            }}
+                                        />
+                                        <Label htmlFor="rain">Rain</Label>
+                                    </div>
+                                    <div className={cn(toggleRain ? 'block' : 'hidden', 'p-4 pt-0')}>
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center gap-2">
+                                                <Toggle
+                                                    id="intermediates"
+                                                    onClick={() =>
+                                                        updateVoteValues({ greenTires: !voteValues.greenTires })
+                                                    }
+                                                />
+                                                <Label htmlFor="intermediates">Intermediates</Label>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Toggle
+                                                    id="fullWetBlueTires"
+                                                    onClick={() =>
+                                                        updateVoteValues({ blueTires: !voteValues.blueTires })
+                                                    }
+                                                />
+                                                <Label htmlFor="fullWetBlueTires">Full Wet</Label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </Card>
+                        </Card>
+                    </div>
                 </div>
-                <div className="col-start-2 row-start-2 h-[32vh]">
+
+                <div className="col-start-2 row-start-2 h-[32vh] mt-4">
                     <Card className="p-4 dark:bg-zinc-800 bg-zinc-300 h-full">
-                        <CardTitle className="mb-4">Submit Vote</CardTitle>
+                        <CardTitle className="krona-one-regular mb-4">Submit Vote</CardTitle>
 
                         {submitStatus.isError && (
                             <div className="mb-4 p-3 bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200 rounded">
