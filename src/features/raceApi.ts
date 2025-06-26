@@ -24,8 +24,17 @@ export const raceApi = createApi({
             },
         }),
         getLastRaceResults: builder.query({
-            query: (raceId: number) =>
-                `raceResults?$orderby=position_display_order&$filter=race_id eq ${parseInt(raceId.toString(), 10)}`,
+            query: (raceId: number) => {
+                console.log(
+                    'Fetching last race results for raceId:',
+                    `raceResults?$orderby=position_display_order&$filter=race_id eq ${parseInt(raceId.toString(), 10)}`,
+                );
+                return `raceResults?$orderby=position_display_order&$filter=race_id eq ${parseInt(
+                    raceId.toString(),
+                    10,
+                )}`;
+            },
+
             transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching last race results:', error);
