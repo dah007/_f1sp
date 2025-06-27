@@ -3,6 +3,7 @@ import js from "@eslint/js";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,6 +17,35 @@ const compat = new FlatCompat({
 });
 
 export default [
+    // Ignore built files, node_modules, and other non-source files
+    {
+        ignores: [
+            "dist/**/*",
+            "node_modules/**/*",
+            "build/**/*",
+            "coverage/**/*",
+            "*.min.js",
+            "**/*.d.ts"
+        ]
+    },
+    
+    // JavaScript files configuration
+    {
+        files: ["**/*.js", "**/*.mjs", "**/*.cjs"],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: "module",
+            globals: {
+                ...globals.browser,
+                ...globals.node,
+            },
+        },
+        rules: {
+            ...js.configs.recommended.rules,
+        },
+    },
+    
+    // TypeScript and React files configuration
     ...compat.extends(
         "eslint:recommended",
         "plugin:react/recommended",
@@ -29,13 +59,20 @@ export default [
         plugins: {
             "@typescript-eslint": typescriptEslint,
             react,
+            "react-hooks": reactHooks,
         },
         languageOptions: {
             parser: tsParser,
-            ecmaVersion: 2020,
+            ecmaVersion: "latest",
             sourceType: "module",
             globals: {
                 ...globals.browser,
+                ...globals.node,
+            },
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
             },
         },
         settings: {
@@ -47,6 +84,8 @@ export default [
             "react/react-in-jsx-scope": "off",
             "@typescript-eslint/no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
             "react/prop-types": "off", // Disable prop-types as we use TypeScript for type checking
+            "react-hooks/rules-of-hooks": "error",
+            "react-hooks/exhaustive-deps": "warn",
         },
     },
 ];

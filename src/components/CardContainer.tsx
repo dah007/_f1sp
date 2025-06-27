@@ -55,7 +55,7 @@ const CardContainer: React.FC<CardProps> = ({
 }: CardProps): JSX.Element => {
     // const [notLoaded, setNotLoaded] = useState(true);
     return (
-        <Card className={cn('bg-gradient-to-r from-zinc-900 to-zinc-800 border-zinc-700', className)}>
+        <Card className={cn('bg-gradient-to-r from-zinc-900 to-zinc-800 border border-zinc-700', className)}>
             {(title || description) && (
                 <CardHeader>
                     {title && <CardTitle className={cn('krona-one-regular', 'm-0', titleClassName)}>{title}</CardTitle>}

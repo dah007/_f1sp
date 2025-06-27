@@ -12,7 +12,7 @@ import { YEAR } from 'constants/constants';
 import { useGetDriversByYearQuery } from 'features/driversApi';
 import { SubmitVoteRequest, useCheckVoteQuery, useSubmitVoteMutation } from 'features/userApi';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { setDriversByYear } from 'slices/driversSlice';
@@ -109,7 +109,7 @@ const Vote: React.FC = (): JSX.Element => {
         } else {
             setVoteCheck(false);
         }
-    }, [voteCheckResults]);
+    }, [dispatch, voteCheckData, voteCheckIsError, voteCheckIsLoading, voteCheckResults]);
 
     const [toggleRain, setToggleRain] = useState(false);
     const [toggleCrash, setToggleCrash] = useState(false);
@@ -277,7 +277,7 @@ const Vote: React.FC = (): JSX.Element => {
                         </div>
                     </Card>
                     <Card className={cn(cardClass, 'p-4')}>
-                        <CardTitle className={cn(cardTitleClass, 'p-0')}>Other "Bets"</CardTitle>
+                        <CardTitle className={cn(cardTitleClass, 'p-0')}>Other &ldquo;Bets&rdquo;</CardTitle>
                         <Label htmlFor="yellows" className="mt-2 font-bold">
                             Total Yellows
                         </Label>

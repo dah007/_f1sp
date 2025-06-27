@@ -107,7 +107,7 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
             cell: ({ row }) => {
                 return (
                     <div className="min-w-8 w-8 max-w-8">
-                        {Flag({ cCode: row.getValue('driverNationality'), size: 24 })}
+                        <Flag cCode={row.getValue('driverNationality')} size={24} />
                     </div>
                 );
             },
@@ -320,7 +320,7 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
             pageSize: totalRaceCount > 0 ? totalRaceCount : 10, // default page size
             // Show all results on a single page if possible
         };
-    }, [raceResults]);
+    }, [totalRaceCount]);
 
     // Initialize and configure the table
     const table = useReactTable({

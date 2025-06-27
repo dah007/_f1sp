@@ -85,7 +85,7 @@ const RaceDetail = () => {
         dispatch(setRaceDetails(resultsArray[0]));
 
         console.log(raceDetail);
-    }, [raceResultsData, raceResultsError, dispatch]);
+    }, [raceDetail, raceResultsData, raceResultsError, dispatch]);
 
     // Reset track image error state when circuit changes
     useEffect(() => {

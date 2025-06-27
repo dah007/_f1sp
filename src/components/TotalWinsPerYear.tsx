@@ -47,7 +47,7 @@ const TotalWinsPerYear: React.FC = ({ className }: { className?: string }): JSX.
         setTotalWinsByYear(totalWinsData);
         dispatch(setError(false));
         dispatch(setLoading(false));
-    }, [totalWinsData, totalWinsLoading, totalWinsError]);
+    }, [dispatch, totalWinsData, totalWinsLoading, totalWinsError]);
 
     if (totalWinsLoading || !totalWinsData) return <CardSkeleton />;
 

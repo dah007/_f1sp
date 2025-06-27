@@ -5,7 +5,7 @@ import * as reduxHooks from 'app/store';
 import * as standingsApi from 'features/standingsApi';
 import React from 'react';
 import { vi } from 'vitest';
-import ConstructorStandings from '../../components/ConstructorsStandings';
+import ConstructorStandings from '../../components/ConstructorsStandingsTable';
 
 // Mock ScrollArea, Table, TableBody, TableCell, TableHead, TableHeader, TableRow
 vi.mock('../components/ui/scroll-area', () => ({

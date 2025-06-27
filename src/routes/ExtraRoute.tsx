@@ -22,7 +22,7 @@ const Extra: React.FC = () => {
     useEffect(() => {
         setDefaultTab(tab || 'engine');
         setWhatTab(tab || 'engine');
-    }, []);
+    }, [tab]);
 
     const manufacturerColDefs = useMemo<ColumnDef<ManufacturerProps>[]>(
         () => [
