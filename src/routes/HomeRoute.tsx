@@ -1,6 +1,14 @@
 'use client';
 
+import ConstructorStandings from '@/components/ConstructorsStandingsTable';
+import DriverStandingsChart from '@/components/DriverStandingsChart';
+import LastRaceResultsPod from '@/components/LastRaceResultsPod';
+import TotalWinsPerYear from '@/components/TotalWinsPerYear';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useGetRaceWithGPQuery } from '@/features/raceApi';
 import { cn } from '@/lib/utils';
+import { setRaceWGP } from '@/slices/racesSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
 import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import CardContainer from 'components/CardContainer';
 import DriverOfTheDay from 'components/DriverOfTheDay';
@@ -8,19 +16,9 @@ import ErrorDialog from 'components/ErrorDialog';
 import NextReactBanner from 'components/NextRaceBanner';
 import { Alert, AlertDescription, AlertTitle } from 'components/ui/alert';
 import { InfoIcon } from 'lucide-react';
-
-import type { RaceProps, RaceResultProps } from 'types/races';
-
-import ConstructorStandings from '@/components/ConstructorsStandingsTable';
-import DriverStandingsChart from '@/components/DriverStandingsChart';
-import LastRaceResultsPod from '@/components/LastRaceResultsPod';
-import TotalWinsPerYear from '@/components/TotalWinsPerYear';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useGetRaceWithGPQuery } from '@/features/raceApi';
-import { setRaceWGP } from '@/slices/racesSlice';
-import { setError, setLoading } from '@/slices/systemWideSlice';
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { selectError } from 'selectors/systemWideSelector';
+import type { RaceProps, RaceResultProps } from 'types/races';
 
 interface MessageFromURLResult {
     success: string | null;
@@ -92,7 +90,7 @@ const Home: React.FC = () => {
         description?: string;
         className?: string;
         children?: React.ReactNode;
-    }) => {
+    }): JSX.Element => {
         return (
             <Alert className={cn('flex flex-col items-start justify-start', className)}>
                 <div className="flex w-full gap-4">
