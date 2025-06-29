@@ -38,7 +38,7 @@ const TyreRoute: React.FC<TypeRouteProps> = ({ className, manufacturerColDefs }:
         if (!tyreManufacturerData) return;
         dispatch(setTyresManufacturers(tyreManufacturerData));
         dispatch(setLoading(false));
-    }, [tyreManufacturerData]);
+    }, [dispatch, tyreManufacturerIsError, tyreManufacturerIsLoading, tyreManufacturerData]);
 
     return <DataTable className={cn(className)} columns={manufacturerColDefs || []} data={tyreManufacturers ?? []} />;
 };

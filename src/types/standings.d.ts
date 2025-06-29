@@ -21,4 +21,5 @@ export interface DriverStanding {
     position_text: string;
     year: number;
     team_name: string;
+    fill?: string;
 }

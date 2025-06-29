@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 type CountdownClockProps = {
     targetDate: string; // ISO string, e.g., "2025-05-23T18:00:00"
@@ -27,7 +27,7 @@ interface TimeLeft {
  * The `calculateTimeLeft` function computes the remaining time until the target date.
  */
 const CountdownClock: React.FC<CountdownClockProps> = ({ targetDate }: CountdownClockProps): JSX.Element => {
-    const calculateTimeLeft = (): TimeLeft => {
+    const calculateTimeLeft = useCallback((): TimeLeft => {
         const now = new Date();
         const target = new Date(targetDate);
         const difference = target.getTime() - now.getTime();
@@ -44,7 +44,7 @@ const CountdownClock: React.FC<CountdownClockProps> = ({ targetDate }: Countdown
         }
 
         return timeLeft;
-    };
+    }, [targetDate]);
 
     const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
 
@@ -53,7 +53,7 @@ const CountdownClock: React.FC<CountdownClockProps> = ({ targetDate }: Countdown
             setTimeLeft(calculateTimeLeft());
         }, 1000);
         return () => clearInterval(timer);
-    }, [targetDate]);
+    }, [calculateTimeLeft, targetDate]);
 
     return (
         <div>

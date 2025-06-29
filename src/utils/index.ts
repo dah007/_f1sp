@@ -19,6 +19,27 @@ export const buildErrorObject = (error: unknown): ErrorObject => {
 };
 
 /**
+ * Removes duplicate objects from an array based on a specified key.
+ *
+ * @typeParam T - The type of objects in the array.
+ * @param array - The array of objects to filter.
+ * @param key - The key of the object to use for determining duplicates.
+ * @returns A new array with duplicates removed, keeping only the first occurrence of each unique key value.
+ */
+export const removeDuplicates = <T extends Record<string, object>>(array: T[], key: keyof T): T[] => {
+    const seen = new Set();
+    return array.filter((item) => {
+        const value = item[key];
+        if (seen.has(value)) {
+            return false;
+        } else {
+            seen.add(value);
+            return true;
+        }
+    });
+};
+
+/**
  * Fetch's data from an endpoint attached to the F1SP
  * @param endPoint The api end point to hit
  * @returns An array of objects
@@ -59,6 +80,7 @@ export const dbFetch = async (endPoint: string) => {
                 },
             };
         });
+
     // Uncomment the following code if you want to use the fetch API directly
     // const F1SP_BASE_DB_URL = '/data-api/rest/';
     // const response = await fetch(`${F1SP_BASE_DB_URL}${endPoint}`);

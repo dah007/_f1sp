@@ -1,6 +1,6 @@
-import { JSX, useEffect, useMemo, useState } from 'react';
-import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import { ColumnDef } from '@tanstack/react-table';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
+import { JSX, useEffect, useMemo, useState } from 'react';
 
 import DataTable from 'components/DataTable';
 import Flag from 'components/Flag';
@@ -9,12 +9,12 @@ import { Button } from 'components/ui/button';
 
 import { intlNumberFormat } from 'utils/number';
 
-import { setConstructors } from 'slices/constructorsSlice';
 import { useGetConstructorsQuery } from 'features/constructorsApi';
+import { setConstructors } from 'slices/constructorsSlice';
 
-import { type ConstructorProps } from 'types/constructors';
-import { ArrowUpDown } from 'lucide-react';
 import { ScrollArea, Scrollbar } from '@radix-ui/react-scroll-area';
+import { ArrowUpDown } from 'lucide-react';
+import { type ConstructorProps } from 'types/constructors';
 
 const Constructors: React.FC = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -37,7 +37,7 @@ const Constructors: React.FC = (): JSX.Element => {
                 cell: ({ row }) => {
                     return (
                         <div className="min-w-8 w-8 max-w-8">
-                            {Flag({ nameAsId: row.getValue('country_id'), size: 24 })}
+                            <Flag nameAsId={row.getValue('country_id')} size={24} />
                         </div>
                     );
                 },
@@ -111,7 +111,7 @@ const Constructors: React.FC = (): JSX.Element => {
                 ),
             },
         ],
-        [dispatch],
+        [],
     );
 
     const page = useMemo(() => {

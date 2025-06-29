@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import Flag, { FlagRendererById } from '../../components/Flag';
 import { getCounty2LetterCode } from '../../utils/locations';
-import Flag, { FlagRendererById } from '../Flag';
 
 // Mock the country-list module
 vi.mock('country-list', () => ({

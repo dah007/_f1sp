@@ -56,7 +56,7 @@ const DriverStandings = ({ year = YEAR, className = '' }: { year?: number; class
         }
         if (!driverStandingsData) return;
         dispatch(setDriverStandings(driverStandingsData));
-    }, [driverStandingsData, dispatch]);
+    }, [driverStandingsData, driverStandingsIsError, driverStandingsIsLoading, dispatch]);
 
     if (!driverStandings) {
         return <div className="text-center italic">No driver standings available.</div>;

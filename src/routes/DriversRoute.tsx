@@ -128,7 +128,7 @@ const Drivers: React.FC = (): JSX.Element => {
         if (driverDataIsLoading) return;
         if (!driverData) return;
         dispatch(setDrivers(driverData));
-    }, [dispatch, driverData, driverDataIsError, driverDataIsLoading]);
+    }, [dispatch, driverData, driverDataIsError, driverDataError, driverDataIsLoading]);
 
     const colDefs = useMemo<ColumnDef<Driver>[]>(
         () => [

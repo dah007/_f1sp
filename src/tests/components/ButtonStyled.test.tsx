@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import ButtonStyled from '../ButtonStyled';
+import ButtonStyled from '../../components/ButtonStyled';
 
 describe('ButtonStyled Component', () => {
     it('renders correctly with children', () => {

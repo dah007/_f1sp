@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import { YEAR } from './constants/constants';
 import { useGetDriversQuery } from './features/driversApi';
 import { useGetNextRaceQuery } from './features/raceApi';
+import ConstructorStandings from './routes/ConstructorStandingsRoute';
 import Home from './routes/HomeRoute';
 import Leaderboard from './routes/LeaderboardRoute';
 import Static from './routes/Static';
@@ -94,6 +95,7 @@ const App = () => {
                             <Route path="circuits" element={<Circuits />} />
 
                             <Route path="constructors/:year?" element={<Constructors />} />
+                            <Route path="constructors/standings" element={<ConstructorStandings />} />
 
                             <Route path="drivers/:year?" element={<Drivers />}>
                                 <Route path="driver/:id" element={<DriverDetail />} />

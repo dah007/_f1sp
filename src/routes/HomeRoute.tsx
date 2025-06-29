@@ -1,22 +1,24 @@
 'use client';
 
+import ConstructorStandings from '@/components/ConstructorsStandingsTable';
+import DriverStandingsChart from '@/components/DriverStandingsChart';
+import LastRaceResultsPod from '@/components/LastRaceResultsPod';
+import TotalWinsPerYear from '@/components/TotalWinsPerYear';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useGetRaceWithGPQuery } from '@/features/raceApi';
 import { cn } from '@/lib/utils';
-import { RootState, useAppSelector } from 'app/store';
+import { setRaceWGP } from '@/slices/racesSlice';
+import { setError, setLoading } from '@/slices/systemWideSlice';
+import { RootState, useAppDispatch, useAppSelector } from 'app/store';
 import CardContainer from 'components/CardContainer';
 import DriverOfTheDay from 'components/DriverOfTheDay';
 import ErrorDialog from 'components/ErrorDialog';
 import NextReactBanner from 'components/NextRaceBanner';
 import { Alert, AlertDescription, AlertTitle } from 'components/ui/alert';
 import { InfoIcon } from 'lucide-react';
-
-import type { RaceProps } from 'types/races';
-
-import ConstructorStandings from '@/components/ConstructorsStandings';
-import DriverStandingsChart from '@/components/DriverStandingsChart';
-import LastRaceResultsPod from '@/components/LastRaceResultsPod';
-import TotalWinsPerYear from '@/components/TotalWinsPerYear';
-import { CardFooter } from '@/components/ui/card';
+import { JSX, useEffect } from 'react';
 import { selectError } from 'selectors/systemWideSelector';
+import type { RaceProps, RaceResultProps } from 'types/races';
 
 interface MessageFromURLResult {
     success: string | null;
@@ -35,17 +37,33 @@ const getMessageFromURL: () => MessageFromURLResult = () => {
 };
 
 const Home: React.FC = () => {
-    const systemError = useAppSelector((state: RootState) => selectError(state));
-    const isLoading = useAppSelector((state: RootState) => state.systemWide.loading);
+    const dispatch = useAppDispatch();
 
-    let raceWGP: Partial<RaceProps> | null = null;
-    try {
-        raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
-    } catch (error) {
-        console.error('!!! Error fetching raceWGP !!!:', error);
-    }
-    // const raceWGP = useAppSelector((state: RootState) =>
-    // const systemError = useAppSelector((state) => state.systemWide.error);
+    const isLoading = useAppSelector((state: RootState) => state.systemWide.loading);
+    const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
+    const raceWGP = useAppSelector((state: RootState) => state.races.raceWGP) as Partial<RaceProps> | null;
+    const systemError = useAppSelector((state: RootState) => selectError(state));
+
+    const {
+        data: raceWGPData,
+        isLoading: raceWGPisLoading,
+        isError: raceWGPisError,
+    } = useGetRaceWithGPQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
+        data: Partial<RaceProps> | undefined;
+        isLoading: boolean;
+        isError: boolean;
+    };
+
+    useEffect(() => {
+        if (raceWGPisError) {
+            dispatch(setError(true));
+            return;
+        }
+        if (raceWGPisLoading) dispatch(setLoading(true));
+        if (!raceWGPData) return;
+        dispatch(setRaceWGP(raceWGPData));
+        dispatch(setLoading(false));
+    }, [raceWGPData, raceWGPisError, raceWGPisLoading, dispatch]);
 
     const widthsNHeights = 'h-[25vh] md:h-[35vh]';
 
@@ -72,7 +90,7 @@ const Home: React.FC = () => {
         description?: string;
         className?: string;
         children?: React.ReactNode;
-    }) => {
+    }): JSX.Element => {
         return (
             <Alert className={cn('flex flex-col items-start justify-start', className)}>
                 <div className="flex w-full gap-4">
@@ -119,17 +137,32 @@ const Home: React.FC = () => {
                 w-full"
                 >
                     <div className={cn('col-start-1 row-start-1', widthsNHeights)}>
-                        <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300 relative', widthsNHeights)}
+                        <Card
+                            className={cn(
+                                'bg-gradient-to-r from-zinc-900 to-zinc-800 border-zinc-700 overflow-hidden',
+                                widthsNHeights,
+                            )}
+                        >
+                            <CardHeader>
+                                <CardTitle className="flex items-center justify-between">
+                                    Last Race: {raceWGP ? raceWGP.official_name : 'N/A'}
+                                </CardTitle>
+                                <CardContent>
+                                    <LastRaceResultsPod />
+                                </CardContent>
+                            </CardHeader>
+                        </Card>
+                        {/* <CardContainer
+                            className={cn('overflow-hidden relative', widthsNHeights)}
                             title={`Last Race: ${raceWGP ? raceWGP.official_name : 'N/A'}`}
                         >
                             <LastRaceResultsPod />
-                        </CardContainer>
+                        </CardContainer> */}
                     </div>
 
-                    <div className={cn('col-start-1 row-start-2', widthsNHeights)}>
+                    <div className={cn('col-start-1', 'row-start-2', widthsNHeights)}>
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                            className={cn('overflow-hidden', 'bg-zinc-900/50', widthsNHeights)}
                             title="Constructors Standings"
                         >
                             <ConstructorStandings />
@@ -137,17 +170,14 @@ const Home: React.FC = () => {
                     </div>
 
                     <div className={cn('col-start-1 md:col-start-2 row-start-3 md:row-start-2 ', widthsNHeights)}>
-                        <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
-                            title="Total Wins"
-                        >
+                        <CardContainer className={cn('overflow-hidden', widthsNHeights)} title="Total Wins">
                             <TotalWinsPerYear />
                         </CardContainer>
                     </div>
 
                     <div className={cn('col-start-2 row-start-1 col-span-2', widthsNHeights)}>
                         <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                            className={cn('overflow-hidden', widthsNHeights)}
                             title={`Driver Standings`}
                             childrenClassName="flex flex-col items-end h-full justify-end w-full"
                         >
@@ -167,7 +197,7 @@ const Home: React.FC = () => {
                             TODO: MAKE THIS A POPOVER on the GRAPH ON CLICK */}
                             {/* <div className={cn('col-start-2 row-start-2', widthsNHeights, 'bg-blue-400')}>
                                 <CardContainer
-                                    className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
+                                    className={cn('overflow-hidden', widthsNHeights)}
                                     childrenClassName="w-full m-0 p-0"
                                     title="Driver Standings"
                                 >
@@ -178,13 +208,12 @@ const Home: React.FC = () => {
                     </div>
 
                     <div className={cn('col-start-3 row-start-2', widthsNHeights)}>
-                        <CardContainer
-                            className={cn('overflow-hidden dark:bg-zinc-800 bg-zinc-300', widthsNHeights)}
-                            title="Driver of the Day"
-                        >
+                        <CardContainer className={cn('overflow-hidden', widthsNHeights)} title="Driver of the Day">
                             <DriverOfTheDay />
                         </CardContainer>
                     </div>
+
+                    {/* <EnhancedRaceResults raceData={raceWGP} /> */}
                 </div>
             </div>
         </>

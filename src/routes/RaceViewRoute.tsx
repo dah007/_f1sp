@@ -14,18 +14,13 @@ const RaceViewRoute = () => {
     const [race, setRace] = useState<Partial<RaceProps>>();
     const [raceResults, setRaceResults] = useState<RaceResultProps[]>([]);
 
-    let raceId = 0;
-
-    console.log('location.pathname', location.pathname);
+    const { id } = useParams<{ id: string }>();
+    let raceId = id ? parseInt(id, 10) : 0;
 
     if (location.pathname === '/races/next') {
         raceId = nextRace?.id ? nextRace.id : 0;
         setRace(nextRace as Partial<RaceProps>);
-    } else {
-        const { id } = useParams<{ id: string }>();
-        raceId = id ? parseInt(id, 10) : 0;
     }
-
     const circuitId = race?.circuit_id || '';
 
     const {

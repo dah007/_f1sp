@@ -3,23 +3,14 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from '../App';
+import * as driversApi from '../features/driversApi';
 import * as raceApi from '../features/raceApi';
 import racesSlice from '../slices/racesSlice';
 import siteWideSlice from '../slices/systemWideSlice';
 
-// // Define the state types
-// interface RacesState {
-//     raceNext: any;
-//     // Add other properties as needed
-// }
-
-// // Define the RootState type for the store
-// type RootState = {
-//     races: RacesState;
-//     siteWide: SiteWideState;
-// };
-
-// Mock the race API hooks
+/**
+ * Mock the race API hooks
+ */
 vi.mock('../features/raceApi', () => ({
     __esModule: true,
     raceApi: {
@@ -35,6 +26,26 @@ vi.mock('../features/raceApi', () => ({
         },
     },
     useGetNextRaceQuery: vi.fn(),
+}));
+
+/**
+ * Mock the drivers API hooks
+ */
+vi.mock('../features/driversApi', () => ({
+    __esModule: true,
+    driversApi: {
+        reducerPath: 'driversApi',
+        reducer: () => ({}),
+        middleware: vi.fn(
+            () => (next: Middleware) => (action: MiddlewareAPI<Dispatch<UnknownAction>, string>) => next(action),
+        ),
+        endpoints: {
+            getDrivers: {
+                useQuery: vi.fn(),
+            },
+        },
+    },
+    useGetDriversQuery: vi.fn(),
 }));
 
 // Mock lazy-loaded components
@@ -61,6 +72,8 @@ describe('App Component', () => {
         reducer: {
             races: racesSlice,
             siteWide: siteWideSlice,
+            driversApi: driversApi.driversApi.reducer,
+            raceApi: raceApi.raceApi.reducer,
         },
         // Don't add RTK Query middleware in tests as it's mocked
         middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
@@ -80,6 +93,13 @@ describe('App Component', () => {
             isLoading: false,
             isError: false,
         } as any);
+
+        // Setup default mock for useGetDriversQuery
+        vi.mocked(driversApi.useGetDriversQuery).mockReturnValue({
+            data: [],
+            isLoading: false,
+            isError: false,
+        } as any);
     });
 
     it('renders without crashing', () => {
@@ -91,23 +111,6 @@ describe('App Component', () => {
 
         expect(screen.getByTestId('header')).toBeInTheDocument();
     });
-
-    // it('shows loading state when fetching next race', () => {
-    //     // Mock loading state
-    //     vi.mocked(raceApi.useGetNextRaceQuery).mockReturnValue({
-    //         data: undefined,
-    //         isLoading: true,
-    //         isError: false,
-    //     } as any);
-
-    //     render(
-    //         <Provider store={store}>
-    //             <App />
-    //         </Provider>,
-    //     );
-
-    //     expect(screen.getByText('Loading...')).toBeInTheDocument();
-    // });
 
     it('handles API errors gracefully', () => {
         // Mock error state

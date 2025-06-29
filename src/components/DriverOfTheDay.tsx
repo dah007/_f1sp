@@ -70,7 +70,7 @@ const DriverOfTheDay: React.FC = ({ className }: { className?: string }) => {
         if (!dataDriversOfTheDay) return;
         dispatch(setDriversOfTheDay(dataDriversOfTheDay));
         dispatch(setLoading(false));
-    }, [dispatch, dataDriversOfTheDay, driverOfTheDayError, raceNextError]);
+    }, [dispatch, dataDriversOfTheDay, driverOfTheDayError, raceNextError, driverOfTheDayLoading]);
 
     if (driverOfTheDayLoading || raceNextLoading || !dataDriversOfTheDay) return <CardSkeleton />;
 

@@ -1,7 +1,7 @@
 import type { ExtendedColumnDef } from '@/types/dataTable';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { GetInVisibleColumn, groupWinnersWithChildren, Item, pagination, rightAligned } from '../utils/tables';
+import { GetInVisibleColumn, groupWinnersWithChildren, Item, pagination, rightAligned } from '../../utils/tables';
 
 describe('GetInVisibleColumn', () => {
     it('should return empty object when given empty array', () => {

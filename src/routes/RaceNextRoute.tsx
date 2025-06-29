@@ -47,7 +47,7 @@ const RaceNextRoute = () => {
 
     return (
         <>
-            <div className="flex flex-col justify-between items-center m-0 p-0 pb-8 bg-zinc-800 border-b border-zinc-700">
+            <div className="flex flex-col justify-between items-center m-0 p-0 pb-8 border border-zinc-700 bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-xl">
                 <RaceDetailHeader race={nextRace as unknown as RaceProps} />
                 <div className="flex justify-evenly items-center gap-4 w-full p-4">
                     <div>
@@ -117,7 +117,7 @@ const RaceNextRoute = () => {
             </div>
             {/* ? END HEADER! */}
 
-            <div className="w-full border-t-1 border-zinc-700 dark:border-zinc-500 mt-4 pt-4">
+            <div className="w-full dark:border-zinc-500 pt-4">
                 <Accordion
                     type="single"
                     collapsible

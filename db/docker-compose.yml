@@ -1,3 +1,11 @@
+#
+#       This file is part of the F1SP project.
+#           However, it has not been updated in a while.
+#           Use at your own risk.
+#           or contact the F1SP team for more information.
+#
+#
+
 services:
     mysql:
         container_name: f1sp-db

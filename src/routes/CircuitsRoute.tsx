@@ -3,7 +3,7 @@ import { setError } from '@/slices/systemWideSlice';
 import PageContainer from 'components/PageContainer';
 import { useAppDispatch } from 'hooks/reduxHooks';
 import mapboxgl from 'mapbox-gl';
-import { useEffect, useRef, useState } from 'react';
+import { JSX, useEffect, useRef, useState } from 'react';
 import {
     gotoCircuit,
     gotoContinent,
@@ -26,7 +26,11 @@ const Circuits: React.FC = (): JSX.Element => {
     const [circuitBBox /*, setCircuitBBox*/] = useState<CircuitProps['bbox']>(CIRCUIT_DETAILS['baku']?.bbox);
     const [continent, setContinent] = useState<string | undefined>('Europe');
 
-    const map = useRef<mapboxgl.Map>();
+    const map = useRef<mapboxgl.Map | null>(null);
+    const [lat, setLat] = useState<number>(42.35);
+    const [lng, setLng] = useState<number>(-70.9);
+    const [zoom, setZoom] = useState<number>(9);
+
     useEffect(() => {
         try {
             setLng(-1.02602);
@@ -88,11 +92,7 @@ const Circuits: React.FC = (): JSX.Element => {
             console.error('Error creating map:', error);
             return;
         }
-    }, [mapContainer]);
-
-    const [lat, setLat] = useState<number>(42.35);
-    const [lng, setLng] = useState<number>(-70.9);
-    const [zoom, setZoom] = useState<number>(9);
+    }, [mapContainer, circuitBBox, dispatch, zoom]);
 
     const mapInfo = () => {
         const returnJSX = [];
