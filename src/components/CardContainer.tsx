@@ -58,7 +58,7 @@ const CardContainer: React.FC<CardProps> = ({
         <Card className={cn('card dark:bg-zinc-900 bg-zinc-300 shadow-md ', className)}>
             {(title || description) && (
                 <CardHeader>
-                    {title && <CardTitle className={cn('m-0', titleClassName)}>{title}</CardTitle>}
+                    {title && <CardTitle className={cn('krona-one-regular', 'm-0', titleClassName)}>{title}</CardTitle>}
                     {description && <CardDescription className={descriptionClassName}>{description}</CardDescription>}
                 </CardHeader>
             )}
