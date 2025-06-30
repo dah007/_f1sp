@@ -10,7 +10,6 @@ import { setConstructorStandings, setDriverStandings } from 'slices/standingsSli
 
 // for recharts v2.1 and above
 import CardContainer from '@/components/CardContainer';
-import TeamPerformanceRadar from '@/components/charts/TeamPerformanceRadar';
 import ConstructorStandings from '@/components/ConstructorsStandingsTable';
 import DriverStandings from '@/components/DriverStandings';
 import { cn } from '@/lib/utils';
@@ -211,9 +210,9 @@ const Standings: React.FC = (): JSX.Element => {
             showBreadcrumbs={true}
             lastCrumb="Standings"
         >
-            <div className="flex flex-col md:flex-row gap-0 w-[99vw] h-[20vh]">
+            {/* <div className="flex flex-col md:flex-row gap-0 w-[99vw] h-[20vh]">
                 <TeamPerformanceRadar data={removeDuplicates(colorConstructors, 'constructor_id')} />
-            </div>
+            </div> */}
 
             <div className="flex flex-col md:flex-row gap-0 w-[99vw]">
                 {/* LEFT SIDE */}
