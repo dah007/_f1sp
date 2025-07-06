@@ -37,3 +37,6 @@ dbServer/my.cnf
 *:Zone.Identifier
 
 coverage/*
+
+# AWS
+aws/
