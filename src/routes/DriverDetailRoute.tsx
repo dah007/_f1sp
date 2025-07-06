@@ -1,5 +1,4 @@
 import Flag from '@/components/Flag';
-import ImageWithFallback from '@/components/ImageWithFallback';
 import { useGetDriverQuery } from '@/features/driversApi';
 import { Driver } from '@/types/drivers';
 import { intlNumberFormat } from '@/utils/number';
@@ -32,12 +31,27 @@ const DriverDetail: React.FC = () => {
         return <p className="text-lg text-gray-700">Loading...</p>;
     }
 
+    // const imgUrl = new URL(`/assets/drivers/${year}/${driver?.id}.png`, import.meta.url).href;
     const imgUrl = `/assets/drivers/${year}/${driver?.id}.png`;
+
+    const driverImg = document.getElementById(`driver-img-${driver?.id}`) as HTMLImageElement;
+    if (driverImg) {
+        driverImg.src = imgUrl || '/assets/images/404.png';
+    }
 
     return (
         <div className="flex items-start gap-10 max-h-fit overflow-hidden">
             <div className="flex items-start justify-start">
-                <ImageWithFallback src={imgUrl} alt="Driver" />
+                <img
+                    id={`driver-img-${driver?.id}`}
+                    src={imgUrl}
+                    alt="Driver"
+                    className="max-h-[175px] object-contain"
+                    onError={(e) => {
+                        e.currentTarget.src = '/src/assets/images/404.png';
+                        e.currentTarget.onerror = null;
+                    }}
+                />
             </div>
             <div className="flex flex-col gap-2 relative">
                 <div className="racingFont-bold text-4xl md:text-3xl z-1">
