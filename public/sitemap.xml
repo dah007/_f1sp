@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
       <loc>https://f1sp.app/</loc>
-      <lastmod>2025-06-13</lastmod>
+      <lastmod>2025-08-16</lastmod>
     </url>
     <url>
       <loc>https://f1sp.app/AccountNew</loc>
@@ -11,42 +11,47 @@
 
     <url>
       <loc>https://f1sp.app/Chassis</loc>
-      <lastmod>2025-06-10</lastmod>
+      <lastmod>2025-06-30</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Circuits</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-07-06</lastmod>
+    </url>
+
+    <url>
+      <loc>https://f1sp.app/ConstructorStandings</loc>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Constructors</loc>
-      <lastmod>2025-05-15</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/DriverDetail</loc>
-      <lastmod>2025-05-23</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Drivers</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Engines</loc>
-      <lastmod>2025-06-11</lastmod>
+      <lastmod>2025-07-13</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Extra</loc>
-      <lastmod>2025-06-10</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Home</loc>
-      <lastmod>2025-06-13</lastmod>
+      <lastmod>2025-08-16</lastmod>
     </url>
 
     <url>
@@ -61,32 +66,32 @@
 
     <url>
       <loc>https://f1sp.app/RaceDetail</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/RaceLast</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-08-14</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/RaceNext</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-08-15</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/RaceResults</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-08-14</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/RaceView</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Races</loc>
-      <lastmod>2025-06-11</lastmod>
+      <lastmod>2025-06-30</lastmod>
     </url>
 
     <url>
@@ -96,17 +101,17 @@
 
     <url>
       <loc>https://f1sp.app/SeasonDetail</loc>
-      <lastmod>2025-06-12</lastmod>
+      <lastmod>2025-06-30</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Season</loc>
-      <lastmod>2025-06-08</lastmod>
+      <lastmod>2025-06-30</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Seasons</loc>
-      <lastmod>2025-06-12</lastmod>
+      <lastmod>2025-06-30</lastmod>
     </url>
 
     <url>
@@ -116,17 +121,17 @@
 
     <url>
       <loc>https://f1sp.app/Standings</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Tyre</loc>
-      <lastmod>2025-06-11</lastmod>
+      <lastmod>2025-07-13</lastmod>
     </url>
 
     <url>
       <loc>https://f1sp.app/Vote</loc>
-      <lastmod>2025-06-09</lastmod>
+      <lastmod>2025-07-06</lastmod>
     </url>
 
 </urlset>
