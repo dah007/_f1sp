@@ -46,8 +46,9 @@ import Flag from '../Flag';
  */
 const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
     circuitId,
-    // setRaceResults,
-}): JSX.Element => {
+}: {
+    circuitId: string;
+}): React.ReactElement => {
     const dispatch = useAppDispatch();
 
     // State for storing race results and metadata
@@ -62,8 +63,6 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
     // Update total race count when data is received
     useEffect(() => {
         if (!raceTotalCountData) return;
-
-        console.log('Total race count:', raceTotalCountData);
         setTotalRaceCount(raceTotalCountData || 0);
     }, [raceTotalCountData]);
 
@@ -359,6 +358,17 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
     //     }
     // };
 
+    function getPositionOneWithChildren(records) {
+        return records
+            .filter((row) => row.position_number === 1)
+            .map((parent) => ({
+                ...parent,
+                children: records.filter(
+                    (child) => child.year === parent.year && child !== parent, // or child.id !== parent.id if you have unique ids
+                ),
+            }));
+    }
+
     // Process race results when data is fetched
     useEffect(() => {
         if (previousRaceResultsError) {
@@ -372,15 +382,24 @@ const PreviousResultsTable: React.FC<{ circuitId: string }> = ({
         }
         if (!previousRaceResults) return;
 
+        console.log('previousRaceResults:', previousRaceResults);
+
         // Group results by year with race winners as parent rows
         const orgedResults = groupWinnersWithChildren(previousRaceResults as unknown as Item[]);
         setRaceResults(orgedResults as unknown as RaceResultProps[]);
-        console.log('ordered results:', orgedResults);
+        console.log(
+            '--------- ?? ordered results:',
+            orgedResults,
+            previousRaceResults,
+            '----------- what am i seeing',
+            getPositionOneWithChildren(previousRaceResults),
+        );
     }, [previousRaceResults, previousRaceResultsError, previousRaceResultsLoading, dispatch]);
 
     return (
         <>
             <div className="flex w-fit">
+                Total Race Count: {totalRaceCount}
                 {/* Pagination components (currently disabled) */}
                 {/* <Pagination>
                     <PaginationContent>

@@ -1,7 +1,7 @@
--- f1sp.total_constructor_wins_by_season source
+-- f1sp.total_wins_by_season source
 
 create or replace
-algorithm = UNDEFINED view `total_constructor_wins_by_season` as
+algorithm = UNDEFINED view `total_wins_by_season` as
 select
     `r`.`year` as `year`,
     `constructor`.`name` as `name`,

@@ -54,7 +54,9 @@ const LastResultsTable: React.FC<{ circuitId: string }> = ({
             accessorKey: 'countryId',
             cell: ({ row }) => {
                 return (
-                    <div className="min-w-8 w-8 max-w-8">{Flag({ nameAsId: row.getValue('countryId'), size: 24 })}</div>
+                    <div className="min-w-8 w-8 max-w-8">
+                        <Flag nameAsId={row.getValue('countryId')} size={24} />
+                    </div>
                 );
             },
             size: 8,
@@ -276,6 +278,8 @@ const LastResultsTable: React.FC<{ circuitId: string }> = ({
         isError: boolean;
     };
 
+    console.log('RACE RESULTS', raceResults);
+
     const table = useReactTable({
         columns: colDefs(),
         data: raceResults || [],
@@ -303,6 +307,8 @@ const LastResultsTable: React.FC<{ circuitId: string }> = ({
             return;
         }
         if (!previousFirstPlaceResults) return;
+
+        console.log('previousFirstPlaceResults:', previousFirstPlaceResults);
 
         setRaceResults(previousFirstPlaceResults);
         console.log('Previous first place results fetched successfully:', previousFirstPlaceResults);

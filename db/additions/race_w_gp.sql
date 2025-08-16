@@ -32,5 +32,5 @@ from
         `race` `r`
         join `grand_prix` `gp` on ((`r`.`grand_prix_id` = `gp`.`id`))
         join `circuit` `cir` on ((`r`.`circuit_id` = `cir`.`id`))
-    );
-order by `r`.`year`
+    )
+order by `r`.`year`;

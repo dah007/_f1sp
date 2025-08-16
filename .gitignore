@@ -38,5 +38,4 @@ dbServer/my.cnf
 
 coverage/*
 
-# AWS
-aws/
+db/all_views.sql

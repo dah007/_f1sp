@@ -10,6 +10,7 @@
         "lint": "eslint .",
         "litmus": "eslint . --ignore-pattern '**/*.test.*' --ignore-pattern '**/*.spec.*' --ignore-pattern '**/coverage/*' && tsc",
         "preview": "vite preview",
+        "start": "swa start --app-location src --data-api-location swa-db-connections",
         "test": "vitest",
         "test:ui": "vitest --ui",
         "test:coverage": "vitest run --coverage",

@@ -5,7 +5,7 @@ import { CIRCUIT_DETAILS } from '@/constants/circuitConstants';
 import { useGetNextRaceQuery } from '@/features/raceApi';
 import { setRaceNext } from '@/slices/racesSlice';
 import { setError, setLoading } from '@/slices/systemWideSlice';
-import type { NextRaceProps, RaceProps } from '@/types/races';
+import type { RaceNextProps, RaceProps } from '@/types/races';
 import { useEffect, useState } from 'react';
 import PreviousResultsTable from '../components/Race/PreviousResultsTable';
 import RaceDetailHeader from '../components/Race/RaceDetailHeader';
@@ -28,7 +28,7 @@ const RaceNextRoute = () => {
 
         if (!nextRaceData) return;
         dispatch(setLoading(false));
-        dispatch(setRaceNext(nextRaceData as NextRaceProps));
+        dispatch(setRaceNext(nextRaceData as RaceNextProps));
     }, [nextRace, dispatch, nextRaceData, nextRaceLoading, nextRaceError]);
 
     const circuitId = nextRace?.circuit_id || '';
@@ -45,6 +45,8 @@ const RaceNextRoute = () => {
         setOpenedAccordion(which);
     };
 
+    console.log('circuitDetails:', circuitDetails);
+
     return (
         <>
             <div className="flex flex-col justify-between items-center m-0 p-0 pb-8 border border-zinc-700 bg-gradient-to-r from-zinc-900 to-zinc-800 rounded-xl">
@@ -53,7 +55,7 @@ const RaceNextRoute = () => {
                     <div>
                         <div className="text-xl font-bold r-2 krona-one-regular">When?</div>
                         <div className="pl-4 border-b-2 border-zinc-700 dark:border-zinc-500">
-                            {nextRace.date} @ {nextRace.time || 'TBD'} local time
+                            11{nextRace.date} @ {nextRace.time || 'TBD'} local time
                         </div>
 
                         <div className="text-xl font-bold r-2 krona-one-regular">Where?</div>

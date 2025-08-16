@@ -69,7 +69,7 @@ export const driverMenuItems: { title: string; href: string; description: string
 export const raceMenuItems: { title: string; href: string; description: string }[] = [
     {
         title: 'Next Race',
-        href: `/race/next`,
+        href: `/race/1138`,
         description: 'View details about the next race.',
     },
     {
@@ -220,14 +220,6 @@ const Header: React.FC = () => {
                 title="What's New"
                 role="button"
             >
-                {/* <div className="flex flex-col items-center" onClick={() => handleNavigation('/whats-new')}>
-                    <Newspaper size={16} />
-                    <div className="text-xs text-zinc-300 text-center">
-                        What&apos;s
-                        <br />
-                        New
-                    </div>
-                </div> */}
                 <a href="https://buymeacoffee.com/dah007" rel="noreferrer" target="_blank" title="Buy me a coffee">
                     <LucideCoffee className="text-yellow-400 light:text-brown-500" />
                 </a>
@@ -254,7 +246,7 @@ const Header: React.FC = () => {
                 </a>
             </div>
 
-            <div className="hidden lg:block">
+            <div className="hidden lg:block w-full">
                 <DesktopNavigation />
             </div>
 

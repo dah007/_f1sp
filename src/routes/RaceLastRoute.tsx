@@ -19,7 +19,7 @@ const RaceLastRoute = () => {
         data: raceWGPData,
         isLoading: raceWGPisLoading,
         isError: raceWGPisError,
-    } = useGetRaceWithGPQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
+    } = useGetRaceWithGPQuery(parseInt(nextRace?.id as unknown as string, 10) || 0) as {
         data: Partial<RaceProps> | undefined;
         isLoading: boolean;
         isError: boolean;
@@ -40,7 +40,7 @@ const RaceLastRoute = () => {
         data: dataResults,
         isLoading: dataIsLoading,
         isError: dataIsError,
-    } = useGetLastRaceResultsQuery(parseInt(nextRace?.id as unknown as string, 10) - 1 || 0) as {
+    } = useGetLastRaceResultsQuery(parseInt(nextRace?.id as unknown as string, 10) || 0) as {
         data: RaceResultProps[] | undefined;
         isLoading: boolean;
         isError: boolean;
@@ -67,12 +67,12 @@ const RaceLastRoute = () => {
                 <RaceDetailHeader race={raceWGP as unknown as RaceProps} />
                 <div className="flex justify-evenly items-center gap-4 w-full p-4">
                     <div>
-                        <div className="text-xl font-bold r-2 krona-one-regular">When?</div>
+                        <div className="text-xl font-bold r-2 krona-one-regular">When</div>
                         <div className="pl-4 border-b-2 border-zinc-700 dark:border-zinc-500">
                             {raceWGP.date} @ {raceWGP.time || 'TBD'} local time
                         </div>
 
-                        <div className="text-xl font-bold r-2 krona-one-regular">Where?</div>
+                        <div className="text-xl font-bold r-2 krona-one-regular">Where</div>
                         <div className="pl-4 border-b-2 border-zinc-700 dark:border-zinc-500">
                             {circuitDetails?.place_name || 'N/A'}
                         </div>
@@ -118,7 +118,9 @@ const RaceLastRoute = () => {
             {/* ? END HEADER! */}
 
             <div className="w-full border-t-1 border-zinc-700 dark:border-zinc-500 mt-4 pt-4">
-                <h2 className="text-xl font-bold mb-2 krona-one-regular">Previous Results</h2>
+                <h2 className="text-xl font-bold mb-2 krona-one-regular">WTF RESULTS Previous Results</h2>
+
+                {JSON.stringify(dataResults)}
 
                 <PreviousResultsTable circuitId={dataResults ? dataResults[0].circuit_id : ''} />
             </div>

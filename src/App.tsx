@@ -13,7 +13,7 @@ import Leaderboard from './routes/LeaderboardRoute';
 import Static from './routes/Static';
 import { setRaceNext } from './slices/racesSlice';
 import { setError, setLoading } from './slices/systemWideSlice';
-import { NextRaceProps, RaceResultProps } from './types/races';
+import { RaceNextProps, RaceResultProps } from './types/races';
 import Error404Image from '/assets/images/404.png';
 
 const AccountNew = lazy(() => import('./routes/AccountNewRoute'));
@@ -42,18 +42,19 @@ const App = () => {
 
     // NEXT RACE
     const nextRace = useAppSelector((state: RootState) => state.races.raceNext) as RaceResultProps | null;
-    const { data: nextRaceData, isLoading: nextRaceLoading, isError: nextRaceError } = useGetNextRaceQuery(0);
+    const { data: raceNextData, isLoading: raceNextLoading, isError: raceNextError } = useGetNextRaceQuery(0);
 
     useEffect(() => {
-        if (nextRaceError) {
+        if (raceNextError) {
             dispatch(setError(true));
             return;
         }
-        if (nextRaceLoading) dispatch(setLoading(true));
-        if (!nextRaceData) return;
+        if (raceNextLoading) dispatch(setLoading(true));
+        if (!raceNextData) return;
+        console.log('raceNextData:', raceNextData);
         dispatch(setLoading(false));
-        dispatch(setRaceNext(nextRaceData as NextRaceProps));
-    }, [nextRace, dispatch, nextRaceData, nextRaceLoading, nextRaceError]);
+        dispatch(setRaceNext(raceNextData as RaceNextProps));
+    }, [nextRace, dispatch, raceNextData, raceNextLoading, raceNextError]);
     // </nextRace>
 
     return (

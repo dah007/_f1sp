@@ -26,38 +26,44 @@ export type Item = {
     year: number;
 };
 
+export type ItemWithChildren = Item & { children: Item[] };
+
 // input: your array of results
-export const groupWinnersWithChildren = (arr: Item[]) => {
+export const groupWinnersWithChildren = (arr: Item[]): ItemWithChildren[] => {
+    // Filter out objects missing required fields
+    const validArr = arr.filter(
+        (item) =>
+            typeof item.id !== 'undefined' && typeof item.position_number === 'number' && typeof item.year === 'number',
+    );
+
     // Group by id
     const grouped: Record<string, Item[]> = {};
-
-    arr.forEach((item: Item) => {
+    validArr.forEach((item: Item) => {
         if (!grouped[item.id]) grouped[item.id] = [];
         grouped[item.id].push(item);
     });
 
     // For each group, find position 1 and attach children
-    const result = Object.values(grouped)
+    const result: ItemWithChildren[] = Object.values(grouped)
         .map((group) => {
             const parent = group.find((item) => item.position_number === 1);
             if (!parent) return null; // skip if no winner
-            const children = group.filter((item) => item.position_number !== 1 && item.position_number != null);
+            const children = group.filter(
+                (item) => item.position_number !== 1 && typeof item.position_number === 'number',
+            );
             return {
                 ...parent,
                 children,
             };
         })
-        .filter(Boolean); // remove nulls
+        .filter(Boolean) as ItemWithChildren[]; // remove nulls
 
     // sort by year, then position, then points
     return result.sort((a, b) => {
-        if (!a || !b) return 0; // handle nulls
         if (a.year !== b.year) return a.year - b.year;
         if (a.position_number !== b.position_number) return a.position_number - b.position_number;
         return (b.points || 0) - (a.points || 0); // sort by points descending
     });
-
-    // return result;
 };
 
 export const rightAligned = (value: string | number) => {

@@ -4,34 +4,17 @@
         "jsxImportSource": "react",
         "baseUrl": ".",
         "paths": {
-            "@/*": [
-                "./src/*"
-            ],
-            "assets/*": [
-                "./src/assets/*"
-            ],
-            "components/*": [
-                "./src/components/*"
-            ],
-            "hooks/*": [
-                "./src/hooks/*"
-            ],
-            "services/*": [
-                "./src/services/*"
-            ],
-            "store/*": [
-                "./src/store/*"
-            ],
-            "styles/*": [
-                "./src/styles/*"
-            ],
-            "types/*": [
-                "./src/types/*"
-            ],
-            "utils/*": [
-                "./src/utils/*"
-            ]
-        }
+            "@/*": ["./src/*"],
+            "assets/*": ["./src/assets/*"],
+            "components/*": ["./src/components/*"],
+            "hooks/*": ["./src/hooks/*"],
+            "services/*": ["./src/services/*"],
+            "store/*": ["./src/store/*"],
+            "styles/*": ["./src/styles/*"],
+            "types/*": ["./src/types/*"],
+            "utils/*": ["./src/utils/*"]
+        },
+        "types": ["react", "react-dom"]
     },
     "files": [],
     "references": [

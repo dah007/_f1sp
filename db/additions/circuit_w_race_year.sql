@@ -3,6 +3,7 @@
 create or replace
 algorithm = UNDEFINED view `circuit_w_race_year` as
 select
+    `r`.`id` as `race_id`,
     `r`.`year` as `race_year`,
     `c`.`id` as `id`,
     `c`.`name` as `name`,

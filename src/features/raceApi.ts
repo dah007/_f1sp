@@ -1,6 +1,6 @@
 import { YEAR } from '@/constants/constants';
 import { NextLinkRaceProps } from '@/routes/RacesRoute';
-import { FastestLap, RaceProps, type NextRaceProps } from '@/types/races';
+import { FastestLap, RaceProps, type RaceNextProps } from '@/types/races';
 import { baseQueryWithRetry } from '@/utils/query';
 // import { buildErrorObject } from '@/utils';
 
@@ -35,14 +35,14 @@ export const raceApi = createApi({
                 )}`;
             },
 
-            transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
+            transformResponse: (response: { value: RaceNextProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching last race results:', error);
             },
         }),
         getLastResultsAtCircuit: builder.query({
             query: ({ circuitId }: { circuitId: string }) => {
-                console.log('Fetching last results at circuit:', circuitId);
+                console.log('???????????????????????????? Fetching last results at circuit:', circuitId);
                 return circuitId
                     ? `/lastResultsByCircuit?$filter=circuit_id eq '${circuitId}'&$orderby=position_number`
                     : `/lastResultsByCircuit?$filter=circuit_id eq '${circuitId}'`;
@@ -72,7 +72,7 @@ export const raceApi = createApi({
         }),
         getNextRace: builder.query({
             query: () => 'raceNext',
-            transformResponse: (response: { value: NextRaceProps }) => response?.value?.[0] ?? {},
+            transformResponse: (response: { value: RaceNextProps }) => response?.value?.[0] ?? {},
             transformErrorResponse: (error) => {
                 console.error('Error fetching next race results:', error);
                 return error;
@@ -99,6 +99,7 @@ export const raceApi = createApi({
         getPreviousRaceResults: builder.query({
             query: (circuitId: string) => {
                 console.log(
+                    'WTF',
                     circuitId
                         ? `/previousRaceResults?$filter=circuit_id eq '${circuitId}'&$orderby=year desc`
                         : `/previousRaceResults`,
@@ -115,7 +116,7 @@ export const raceApi = createApi({
         }),
         getRaceWithGP: builder.query({
             query: (raceId: number) => `raceGP?$filter=id eq ${raceId}`,
-            transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? [],
+            transformResponse: (response: { value: RaceNextProps }) => response?.value[0] ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error fetching race with GP:', error);
             },
@@ -229,9 +230,18 @@ export const raceApi = createApi({
 
         getRaceNext: builder.query({
             query: () => `/raceNext`,
-            transformResponse: (response: { value: NextRaceProps }) => response?.value[0] ?? {},
+            transformResponse: (response: { value: RaceNextProps }) => response?.value[0] ?? {},
             transformErrorResponse: (error) => {
                 console.error('Error fetching next race:', error);
+                return error;
+            },
+        }),
+
+        useGetRaceWinnerQuery: builder.query({
+            query: (raceId: number | string = '') => `/raceWinner?$filter=id eq ${raceId}`,
+            transformResponse: (response: { value: RaceProps }) => response?.value ?? {},
+            transformErrorResponse: (error) => {
+                console.error('Error fetching race winner:', error);
                 return error;
             },
         }),
@@ -263,7 +273,7 @@ export const raceApi = createApi({
         }),
         getRaceResultsWithQual: builder.query({
             query: (year: number = YEAR) => `/race_result?$filter=year eq ${year}`,
-            transformResponse: (response: { value: NextRaceProps }) => response?.value ?? [],
+            transformResponse: (response: { value: RaceNextProps }) => response?.value ?? [],
             transformErrorResponse: (error) => {
                 console.error('Error', error);
                 return error;
@@ -285,8 +295,11 @@ export const raceApi = createApi({
 
 export const {
     // useGetDriverOfTheDayQuery, -- @deprecated
-    useGetFastestLapQuery,
     // useGetFastestPitStopQuery,
+    // useGetRaceMaxYearQuery,
+    // useGetRaceResultsPreviousQuery,
+    // useGetTotalWinsQuery,
+    useGetFastestLapQuery,
     useGetLastRaceResultsQuery,
     useGetLastResultsAtCircuitQuery,
     useGetMaxRaceIdByCircuitQuery,
@@ -294,18 +307,16 @@ export const {
     useGetNextRaceQuery,
     useGetPointsByRaceQuery,
     useGetPollPositionQuery,
-    useGetPreviousWinnersAtCircuitQuery,
     useGetPreviousFirstPlaceResultsQuery,
     useGetPreviousRaceResultsQuery,
-    useGetRaceCountQuery,
+    useGetPreviousWinnersAtCircuitQuery,
     useGetRaceCountByCircuitQuery,
-    // useGetRaceMaxYearQuery,
+    useGetRaceCountQuery,
     useGetRaceNextQuery,
     useGetRaceQuery,
-    // useGetRaceResultsPreviousQuery,
     useGetRaceResultsWithQualQuery,
+    useGetRaceWinnerQuery,
     useGetRaceWithGPQuery,
     useGetRacesQuery,
     useGetRacesResultsWithQualQuery,
-    // useGetTotalWinsQuery,
 } = raceApi;

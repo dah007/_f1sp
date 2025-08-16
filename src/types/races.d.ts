@@ -176,7 +176,7 @@ export interface TotalWinsYearProps {
     id: string;
 }
 
-export type NextRaceProps = Partial<RaceProps> & {
+export type RaceNextProps = Partial<RaceProps> & {
     circuit_id: string;
     official_name: string;
     short_name?: string;

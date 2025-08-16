@@ -9,61 +9,31 @@ import { JSX } from 'react';
  * @component
  * @returns {JSX.Element} A JSX element displaying the next race information or an empty fragment if no race details are provided.
  */
-const NextReactBanner: React.FC = (): JSX.Element => {
+const NextRaceBanner: React.FC = (): JSX.Element => {
     const raceNext = useAppSelector((state: RootState) => state.races.raceNext);
-
-    const renderBanner = () => {
-        if (!raceNext || !raceNext.date) return;
-
-        // // Calculate Friday midnight before the Sunday race
-        // let weekendStartISO = DateTime.fromISO(getWeekendStart(`${raceNext.date}T00:00:00Z`), { zone: 'UTC+4' }).toString();
-        // console.log('startISO:', startISO);
-
-        // weekendStartISO = DateTime.fromISO(weekendStartISO, { zone: 'UTC', zone: CIRCUIT_DETAILS['monoco'].timezone. })
-
-        // console.log('?d date/time??:', DateTime.fromISO(`${raceNext.date}`));
-
-        return (
-            <>
-                {/* <CountdownClock targetDate={new Date().toString()} /> */}
-
-                <div
-                    className="
-                krona-one-regular 
-                flex 
-                flex-col 
-                sm:flex-col
-                xl:text-xl 
-                lg:text-lg 
-                text-sm
-            "
-                >
-                    <span>{`Next Race: ${raceNext.date || ''} @ ${raceNext.official_name || 'N/A'}`}</span>
-                </div>
-            </>
-        );
-    };
 
     return (
         <div
             className="
             flex
-            items-end
-            justify-center
+            justify-end
             gap-2
-            text-center
             align-middle
             raceNext
-            racingFont
-            lg:text-3xl
-            md:text-2xl
+            krona-one-regular
+            xl:text-2xl
+            lg:text-2xl
             text-xl
             pb-2
+            pl-8
+            pt-2
+            w-full
+            italic
         "
         >
-            {renderBanner()}
+            {`Next Race: ${raceNext?.date || ''} @ ${raceNext?.circuit_name || 'N/A'}`}
         </div>
     );
 };
 
-export default NextReactBanner;
+export default NextRaceBanner;

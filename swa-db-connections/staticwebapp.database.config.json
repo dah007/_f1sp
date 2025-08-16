@@ -3,7 +3,7 @@
     "data-source": {
         "database-type": "mysql",
         "options": {},
-        "connection-string": "@env('DATABASE_CONNECTION_STRING')"
+        "connection-string": "@env('DATABASE_CONNECTION_STRING_F1SP')"
     },
     "runtime": {
         "rest": {
@@ -19,8 +19,9 @@
             "mode": "production",
             "cors": {
                 "origins": [
-                    "http://localhost:4280",
                     "https://localhost:3000",
+                    "http://localhost:4280",
+                    "http://localhost:5173",
                     "chrome-extension://coohjcphdfgbiolnekdpbcijmhambjff"
                 ],
                 "allow-credentials": true
@@ -39,7 +40,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -52,7 +53,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -62,11 +63,12 @@
             "source": "driver",
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
         },
+
         "driverOfTheDay": {
             "source": {
                 "type": "view",
@@ -75,11 +77,12 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
         },
+
         "drivers": {
             "source": {
                 "type": "view",
@@ -88,7 +91,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -101,7 +104,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -115,7 +118,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -128,7 +131,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -141,7 +144,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -155,7 +158,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -169,7 +172,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -183,7 +186,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -197,7 +200,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -210,7 +213,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -223,24 +226,12 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
         },
-        "previousWinnersAtCircuit": {
-            "source": {
-                "type": "view",
-                "key-fields": ["circuit_id"],
-                "object": "previous_winners_circuit"
-            },
-            "permissions": [
-                {
-                    "actions": ["*"],
-                    "role": "anonymous"
-                }
-            ]
-        },
+
         "races": {
             "source": {
                 "type": "view",
@@ -249,7 +240,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -262,7 +253,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -275,7 +266,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -288,7 +279,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -301,7 +292,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -314,7 +305,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -327,7 +318,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -340,21 +331,21 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
         },
 
-        "seasonStats": {
+        "raceWinner": {
             "source": {
                 "type": "view",
-                "key-fields": ["year"],
-                "object": "season_stats"
+                "key-fields": ["race_id"],
+                "object": "race_winner"
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -368,7 +359,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -381,7 +372,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -395,7 +386,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -408,7 +399,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -421,7 +412,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -434,7 +425,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ]
@@ -490,7 +481,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ],
@@ -507,7 +498,7 @@
             },
             "permissions": [
                 {
-                    "actions": ["*"],
+                    "actions": ["read"],
                     "role": "anonymous"
                 }
             ],

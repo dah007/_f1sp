@@ -20,12 +20,12 @@ vi.mock('../features/raceApi', () => ({
             () => (next: Middleware) => (action: MiddlewareAPI<Dispatch<UnknownAction>, string>) => next(action),
         ),
         endpoints: {
-            getNextRace: {
+            getRaceNext: {
                 useQuery: vi.fn(),
             },
         },
     },
-    useGetNextRaceQuery: vi.fn(),
+    useGetRaceNextQuery: vi.fn(),
 }));
 
 /**

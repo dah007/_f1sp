@@ -43,7 +43,7 @@ const RaceResultsRoute = () => {
         data: dataResults,
         isLoading: dataIsLoading,
         isError: dataIsError,
-    } = useGetLastRaceResultsQuery(parseInt(id as unknown as string, 10) - 1 || 0) as {
+    } = useGetLastRaceResultsQuery(parseInt(id as unknown as string, 10) || 0) as {
         data: RaceResultProps[] | undefined;
         isLoading: boolean;
         isError: boolean;
@@ -72,12 +72,12 @@ const RaceResultsRoute = () => {
                 <RaceDetailHeader race={raceWGP as unknown as RaceProps} />
                 <div className="flex justify-evenly items-center gap-4 w-full p-4">
                     <div>
-                        <div className="text-xl font-bold r-2 krona-one-regular">When?</div>
+                        <div className="text-xl font-bold r-2 krona-one-regular">When</div>
                         <div className="pl-4 border-b-2 border-zinc-700 dark:border-zinc-500">
                             {raceWGP.date} @ {raceWGP.time || 'TBD'} local time
                         </div>
 
-                        <div className="text-xl font-bold r-2 krona-one-regular">Where?</div>
+                        <div className="text-xl font-bold r-2 krona-one-regular">Where</div>
                         <div className="pl-4 border-b-2 border-zinc-700 dark:border-zinc-500">
                             {circuitDetails?.place_name || 'N/A'}
                         </div>
