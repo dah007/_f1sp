@@ -149,7 +149,6 @@
                 }
             ]
         },
-
         "fastestLap": {
             "source": {
                 "type": "view",
@@ -163,7 +162,6 @@
                 }
             ]
         },
-
         "fastestLapsByYear": {
             "source": {
                 "type": "view",
